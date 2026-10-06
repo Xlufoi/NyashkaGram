@@ -1,4 +1,4 @@
-name: Debug build
+name: Build (arm64-v8a)
 
 on:
   push:
@@ -19,174 +19,99 @@ permissions:
   actions: read
 
 jobs:
-  native:
-    name: Native Build (Telegram)
+  build:
+    name: Build NyashkaGram (arm64-v8a)
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        flavor:
-          - armeabi-v7a
-          - arm64-v8a
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
       - name: Fetch Status
         run: |
           sed -i 's/\/\///g' settings.gradle
-      - name: Native Cache
+
+      - name: Checkout Library
+        run: |
+          git submodule update --init
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK Tools
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+
+      - name: Install NDK
+        run: |
+          echo "y" | sdkmanager --install "ndk;27.2.12479018" --sdk_root=${ANDROID_SDK_ROOT} &> /dev/null
+          echo "sdk.dir=${ANDROID_HOME}" > local.properties
+          echo "ndk.dir=${ANDROID_HOME}/ndk/27.2.12479018" >> local.properties
+
+      - name: Native Cache (arm64-v8a)
         id: cache
         uses: actions/cache@v6
         with:
           path: |
             TMessagesProj/src/main/libs
-          key: ${{ hashFiles('TMessagesProj/jni/**') }}-${{ matrix.flavor }}
-      - name: Checkout Library
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          git submodule update --init
-      - name: Set up JDK 17
-        uses: actions/setup-java@v6
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Setup Android SDK Tools
-        uses: android-actions/setup-android@v4
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          packages: 'platform-tools'
-      - name: Install NDK
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          echo "y" | sdkmanager --install "ndk;27.2.12479018" --sdk_root=${ANDROID_SDK_ROOT} &> /dev/null
-          echo "sdk.dir=${ANDROID_HOME}" > local.properties
-          echo "ndk.dir=${ANDROID_HOME}/ndk/27.2.12479018" >> local.properties
-      - name: Native Build
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          export NATIVE_TARGET="${{ matrix.flavor }}"
-          ./run libs native
-  build:
-    name: Gradle Build
-    runs-on: ubuntu-latest
-    needs:
-      - native
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-      - name: Fetch Status
-        run: |
-          sed -i 's/\/\///g' settings.gradle
-      - name: Native Cache (armeabi-v7a)
-        uses: actions/cache@v6
-        with:
-          path: |
-            TMessagesProj/src/main/libs
-          key: ${{ hashFiles('TMessagesProj/jni/**') }}-armeabi-v7a
-      - name: Native Cache (arm64-v8a)
-        uses: actions/cache@v6
-        with:
-          path: |
-            TMessagesProj/src/main/libs
           key: ${{ hashFiles('TMessagesProj/jni/**') }}-arm64-v8a
-      - name: Checkout Library
+
+      - name: Native Build (arm64-v8a)
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          git submodule update --init
-      - name: Set up JDK 17
-        uses: actions/setup-java@v6
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Setup Android SDK Tools
-        uses: android-actions/setup-android@v4
-        with:
-          packages: 'platform-tools'
-      - name: Install NDK
+          export NATIVE_TARGET="arm64-v8a"
+          ./run libs native
+
+      - name: Prepare Signing Keystore
         run: |
-          echo "y" | sdkmanager --install "ndk;27.2.12479018" --sdk_root=${ANDROID_SDK_ROOT} &> /dev/null
-          echo "sdk.dir=${ANDROID_HOME}" > local.properties
-          echo "ndk.dir=${ANDROID_HOME}/ndk/27.2.12479018" >> local.properties
+          rm -f TMessagesProj/release.keystore
+          keytool -genkey -v -keystore TMessagesProj/release.keystore -alias key0 -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=NyashkaGram, OU=NyashkaGram, O=NyashkaGram, L=Default, S=Default, C=RU"
+
       - name: Configure Gradle
         run: |
           sed -i "s/2000000000000/$(date +%s%N | cut -c1-13)/g" gradle.properties
           echo "sdk.dir=${ANDROID_HOME}" >> local.properties
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
         with:
           cache-read-only: false
-      - name: Debug Build
+
+      - name: Gradle Build (arm64-v8a)
         run: |
-          export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
-          export SENTRY_AUTH_TOKEN="${{ secrets.SENTRY_AUTH_TOKEN }}"
+          export KEYSTORE_PASS="123456"
+          export ALIAS_NAME="key0"
+          export ALIAS_PASS="123456"
+          export NATIVE_TARGET="arm64-v8a"
           ./gradlew TMessagesProj:assembleRelease --build-cache --no-configuration-cache
 
-          APK=$(find TMessagesProj/build/outputs/apk -name '*arm64-v8a*.apk')
-          APK=$(dirname $APK)
-          echo "APK=$APK" >> $GITHUB_ENV
-      - name: Upload gradle.properties
+          mkdir -p release_apks
+          cp $(find TMessagesProj/build/outputs/apk -name '*arm64-v8a*.apk') release_apks/
+          ls -lh release_apks/
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: gradle-properties
-          path: gradle.properties
-      - uses: actions/upload-artifact@v7
-        with:
-          name: Release
-          path: ${{ env.APK }}
-  upload:
-    name: Upload debug
-    if: github.event.inputs.upload != 'y'
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-      - name: Remove gradle.properties
-        run: |
-          rm -f gradle.properties
-      - name: Download gradle.properties
-        uses: actions/download-artifact@v8
-        with:
-          name: gradle-properties
-          path: .
-      - name: Donwload Artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: artifacts
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: 3.12
-      - name: Send to Telegram
-        continue-on-error: true
-        run: |
-          if [ -z "${{ secrets.HELPER_BOT_TOKEN }}" ]; then
-            echo "HELPER_BOT_TOKEN not provided, skipping telegram upload."
-            exit 0
-          fi
-          # send release via telegram bot api
-          export mini64=$(find artifacts -name "*arm64-v8a.apk")
-          export mini32=$(find artifacts -name "*armeabi-v7a.apk")
+          name: NyashkaGram-arm64-v8a
+          path: release_apks/*.apk
 
-          echo $mini64
-          echo $mini32
-
-          python -m pip install -r bin/scripts/requirements.txt
-          git log -1 --pretty=format:"%s%n%n%b" > artifacts/caption.txt
-          python bin/scripts/upload.py ${{ secrets.HELPER_BOT_TOKEN }} ${{ secrets.HELPER_BOT_TARGET }} test
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         continue-on-error: true
         with:
           tag_name: nightly-${{ github.run_number }}
-          name: NyashkaGram Nightly #${{ github.run_number }} (Material 3 Expressive)
+          name: NyashkaGram Nightly #${{ github.run_number }} (arm64-v8a)
           body: |
             ### NyashkaGram Nightly Build (Material 3 Expressive)
+            - Architecture: **arm64-v8a (64-bit)**
             - Design: **Material 3 Expressive**
-            - Nightly branch: `dev`
+            - Branch: `dev`
             - Commit: `${{ github.sha }}`
           draft: false
           prerelease: true
-          files: artifacts/**/*.apk
+          files: release_apks/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
