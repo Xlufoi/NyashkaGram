@@ -1,8 +1,5 @@
 package tw.nekomimi.nekogram.settings;
 
-import static tw.nekomimi.nekogram.utils.UpdateUtil.channelUsername;
-import static tw.nekomimi.nekogram.utils.UpdateUtil.channelUsernameTips;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -68,10 +65,7 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
     private int categories2Row;
 
     private int aboutRow;
-    private int channelRow;
-    private int channelTipsRow;
     private int sourceCodeRow;
-    private int translationRow;
     private int datacenterRow;
     private int networkLogRow;
     private int about2Row;
@@ -107,14 +101,8 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
             presentFragment(new NekoExperimentalSettingsActivity());
         } else if (position == debugRow) {
             presentFragment(new NekoDebugSettingsActivity());
-        } else if (position == channelRow) {
-            getMessagesController().openByUserName(channelUsername, this, 1);
-        } else if (position == channelTipsRow) {
-            getMessagesController().openByUserName(channelUsernameTips, this, 1);
         } else if (position == sourceCodeRow) {
-            Browser.openUrl(getParentActivity(), "https://github.com/NextAlone/Nagram");
-        } else if (position == translationRow) {
-            Browser.openUrl(getParentActivity(), "https://xtaolabs.crowdin.com/nagram");
+            Browser.openUrl(getParentActivity(), "https://github.com/Xlufoi/NyashkaGram");
         } else if (position == datacenterRow) {
             presentFragment(new DatacenterActivity(0));
         } else if (position == networkLogRow) {
@@ -172,10 +160,7 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
         categories2Row = addRow();
 
         aboutRow = addRow("about");
-        channelRow = addRow("channel");
-        channelTipsRow = addRow("channelTips");
         sourceCodeRow = addRow("sourceCode");
-        translationRow = addRow("translation");
         datacenterRow = addRow("datacenter");
         networkLogRow = addRow("networkLog");
         about2Row = addRow();
@@ -198,14 +183,8 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
             switch (holder.getItemViewType()) {
                 case TYPE_SETTINGS: {
                     TextSettingsCell textCell = (TextSettingsCell) holder.itemView;
-                    if (position == channelRow) {
-                        textCell.setTextAndValue(LocaleController.getString(R.string.OfficialChannel), "@" + channelUsername, divider);
-                    } else if (position == channelTipsRow) {
-                        textCell.setTextAndValue(LocaleController.getString(R.string.TipsChannel), "@" + channelUsernameTips, divider);
-                    } else if (position == sourceCodeRow) {
+                    if (position == sourceCodeRow) {
                         textCell.setText(LocaleController.getString(R.string.SourceCode), divider);
-                    } else if (position == translationRow) {
-                        textCell.setText(LocaleController.getString(R.string.TransSite), divider);
                     } else if (position == datacenterRow) {
                         textCell.setText(LocaleController.getString(R.string.DatacenterStatus), divider);
                     } else if (position == networkLogRow) {
@@ -258,9 +237,9 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
                 return TYPE_HEADER;
             } else if (position > categoriesRow && position < categories2Row) {
                 return TYPE_TEXT;
-            } else if (position >= channelRow && position < about2Row) {
+            } else if (position > aboutRow && position < about2Row) {
                 return TYPE_SETTINGS;
-            } else if (position >= importSettingsRow && position < settings2Row) {
+            } else if (position > settingsRow && position < settings2Row) {
                 return TYPE_SETTINGS;
             }
             return TYPE_SETTINGS;

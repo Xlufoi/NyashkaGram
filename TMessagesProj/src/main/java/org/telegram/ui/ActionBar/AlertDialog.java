@@ -574,7 +574,7 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                             (getHeight() + h) / 2f
                     );
                 } else {
-                    r = dp(20);
+                    r = dp(28);
                     AndroidUtilities.rectTmp.set(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getMeasuredHeight() - getPaddingBottom());
                 }
 

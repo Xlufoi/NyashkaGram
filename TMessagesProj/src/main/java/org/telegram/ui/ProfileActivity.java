@@ -4676,11 +4676,11 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             } else if (position == nekoRow) {
                 presentFragment(new NekoSettingsActivity());
             } else if (position == questionRow) {
-                Browser.openUrl(getParentActivity(), "https://t.me/NekogramX");
+                Browser.openUrl(getParentActivity(), "https://github.com/Xlufoi/NyashkaGram");
             } else if (position == faqRow) {
                 Browser.openUrl(getParentActivity(), NekoXConfig.FAQ_URL);
             } else if (position == policyRow) {
-                Browser.openUrl(getParentActivity(), "https://nagram.app/privacy/");
+                Browser.openUrl(getParentActivity(), "https://telegram.org/privacy");
             } else if (position == sendLogsRow) {
                 sendLogs(getParentActivity(), false);
             } else if (position == sendLastLogsRow) {
@@ -4833,7 +4833,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     updateListAnimated(false);
                 });
                 o.add(R.drawable.msg_retry, LocaleController.getString(R.string.SwitchVersion), () -> {
-                    Browser.openUrl(ProfileActivity.this.getParentActivity(), "https://github.com/NextAlone/Nagram/releases");
+                    Browser.openUrl(ProfileActivity.this.getParentActivity(), BuildVars.GITHUB_RELEASE_URL);
                 });
 
                 o.add(R.drawable.msg_search, LocaleController.getString(R.string.CheckUpdate), () -> {

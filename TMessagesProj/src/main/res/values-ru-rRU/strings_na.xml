@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="N_Config">Настройки N</string>
+    <string name="N_Config">Настройки няшкаграм</string>
     <string name="ForceCopy">Принудительное копирование</string>
     <string name="disableSecondAddress">Отключить второй запрос адреса</string>
     <string name="InvertReply">Инвертировать</string>
@@ -22,7 +22,7 @@
     <string name="SendReactions">Отправить реакцию</string>
     <string name="ShowReactions">Показать реакции</string>
     <string name="CustomTitle">Пользовательский заголовок</string>
-    <string name="CustomTitleHint">Оставьте поле пустым, чтобы использовать «НяшкаГрам»</string>
+    <string name="CustomTitleHint">Оставьте поле пустым, чтобы использовать «няшкаграм»</string>
     <string name="CodeSyntaxHighlight">Подсветка синтаксиса кода</string>
     <string name="CreateMono">Создать моноширинный</string>
     <string name="CreateMonoLanguage">Язык кода</string>

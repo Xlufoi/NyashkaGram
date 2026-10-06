@@ -31,17 +31,8 @@ import xyz.nextalone.nagram.NaConfig;
 
 public class NekoXConfig {
 
-    //  public static String FAQ_URL = "https://telegra.ph/NekoX-FAQ-03-31";
-    public static String FAQ_URL = "https://github.com/NextAlone/Nagram#faq";
-    public static long[] officialChats = {
-//            1305127566, // NekoX Updates
-//            1151172683, // NekoX Chat
-//            1299578049, // NekoX Chat Channel
-//            1137038259, // NekoX APKs
-            1500637449, // Nagram
-            1645699549, // Nagram Updates
-            2001739482, // Nagram Tips
-    };
+    public static String FAQ_URL = "https://github.com/Xlufoi/NyashkaGram#faq";
+    public static long[] officialChats = {};
 
     public static long[] developers = {
             896711046, // nekohasekai
