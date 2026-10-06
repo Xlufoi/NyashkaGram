@@ -12,6 +12,10 @@ on:
       upload:
         description: 'Upload: If want ignore'
         required: false
+
+permissions:
+  contents: write
+  actions: read
 jobs:
   native:
     name: Native Build (Telegram)
@@ -150,6 +154,8 @@ jobs:
         with:
           python-version: 3.12
       - name: Send to Telegram
+        if: ${{ secrets.HELPER_BOT_TOKEN != '' && secrets.HELPER_BOT_TARGET != '' }}
+        continue-on-error: true
         run: |
           # send release via telegram bot api
           export mini64=$(find artifacts -name "*arm64-v8a.apk")
@@ -161,3 +167,18 @@ jobs:
           python -m pip install -r bin/scripts/requirements.txt
           git log -1 --pretty=format:"%s%n%n%b" > artifacts/caption.txt
           python bin/scripts/upload.py ${{ secrets.HELPER_BOT_TOKEN }} ${{ secrets.HELPER_BOT_TARGET }} release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          tag_name: release-${{ github.run_number }}
+          name: NyashkaGram Release #${{ github.run_number }} (Material 3 Expressive)
+          body: |
+            ### NyashkaGram Release (Material 3 Expressive)
+            - Design: **Material 3 Expressive**
+            - Commit: `${{ github.sha }}`
+          draft: false
+          prerelease: false
+          files: artifacts/**/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,11 +1,9 @@
-# Nagram
+# NyashkaGram (НяшкаГрам)
 
-Nagram is a third-party Telegram client based on [NekoX](https://web.archive.org/web/20240306062834/https://github.com/NekoX-Dev/NekoX) with some modifications.
+NyashkaGram is an Android Telegram client forked from [Nagram](https://github.com/NextAlone/Nagram) (nightly) featuring a **Material 3 Expressive** design, Monet dynamic theme engine, pill-shaped tabs, expressively rounded bubbles and modern switch styles.
 
-- Official Site: <https://nagram.app>
-- Telegram Update Channel: <https://t.me/nagram_channel>
-- Releases: <https://github.com/NextAlone/Nagram/releases>
-- Issues here: <https://t.me/na_gram_reports/18>
+- Fork Repository: <https://github.com/Xlufoi/NyashkaGram>
+- Releases: <https://github.com/Xlufoi/NyashkaGram/releases>
 
 ## Branding
 

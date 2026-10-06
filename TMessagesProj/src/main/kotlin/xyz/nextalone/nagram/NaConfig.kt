@@ -1011,7 +1011,7 @@ object NaConfig {
         addConfig(
             "TabStyle",
             ConfigItem.configTypeInt,
-            0
+            TabStyle.PILLS.value
         )
     val chatActivityNavbarTransparent =
         addConfig(
@@ -1399,13 +1399,13 @@ object NaConfig {
         addConfig(
             "MaterialDesign3ChatHeader",
             ConfigItem.configTypeBool,
-            false
+            true
         )
     val switchStyle =
         addConfig(
             "SwitchStyle",
             ConfigItem.configTypeInt,
-            SwitchStyle.TELEGRAM.value
+            SwitchStyle.MODERN.value
         )
     val disableChatListSwipeGesture =
         addConfig(

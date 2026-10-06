@@ -4369,9 +4369,19 @@ public class Theme {
             throw new RuntimeException(e);
         }
         if (applyingTheme == null) {
-            applyingTheme = defaultTheme;
-        } else {
-            currentDayTheme = applyingTheme;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && themesDict.containsKey("Monet Light")) {
+                applyingTheme = themesDict.get("Monet Light");
+            } else {
+                applyingTheme = defaultTheme;
+            }
+        }
+        currentDayTheme = applyingTheme;
+        if (currentNightTheme == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && themesDict.containsKey("Monet Dark")) {
+                currentNightTheme = themesDict.get("Monet Dark");
+            } else {
+                currentNightTheme = themesDict.get("Night");
+            }
         }
 
         if (preferences.contains("overrideThemeWallpaper") || preferences.contains("selectedBackground2")) {
