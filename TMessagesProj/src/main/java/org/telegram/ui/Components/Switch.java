@@ -409,14 +409,14 @@ public class Switch extends View {
         rectF.set(x, y, x + width, y + AndroidUtilities.dpf2(14));
         if (modernStyle) {
             float scale = Math.min(AndroidUtilities.dpf2(20), Math.min(getMeasuredHeight(), getMeasuredWidth() * 32f / 56f)) / 32f;
-            float trackWidth = 56 * scale;
+            float trackWidth = 52 * scale;
             float trackHeight = 32 * scale;
             float left = (getMeasuredWidth() - trackWidth) / 2f;
             float top = (getMeasuredHeight() - trackHeight) / 2f;
             rectF.set(left, top, left + trackWidth, top + trackHeight);
             trackRadius = trackHeight / 2f;
-            thumbRadius = 13 * scale;
-            thumbX = left + (16 + 24 * progress) * scale;
+            thumbRadius = (9.5f + 4f * progress) * scale;
+            thumbX = left + (16 + 20 * progress) * scale;
             thumbY = getMeasuredHeight() / 2f;
             tx = Math.round(thumbX);
             ty = Math.round(thumbY);

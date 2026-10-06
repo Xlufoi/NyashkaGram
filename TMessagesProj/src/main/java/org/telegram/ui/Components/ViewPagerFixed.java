@@ -1615,10 +1615,10 @@ public class ViewPagerFixed extends FrameLayout {
             selectorDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, null);
             selectorDrawable.setColor(Theme.getColor(tabLineColorKey, resourcesProvider));
             if (tabsSelectorType == SELECTOR_TYPE_BUBBLE_STYLE) {
-                float rad = AndroidUtilities.dpf2(13);
+                float rad = AndroidUtilities.dpf2(16);
                 selectorDrawable.setCornerRadii(new float[]{rad, rad, rad, rad, rad, rad, rad, rad});
             } else {
-                float rad = AndroidUtilities.dpf2(3);
+                float rad = AndroidUtilities.dpf2(4);
                 selectorDrawable.setCornerRadii(new float[]{rad, rad, rad, rad, 0, 0, 0, 0});
             }
 
@@ -2050,12 +2050,12 @@ public class ViewPagerFixed extends FrameLayout {
                             indicatorWidth = (int) AndroidUtilities.lerp(lastDrawnIndicatorW, indicatorWidth, indicatorProgress2);
                         }
                         if (selectorType == SELECTOR_TYPE_BUBBLE_STYLE) {
-                            final float TAB_INTERNAL_PADDING = 12.5f;
+                            final float TAB_INTERNAL_PADDING = 14f;
                             final float add = additionalTabWidth / 2f;
-                            final int y = height / 2 - dp(14);
+                            final int y = height / 2 - dp(16);
                             if (NaConfig.INSTANCE.getTabStyleStroke().Bool()) {
                                 selectorDrawable.setStroke(AndroidUtilities.dp(1), Theme.getColor(activeTextColorKey, resourcesProvider));
-                                selectorDrawable.setColor(ColorUtils.setAlphaComponent(Theme.getColor(tabLineColorKey, resourcesProvider), 50));
+                                selectorDrawable.setColor(ColorUtils.setAlphaComponent(Theme.getColor(tabLineColorKey, resourcesProvider), 60));
                             } else {
                                 selectorDrawable.setStroke(0, 0);
                                 selectorDrawable.setColor(Theme.getColor(tabLineColorKey, resourcesProvider));
@@ -2063,8 +2063,8 @@ public class ViewPagerFixed extends FrameLayout {
                             selectorDrawable.setBounds(
                                 (int) (indicatorX - dp(TAB_INTERNAL_PADDING) - add), y,
                                 (int) (indicatorX + indicatorWidth + dp(TAB_INTERNAL_PADDING) + add),
-                                y + dp(28));
-                            selectorDrawable.setAlpha(NaConfig.INSTANCE.getTabStyleStroke().Bool() ? 255 : 31);
+                                y + dp(32));
+                            selectorDrawable.setAlpha(NaConfig.INSTANCE.getTabStyleStroke().Bool() ? 255 : 48);
                             selectorDrawable.draw(canvas);
                         } else {
                             selectorDrawable.setBounds(indicatorX, (int) (height - AndroidUtilities.dpr(4) + hideProgress * AndroidUtilities.dpr(4)), indicatorX + indicatorWidth, (int) (height + hideProgress * AndroidUtilities.dpr(4)));
