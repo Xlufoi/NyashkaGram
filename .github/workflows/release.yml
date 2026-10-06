@@ -154,9 +154,12 @@ jobs:
         with:
           python-version: 3.12
       - name: Send to Telegram
-        if: ${{ secrets.HELPER_BOT_TOKEN != '' && secrets.HELPER_BOT_TARGET != '' }}
         continue-on-error: true
         run: |
+          if [ -z "${{ secrets.HELPER_BOT_TOKEN }}" ]; then
+            echo "HELPER_BOT_TOKEN not provided, skipping telegram upload."
+            exit 0
+          fi
           # send release via telegram bot api
           export mini64=$(find artifacts -name "*arm64-v8a.apk")
           export mini32=$(find artifacts -name "*armeabi-v7a.apk")
