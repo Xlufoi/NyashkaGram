@@ -41,16 +41,16 @@ public class HeaderCell extends FrameLayout {
     private TextView textView;
     private AnimatedTextView animatedTextView;
     private SimpleTextView textView2;
-    private int height = 40;
+    private int height = 36;
     private final Theme.ResourcesProvider resourcesProvider;
     private final boolean animated;
 
     public HeaderCell(Context context) {
-        this(context, Theme.key_windowBackgroundWhiteBlueHeader, 18, 7, false, null);
+        this(context, Theme.key_windowBackgroundWhiteBlueHeader, 16, 6, false, null);
     }
 
     public HeaderCell(Context context, Theme.ResourcesProvider resourcesProvider) {
-        this(context, Theme.key_windowBackgroundWhiteBlueHeader, 18, 7, false, resourcesProvider);
+        this(context, Theme.key_windowBackgroundWhiteBlueHeader, 16, 6, false, resourcesProvider);
     }
 
     public HeaderCell(Context context, int padding) {

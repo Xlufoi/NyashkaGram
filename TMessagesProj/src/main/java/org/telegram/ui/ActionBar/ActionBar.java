@@ -2287,7 +2287,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 int sideMargin = dp(5);
                 int bottomMargin = dp(2);
                 AndroidUtilities.rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
-                final float cardRadius = dp(20);
+                final float cardRadius = dp(12);
                 canvas.drawRoundRect(AndroidUtilities.rectTmp, cardRadius, cardRadius, blurScrimPaint);
 
                 cardHeaderClipPath.rewind();

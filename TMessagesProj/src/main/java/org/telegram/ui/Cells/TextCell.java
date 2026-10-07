@@ -59,7 +59,7 @@ public class TextCell extends FrameLayout {
     public int leftPadding;
     private boolean needDivider;
     public int offsetFromImage = 58;
-    public int heightDp = 50;
+    public int heightDp = 46;
     public int imageLeft = 16;
     private boolean inDialogs;
     private boolean prioritizeTitleOverValue;
@@ -76,11 +76,11 @@ public class TextCell extends FrameLayout {
     private int lastWidth;
 
     public TextCell(Context context) {
-        this(context, 23, false, false, null);
+        this(context, 16, false, false, null);
     }
 
     public TextCell(Context context, Theme.ResourcesProvider resourcesProvider) {
-        this(context, 23, false, false, resourcesProvider);
+        this(context, 16, false, false, resourcesProvider);
     }
 
     public TextCell(Context context, int left, boolean dialog) {

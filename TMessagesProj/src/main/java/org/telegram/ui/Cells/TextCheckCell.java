@@ -58,7 +58,7 @@ public class TextCheckCell extends FrameLayout {
     public CheckBoxSquare checkBoxSquare;
     private boolean needDivider;
     private boolean isMultiline;
-    private int height = 50;
+    private int height = 46;
     private int animatedColorBackground;
     private float animationProgress;
     private Paint animationPaint;
@@ -84,7 +84,7 @@ public class TextCheckCell extends FrameLayout {
     };
 
     public TextCheckCell(Context context) {
-        this(context, 21);
+        this(context, 16);
     }
 
     public TextCheckCell(Context context, int padding) {
@@ -92,7 +92,7 @@ public class TextCheckCell extends FrameLayout {
     }
 
     public TextCheckCell(Context context, Theme.ResourcesProvider resourcesProvider) {
-        this(context, 21, false, resourcesProvider);
+        this(context, 16, false, resourcesProvider);
     }
 
     public TextCheckCell(Context context, int padding, boolean dialog) {

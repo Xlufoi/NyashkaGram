@@ -69,7 +69,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
         clipRectF.set(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getPaddingTop() + bgHeight);
 
-        final float r = Math.min(dp(20), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
+        final float r = Math.min(dp(12), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
         clipPath.rewind();
         clipPath.addRoundRect(clipRectF, r, r, Path.Direction.CW);
 
@@ -107,7 +107,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
         solidPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelBackground));
         solidPaint.setAlpha((int) (getMetadata().getTotalVisibility() * 255));
-        final float r = Math.min(dp(20), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
+        final float r = Math.min(dp(12), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
         canvas.drawRoundRect(clipRectF, r, r, solidPaint);
 
         boolean callDrawn = false;

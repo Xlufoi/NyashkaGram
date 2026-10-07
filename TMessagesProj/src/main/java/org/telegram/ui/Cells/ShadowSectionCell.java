@@ -29,11 +29,11 @@ public class ShadowSectionCell extends View {
     private boolean bottom = true;
 
     public ShadowSectionCell(Context context) {
-        this(context, 12, null);
+        this(context, 8, null);
     }
 
     public ShadowSectionCell(Context context, Theme.ResourcesProvider resourcesProvider) {
-        this(context, 12, resourcesProvider);
+        this(context, 8, resourcesProvider);
     }
 
     public ShadowSectionCell(Context context,  int s) {

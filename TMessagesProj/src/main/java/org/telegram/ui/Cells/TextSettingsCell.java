@@ -62,11 +62,11 @@ public class TextSettingsCell extends FrameLayout {
     Paint paint;
 
     public TextSettingsCell(Context context) {
-        this(context, 21);
+        this(context, 16);
     }
 
     public TextSettingsCell(Context context, Theme.ResourcesProvider resourcesProvider) {
-        this(context, 21, resourcesProvider);
+        this(context, 16, resourcesProvider);
     }
 
     public TextSettingsCell(Context context, int padding) {
@@ -120,7 +120,7 @@ public class TextSettingsCell extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), AndroidUtilities.dp(50) + (needDivider ? 1 : 0));
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), AndroidUtilities.dp(46) + (needDivider ? 1 : 0));
 
         int availableWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - AndroidUtilities.dp(34);
         int width = betterLayout ? availableWidth : availableWidth / 2;
