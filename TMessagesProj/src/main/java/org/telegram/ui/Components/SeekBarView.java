@@ -40,6 +40,7 @@ import androidx.core.graphics.ColorUtils;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.Emoji;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.Utilities;
@@ -681,7 +682,7 @@ public class SeekBarView extends FrameLayout {
             float waveLength = AndroidUtilities.dp(18f);
             float startX = rect.left;
             float endX = rect.right;
-            boolean isPlaying = !org.telegram.messenger.MediaController.getInstance().isAudioPaused();
+            boolean isPlaying = !MediaController.getInstance().isMessagePaused() && MediaController.getInstance().getPlayingMessageObject() != null;
             float phase = isPlaying ? (SystemClock.elapsedRealtime() % 1400L) / 1400f * (float) (Math.PI * 2) : 0;
             wavePath.moveTo(startX, cy);
             float step = AndroidUtilities.dp(2);
