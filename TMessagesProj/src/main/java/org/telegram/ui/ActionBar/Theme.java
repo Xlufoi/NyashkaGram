@@ -4155,6 +4155,11 @@ public class Theme {
             final ThemeInfo themeDarkBlue = themesDict.get("Night");
 
             String theme = preferences.getString("theme", null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (theme == null || "Default".equals(theme) || "Blue".equals(theme)) {
+                    theme = "Monet Light";
+                }
+            }
             if ("Default".equals(theme)) {
                 applyingTheme = themesDict.get("Blue");
                 applyingTheme.currentAccentId = DEFALT_THEME_ACCENT_ID;
@@ -4171,6 +4176,11 @@ public class Theme {
             }
 
             theme = preferences.getString("nighttheme", null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (theme == null || "Default".equals(theme) || "Dark".equals(theme) || "Night".equals(theme)) {
+                    theme = "Monet Dark";
+                }
+            }
             if ("Default".equals(theme)) {
                 applyingTheme = themesDict.get("Blue");
                 applyingTheme.currentAccentId = DEFALT_THEME_ACCENT_ID;
@@ -9172,6 +9182,24 @@ public class Theme {
         if (serviceBitmapShader != null && (key_chat_serviceText == key || key_chat_serviceLink == key || key_chat_serviceIcon == key
                 || key_chat_stickerReplyLine == key || key_chat_stickerReplyNameText == key || key_chat_stickerReplyMessageText == key)) {
             return 0xffffffff;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            boolean isDark = isCurrentThemeDark();
+            if (key == key_windowBackgroundWhite) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_10);
+            } else if (key == key_windowBackgroundGray) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_50);
+            } else if (key == key_actionBarDefault || key == key_chats_actionBackground) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_chat_outBubble) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_700 : android.R.color.system_accent1_100);
+            } else if (key == key_chat_inBubble) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_50);
+            } else if (key == key_chat_messagePanelBackground) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_10);
+            } else if (key == key_divider) {
+                return 0x00000000; // Flat dividers hidden for M3 Expressive card style
+            }
         }
         if (currentTheme == defaultTheme) {
             boolean useDefault;

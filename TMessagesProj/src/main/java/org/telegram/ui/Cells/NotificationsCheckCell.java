@@ -207,13 +207,7 @@ public class NotificationsCheckCell extends FrameLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         if (needDivider) {
-            canvas.drawLine(
-                LocaleController.isRTL ? 0 : dp(imageView != null ? 64 : 20),
-                getMeasuredHeight() - 1,
-                getMeasuredWidth() - (LocaleController.isRTL ? dp(imageView != null ? 64 : 20) : 0),
-                getMeasuredHeight() - 1,
-                Theme.dividerPaint
-            );
+            // M3 Expressive: remove flat list dividers
         }
         if (drawLine) {
             int x = LocaleController.isRTL ? dp(76) : getMeasuredWidth() - dp(76) - 1;
