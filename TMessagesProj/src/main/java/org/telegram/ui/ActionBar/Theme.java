@@ -9199,7 +9199,7 @@ public class Theme {
             } else if (key == key_windowBackgroundGray) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_50);
             } else if (key == key_dialogBackground) {
-                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_20);
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_10);
             } else if (key == key_actionBarDefault || key == key_chats_actionBackground) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
             } else if (key == key_actionBarDefaultTitle) {
