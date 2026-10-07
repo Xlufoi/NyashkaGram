@@ -2822,6 +2822,7 @@ public class Theme {
     public static final int key_chat_attachCheckBoxCheck = colorsCount++;
     public static final int key_chat_attachCheckBoxBackground = colorsCount++;
     public static final int key_chat_attachPhotoBackground = colorsCount++;
+    public static final int key_chat_attachCamera = colorsCount++;
     public static final int key_chat_attachActiveTab = colorsCount++;
     public static final int key_chat_attachUnactiveTab = colorsCount++;
     public static final int key_chat_attachPermissionImage = colorsCount++;
@@ -3570,6 +3571,7 @@ public class Theme {
         fallbackKeys.put(key_groupcreate_spanDelete, key_chats_actionIcon);
         fallbackKeys.put(key_sharedMedia_photoPlaceholder, key_windowBackgroundGray);
         fallbackKeys.put(key_chat_attachPollBackground, key_chat_attachAudioBackground);
+        fallbackKeys.put(key_chat_attachCamera, key_chat_attachPhotoBackground);
         fallbackKeys.put(key_chats_onlineCircle, key_windowBackgroundWhiteBlueText);
         fallbackKeys.put(key_windowBackgroundWhiteBlueButton, key_windowBackgroundWhiteValueText);
         fallbackKeys.put(key_windowBackgroundWhiteBlueIcon, key_windowBackgroundWhiteValueText);
@@ -9248,7 +9250,7 @@ public class Theme {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent2_700 : android.R.color.system_accent2_200);
             } else if (key == key_chats_unreadCounter || key == key_chats_unreadCounterMuted) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent2_600 : android.R.color.system_accent2_100);
-            } else if (key == key_chats_unreadCounterText || key == key_chats_unreadCounterMutedText) {
+            } else if (key == key_chats_unreadCounterText) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_50 : android.R.color.system_neutral1_900);
             } else if (key == key_divider) {
                 return 0x00000000; // Flat dividers hidden for M3 Expressive card style
