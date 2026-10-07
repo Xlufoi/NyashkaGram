@@ -2304,11 +2304,11 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 glassDrawable.draw(canvas);
             }
         }
-        if (glassDrawableBack != null && hasBackButton) {
+        if (glassDrawableBack != null && hasBackButton && (!doNotDrawGlassHeader || actionModeVisible)) {
             glassDrawableBack.setBounds(0, t, s + p * 2, b);
             glassDrawableBack.draw(canvas);
         }
-        if (glassDrawableMenu != null && menuWidth > 0 && !glassOnlyBack && !doNotDrawGlassMenu) {
+        if (glassDrawableMenu != null && menuWidth > 0 && !glassOnlyBack && !doNotDrawGlassMenu && (!doNotDrawGlassHeader || actionModeVisible)) {
             glassDrawableMenu.setBounds(getWidth() - Math.max(s, menuWidth) - p * 2, t, getWidth(), b);
             glassDrawableMenu.setAlpha(hasForcedMenuWidth ? 255 : (int) (255 * animatorHasMenuItems.getFloatValue()));
             glassDrawableMenu.draw(canvas);

@@ -70,8 +70,8 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
 
         ScaleStateListAnimator.apply(this);
         if (!isSubButton) {
-            setOutlineProvider(ViewOutlineProviderImpl.BOUNDS_OVAL);
-            setTranslationZ(dpf2(0.5f));
+            setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(18)));
+            setTranslationZ(dpf2(1f));
         }
 
         if (isSubButton) {
@@ -163,7 +163,7 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
         } else {
             imageView.setColorFilter(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider), PorterDuff.Mode.SRC_IN);
             progressView.setProgressColor(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider));
-            setBackground(Theme.createSimpleSelectorCircleDrawable(dp(48),
+            setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(18),
                 Theme.getColor(Theme.key_featuredStickers_addButton, resourcesProvider),
                 Theme.getColor(Theme.key_featuredStickers_addButtonPressed, resourcesProvider)
             ));
@@ -179,16 +179,15 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
     }
 
     public static FrameLayout.LayoutParams createDefaultLayoutParams() {
-        return LayoutHelper.createFrame(48, 48,
+        return LayoutHelper.createFrame(56, 56,
                 (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.BOTTOM,
-                20, 0, 20, 14);
+                16, 0, 16, 14);
     }
-
 
     public static FrameLayout.LayoutParams createDefaultLayoutParamsBig() {
         return LayoutHelper.createFrame(56, 56,
                 (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.BOTTOM,
-                20 /*24*/, 0, 20 /*24*/, 14 /*16*/);
+                16, 0, 16, 14);
     }
 
     private float additionalTranslationY;

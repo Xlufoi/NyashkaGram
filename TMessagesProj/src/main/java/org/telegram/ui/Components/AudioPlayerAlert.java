@@ -1090,9 +1090,9 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         prevButton.setLayerColor("Triangle 3", iconColor);
         prevButton.setLayerColor("Triangle 4", iconColor);
         prevButton.setLayerColor("Rectangle 4", iconColor);
-        prevButton.setBackgroundDrawable(Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector), 1, dp(22)));
+        prevButton.setBackground(Theme.createCircleDrawable(dp(44), getThemedColor(Theme.key_chat_messagePanelBackground)));
         if (messageObject != null && !messageObject.isVoice()) {
-            bottomView.addView(prevButton, LayoutHelper.createFrame(48, 48, Gravity.LEFT | Gravity.TOP));
+            bottomView.addView(prevButton, LayoutHelper.createFrame(44, 44, Gravity.LEFT | Gravity.TOP));
         }
         prevButton.setContentDescription(LocaleController.getString(R.string.AccDescrPrevious));
 
@@ -1100,9 +1100,11 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         playButton.setScaleType(ImageView.ScaleType.CENTER);
         playButton.setImageDrawable(playPauseDrawable = new PlayPauseDrawable(28));
         playPauseDrawable.setPause(!MediaController.getInstance().isMessagePaused(), false);
-        playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_player_button), PorterDuff.Mode.MULTIPLY));
-        playButton.setBackgroundDrawable(Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector), 1, dp(24)));
-        bottomView.addView(playButton, LayoutHelper.createFrame(48, 48, Gravity.LEFT | Gravity.TOP));
+        playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_player_actionBarTitle), PorterDuff.Mode.MULTIPLY));
+        playButton.setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(28),
+            getThemedColor(Theme.key_chat_messagePanelBackground),
+            Theme.getColor(Theme.key_listSelector, resourcesProvider)));
+        bottomView.addView(playButton, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 56, Gravity.LEFT | Gravity.TOP));
         playButton.setOnClickListener(v -> {
             if (MediaController.getInstance().isDownloadingCurrentMessage()) {
                 return;
@@ -1212,9 +1214,9 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         nextButton.setLayerColor("Triangle 4", iconColor);
         nextButton.setLayerColor("Rectangle 4", iconColor);
         nextButton.setRotation(180f);
-        nextButton.setBackground(Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector), 1, dp(22)));
+        nextButton.setBackground(Theme.createCircleDrawable(dp(44), getThemedColor(Theme.key_chat_messagePanelBackground)));
         if (messageObject != null && !messageObject.isVoice()) {
-            bottomView.addView(nextButton, LayoutHelper.createFrame(48, 48, Gravity.LEFT | Gravity.TOP));
+            bottomView.addView(nextButton, LayoutHelper.createFrame(44, 44, Gravity.LEFT | Gravity.TOP));
         }
         nextButton.setContentDescription(LocaleController.getString(R.string.Next));
 
@@ -1607,7 +1609,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
 
         bigAlbumConver = new BackupImageView(context);
         bigAlbumConver.setAspectFit(true);
-        bigAlbumConver.setRoundRadius(dp(8));
+        bigAlbumConver.setRoundRadius(dp(28));
         bigAlbumConver.setScaleX(0.9f);
         bigAlbumConver.setScaleY(0.9f);
         blurredView.addView(bigAlbumConver, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.LEFT | Gravity.TOP, 30, 30, 30, 30));
@@ -3544,7 +3546,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                         onImageUpdated(imageReceiver);
                     }
                 });
-                imageViews[i].setRoundRadius(dp(4));
+                imageViews[i].setRoundRadius(dp(16));
                 if (i == 1) {
                     imageViews[i].setVisibility(GONE);
                 }

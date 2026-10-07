@@ -522,9 +522,19 @@ public class SeekBarView extends FrameLayout {
             if (oldCircleProgress > 0f) {
                 canvas.drawCircle(transitionThumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * oldCircleProgress, outerPaint1);
             }
-            canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * newCircleProgress, outerPaint1);
+            float pillHalfW = AndroidUtilities.dp(2f);
+            float pillHalfH = AndroidUtilities.dp(7f);
+            float cx = thumbX + selectorWidth / 2f;
+            float cy = y + thumbSize / 2f;
+            rect.set(cx - pillHalfW, cy - pillHalfH, cx + pillHalfW, cy + pillHalfH);
+            canvas.drawRoundRect(rect, AndroidUtilities.dp(2), AndroidUtilities.dp(2), outerPaint1);
         } else {
-            canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius, outerPaint1);
+            float pillHalfW = AndroidUtilities.dp(2.2f);
+            float pillHalfH = AndroidUtilities.dp(8f);
+            float cx = thumbX + selectorWidth / 2f;
+            float cy = y + thumbSize / 2f;
+            rect.set(cx - pillHalfW, cy - pillHalfH, cx + pillHalfW, cy + pillHalfH);
+            canvas.drawRoundRect(rect, AndroidUtilities.dp(2.2f), AndroidUtilities.dp(2.2f), outerPaint1);
         }
 
         drawTimestampLabel(canvas);
@@ -654,8 +664,33 @@ public class SeekBarView extends FrameLayout {
         });
     }
 
+    private final Path wavePath = new Path();
+
     private void drawProgressBar(Canvas canvas, RectF rect, Paint paint) {
-        float radius = AndroidUtilities.dp(2);
+        float radius = AndroidUtilities.dp(3);
+        if (paint == outerPaint1 && rect.width() > AndroidUtilities.dp(8)) {
+            wavePath.reset();
+            float cy = rect.centerY();
+            float waveAmp = AndroidUtilities.dp(2.2f);
+            float waveLength = AndroidUtilities.dp(16f);
+            float startX = rect.left;
+            float endX = rect.right;
+            wavePath.moveTo(startX, cy);
+            for (float x = startX; x <= endX; x += AndroidUtilities.dp(2)) {
+                float y = cy + (float) Math.sin((x - startX) / waveLength * (Math.PI * 2)) * waveAmp;
+                wavePath.lineTo(x, y);
+            }
+            float oldStroke = paint.getStrokeWidth();
+            Paint.Style oldStyle = paint.getStyle();
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(AndroidUtilities.dp(4));
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            canvas.drawPath(wavePath, paint);
+            paint.setStyle(oldStyle);
+            paint.setStrokeWidth(oldStroke);
+            return;
+        }
         if (timestamps == null || timestamps.isEmpty()) {
             canvas.drawRoundRect(rect, radius, radius, paint);
         } else {

@@ -9244,6 +9244,20 @@ public class Theme {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_400 : android.R.color.system_neutral2_600);
             } else if (key == key_divider) {
                 return 0x00000000; // Flat dividers hidden for M3 Expressive card style
+            } else if (key == key_player_background) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_10);
+            } else if (key == key_player_actionBarTitle || key == key_player_time) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_50 : android.R.color.system_neutral1_900);
+            } else if (key == key_player_actionBarSubtitle) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_400 : android.R.color.system_neutral2_600);
+            } else if (key == key_player_progress) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_player_progressBackground) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_700 : android.R.color.system_neutral2_200);
+            } else if (key == key_player_button) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_100 : android.R.color.system_neutral1_800);
+            } else if (key == key_player_buttonActive) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
             }
         }
         if (currentTheme == defaultTheme) {
