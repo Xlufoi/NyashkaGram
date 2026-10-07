@@ -2745,8 +2745,21 @@ public class ChatActivityEnterView extends FrameLayout implements
                 }
                 return super.drawChild(canvas, child, drawingTime);
             }
+
+            private final RectF m3InputPillRect = new RectF();
+            private final Paint m3InputPillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                m3InputPillPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                m3InputPillRect.set(dp(6), dp(3), getMeasuredWidth() - dp(6), getMeasuredHeight() - dp(3));
+                float r = m3InputPillRect.height() / 2f;
+                canvas.drawRoundRect(m3InputPillRect, r, r, m3InputPillPaint);
+                super.onDraw(canvas);
+            }
         };
         frameLayout.setClipChildren(false);
+        frameLayout.setWillNotDraw(false);
         textFieldContainer.addView(frameLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 0, 0, DEFAULT_HEIGHT, 0));
 
         emojiButton = new ChatActivityEnterViewAnimatedIconView(context) {
@@ -3536,11 +3549,11 @@ public class ChatActivityEnterView extends FrameLayout implements
         audioVideoSendButton.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 //        audioVideoSendButton.setFocusable(true);
 //        audioVideoSendButton.setAccessibilityDelegate(mediaMessageButtonsDelegate);
-        padding = dp(10f);
+        padding = dp(11f);
         audioVideoSendButton.setPadding(padding, padding, padding, padding);
 
-        if (Build.VERSION.SDK_INT >= 21 && NekoConfig.useChatAttachMediaMenu.Bool()) {
-            audioVideoSendButton.setBackground(Theme.createSelectorDrawable(Theme.getColor(Theme.key_listSelector)));
+        if (Build.VERSION.SDK_INT >= 21) {
+            audioVideoSendButton.setBackground(Theme.createCircleDrawable(dp(44), getThemedColor(Theme.key_chat_messagePanelSend)));
         }
 
         audioVideoButtonContainer.addView(audioVideoSendButton, LayoutHelper.createFrame(DEFAULT_HEIGHT, DEFAULT_HEIGHT));
@@ -4856,22 +4869,24 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
         int bottom = top + Theme.chat_composeShadowDrawable.getIntrinsicHeight();
 
-        if (withComposeShadowDrawable) {
+        if (withComposeShadowDrawable && isStories) {
             Theme.chat_composeShadowDrawable.setAlpha((int) (composeShadowAlpha * 0xFF));
             Theme.chat_composeShadowDrawable.setBounds(0, top, getMeasuredWidth(), bottom);
             Theme.chat_composeShadowDrawable.draw(canvas);
         }
 
-        if (allowBlur) {
-            backgroundPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
-            if (SharedConfig.chatBlurEnabled() && sizeNotifierLayout != null) {
-                blurBounds.set(0, bottom, getWidth(), getHeight());
-                sizeNotifierLayout.drawBlurRect(canvas, getTop(), blurBounds, backgroundPaint, false);
+        if (isStories) {
+            if (allowBlur) {
+                backgroundPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                if (SharedConfig.chatBlurEnabled() && sizeNotifierLayout != null) {
+                    blurBounds.set(0, bottom, getWidth(), getHeight());
+                    sizeNotifierLayout.drawBlurRect(canvas, getTop(), blurBounds, backgroundPaint, false);
+                } else {
+                    canvas.drawRect(0, bottom, getWidth(), getHeight(), backgroundPaint);
+                }
             } else {
-                canvas.drawRect(0, bottom, getWidth(), getHeight(), backgroundPaint);
+                canvas.drawRect(0, bottom, getWidth(), getHeight(), getThemedPaint(Theme.key_paint_chatComposeBackground));
             }
-        } else {
-            canvas.drawRect(0, bottom, getWidth(), getHeight(), getThemedPaint(Theme.key_paint_chatComposeBackground));
         }
     }
 

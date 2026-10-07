@@ -9209,11 +9209,23 @@ public class Theme {
             } else if (key == key_chats_actionIcon) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_50);
             } else if (key == key_chat_outBubble) {
-                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_700 : android.R.color.system_accent1_100);
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_chat_messageTextOut) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_50);
             } else if (key == key_chat_inBubble) {
-                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_50);
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_100);
+            } else if (key == key_chat_messageTextIn) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_50 : android.R.color.system_neutral1_900);
             } else if (key == key_chat_messagePanelBackground) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_100);
+            } else if (key == key_chat_topPanelBackground) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_10);
+            } else if (key == key_chat_messagePanelText) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_50 : android.R.color.system_neutral1_900);
+            } else if (key == key_chat_messagePanelHint) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_400 : android.R.color.system_neutral2_500);
+            } else if (key == key_chat_messagePanelIcons) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_300 : android.R.color.system_neutral2_700);
             } else if (key == key_chat_messagePanelSend || key == key_featuredStickers_addButton || key == key_featuredStickers_addButton2) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
             } else if (key == key_featuredStickers_buttonText) {
