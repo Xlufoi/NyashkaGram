@@ -443,6 +443,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         BlurredBackgroundWithFadeDrawable fadeDrawable = new BlurredBackgroundWithFadeDrawable(iBlur3FactoryFade.create(fadeView, null));
         fadeDrawable.setFadeHeight(dp(60), true);
         fadeView.setBackground(fadeDrawable);
+        fadeView.setVisibility(View.GONE);
 
         contentView.addView(fadeView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 0, Gravity.BOTTOM));
 
@@ -1192,9 +1193,8 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
             alpha = 0.0f;
         }
 
-        fadeView.setAlpha(alpha);
-        fadeView.setTranslationY(isProfile * dp(48));
-        fadeView.setVisibility(alpha > 0 ? View.VISIBLE : View.GONE);
+        fadeView.setAlpha(0f);
+        fadeView.setVisibility(View.GONE);
     }
 
     private void checkUi_tabsPosition() {

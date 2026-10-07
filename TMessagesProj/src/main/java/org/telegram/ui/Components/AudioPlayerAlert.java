@@ -791,54 +791,57 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                     return;
                 }
 
-                int numButtons = buttons.length;
-                int nominalButtonWidth = dp(48);
-                int t = dp(9);
-                int sidePadding = dp(4);
-
                 int availableWidth = right - left;
-                int totalNominalWidthPlusSidePaddings = (numButtons * nominalButtonWidth) + (2 * sidePadding);
-                int spaceToDistributeInGaps = availableWidth - totalNominalWidthPlusSidePaddings;
+                int t = dp(9);
+                int sidePadding = dp(8);
 
-                int numGaps = numButtons - 1;
-                int distPerGap = 0;
-                if (numGaps > 0) {
-                    distPerGap = spaceToDistributeInGaps / numGaps;
+                int playWidth = dp(96);
+                int playHeight = dp(52);
+                if (playButton != null) {
+                    playButton.measure(
+                        MeasureSpec.makeMeasureSpec(playWidth, MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(playHeight, MeasureSpec.EXACTLY)
+                    );
                 }
 
-                if (distPerGap < 0) {
-                    distPerGap = 0;
+                int centerX = availableWidth / 2;
+                int playLeft = centerX - playWidth / 2;
+                int playRight = centerX + playWidth / 2;
+                if (playButton != null) {
+                    playButton.layout(playLeft, dp(7), playRight, dp(7) + playHeight);
                 }
 
-                for (int i = 0; i < numButtons; i++) {
+                int leftSectionWidth = playLeft - sidePadding - dp(6);
+                int leftCount = 3;
+                int leftSlotWidth = leftSectionWidth / leftCount;
+                for (int i = 0; i < 3 && i < buttons.length; i++) {
                     View button = buttons[i];
-                    if (button == null) {
-                        continue;
-                    }
+                    if (button == null) continue;
+                    button.measure(
+                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.AT_MOST),
+                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.EXACTLY)
+                    );
+                    int bw = button.getMeasuredWidth();
+                    int slotL = sidePadding + i * leftSlotWidth;
+                    int bLeft = slotL + (leftSlotWidth - bw) / 2;
+                    button.layout(bLeft, t, bLeft + bw, t + button.getMeasuredHeight());
+                }
 
-                    int nominalSlotLeft = sidePadding + i * (nominalButtonWidth + distPerGap);
-                    int buttonActualWidth = button.getMeasuredWidth();
-
-                    if (button == playButton) {
-                        button.measure(
-                            MeasureSpec.makeMeasureSpec(dp(84), MeasureSpec.EXACTLY),
-                            MeasureSpec.makeMeasureSpec(dp(54), MeasureSpec.EXACTLY)
-                        );
-                        buttonActualWidth = button.getMeasuredWidth();
-                    } else if (buttonActualWidth == 0) {
-                         button.measure(
-                            MeasureSpec.makeMeasureSpec(dp(48), MeasureSpec.AT_MOST),
-                            MeasureSpec.makeMeasureSpec(dp(48), MeasureSpec.EXACTLY)
-                        );
-                        buttonActualWidth = button.getMeasuredWidth();
-                         if (buttonActualWidth == 0) buttonActualWidth = nominalButtonWidth;
-                    }
-
-                    int centeringOffset = (nominalButtonWidth - buttonActualWidth) / 2;
-                    int actualButtonLeft = nominalSlotLeft + centeringOffset;
-                    int actualTop = button == playButton ? dp(6) : t;
-
-                    button.layout(actualButtonLeft, actualTop, actualButtonLeft + buttonActualWidth, actualTop + button.getMeasuredHeight());
+                int rightSectionStart = playRight + dp(6);
+                int rightSectionWidth = availableWidth - sidePadding - rightSectionStart;
+                int rightCount = Math.max(1, buttons.length - 4);
+                int rightSlotWidth = rightSectionWidth / rightCount;
+                for (int i = 4; i < buttons.length; i++) {
+                    View button = buttons[i];
+                    if (button == null) continue;
+                    button.measure(
+                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.AT_MOST),
+                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.EXACTLY)
+                    );
+                    int bw = button.getMeasuredWidth();
+                    int slotL = rightSectionStart + (i - 4) * rightSlotWidth;
+                    int bLeft = slotL + (rightSlotWidth - bw) / 2;
+                    button.layout(bLeft, t, bLeft + bw, t + button.getMeasuredHeight());
                 }
             }
         };
@@ -1106,7 +1109,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         playButton.setImageDrawable(playPauseDrawable = new PlayPauseDrawable(28));
         playPauseDrawable.setPause(!MediaController.getInstance().isMessagePaused(), false);
         playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_player_actionBarTitle), PorterDuff.Mode.MULTIPLY));
-        playButton.setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(28),
+        playButton.setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(26),
             getThemedColor(Theme.key_chat_messagePanelBackground),
             Theme.getColor(Theme.key_listSelector, resourcesProvider)));
         bottomView.addView(playButton, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 56, Gravity.LEFT | Gravity.TOP));

@@ -69,14 +69,14 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
         clipRectF.set(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getPaddingTop() + bgHeight);
 
-        final float r = Math.min(dp(12), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
+        final float r = Math.min(dp(10), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
         clipPath.rewind();
         clipPath.addRoundRect(clipRectF, r, r, Path.Direction.CW);
 
         if (backgroundDrawable != null) {
             backgroundDrawable.setAlpha((int) (bgAlpha * 255));
             backgroundDrawable.setBounds(getPaddingLeft() - dp(7), 0, getMeasuredWidth() - getPaddingRight() + dp(7), getPaddingTop() + getPaddingBottom() + (int) bgHeight);
-            backgroundDrawable.setRadius(Math.min(dp(12), bgHeight / 2));
+            backgroundDrawable.setRadius(Math.min(dp(10), bgHeight / 2));
         }
     }
 
@@ -107,7 +107,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
         solidPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelBackground));
         solidPaint.setAlpha((int) (getMetadata().getTotalVisibility() * 255));
-        canvas.drawRoundRect(clipRectF, dp(12), dp(12), solidPaint);
+        canvas.drawRoundRect(clipRectF, dp(10), dp(10), solidPaint);
 
         boolean callDrawn = false;
         if (callFragmentContextView != null) {

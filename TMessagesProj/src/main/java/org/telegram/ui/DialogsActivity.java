@@ -4926,7 +4926,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
             topPanelLayout.setPadding(dp(11), dp(21), dp(11), dp(21));
             topPanelLayout.setBlurredBackground(topPanelLayoutBackground);
-            topPanelLayout.setDefaultRadiusDp(20);
+            topPanelLayout.setDefaultRadiusDp(10);
 
             fragmentLocationContextViewWrapper = new FrameLayout(context);
             topPanelLayout.addView(fragmentLocationContextViewWrapper);
@@ -13195,11 +13195,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     gradientDrawable.draw(canvas);
                 }
 
-                if (navigationBarHeight > dp(32)) {
-                    gradientDrawable2.setColor(Theme.multAlpha(getThemedColor(Theme.key_windowBackgroundWhite), 0.9f));
-                    gradientDrawable2.setBounds(0, getMeasuredHeight() - navigationBarHeight, getMeasuredWidth(), getMeasuredHeight());
-                    gradientDrawable2.draw(canvas);
-                }
+
             }
 
             @Override

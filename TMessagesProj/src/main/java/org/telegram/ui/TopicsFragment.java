@@ -1430,15 +1430,16 @@ public class TopicsFragment extends BaseFragment implements NotificationCenter.N
         topPanelLayout = new DialogsActivityTopPanelLayout(context);
         topPanelLayout.setPadding(dp(11), dp(21), dp(11), dp(21));
         BlurredBackgroundDrawable topPanelLayoutBackground = iBlur3FactoryLiquidGlass.create(topPanelLayout, BlurredBackgroundProviderImpl.topPanel(resourceProvider));
-        topPanelLayoutBackground.setRadius(dp(24));
+        topPanelLayoutBackground.setRadius(dp(10));
         topPanelLayoutBackground.setPadding(dp(7));
         topPanelLayout.setBlurredBackground(topPanelLayoutBackground);
+        topPanelLayout.setDefaultRadiusDp(10);
         topPanelLayout.setOnAnimatedHeightChangedListener(() -> {
             blur3_InvalidateBlur();
             checkUi_listViewPadding();
         });
 
-        contentView.addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 0, -14, 0, 0));
+        contentView.addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 12, -14, 12, 0));
 
         TLRPC.Chat currentChat = getCurrentChat();
         if (currentChat != null) {

@@ -906,9 +906,10 @@ public class CallLogActivity extends BaseFragment implements NotificationCenter.
 		});
 
 		BlurredBackgroundDrawable topPanelLayoutBackground = iBlur3FactoryLiquidGlass.create(topPanelLayout, BlurredBackgroundProviderImpl.topPanel(resourceProvider));
-		topPanelLayoutBackground.setRadius(dp(24));
+		topPanelLayoutBackground.setRadius(dp(10));
 		topPanelLayoutBackground.setPadding(dp(7));
 		topPanelLayout.setBlurredBackground(topPanelLayoutBackground);
+		topPanelLayout.setDefaultRadiusDp(10);
 
 		fragmentContextViewWrapper = new FrameLayout(context);
 		topPanelLayout.addView(fragmentContextViewWrapper);

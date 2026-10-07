@@ -150,6 +150,7 @@ public class ChatAttachAlertAudioLayout extends ChatAttachAlert.AttachAlertLayou
 
         topPanelLayout = new DialogsActivityTopPanelLayout(context);
         topPanelLayout.setPadding(dp(11), dp(21), dp(11), dp(21));
+        topPanelLayout.setDefaultRadiusDp(10);
         topPanelLayout.setOnAnimatedHeightChangedListener(() -> {
             alert.blur3_InvalidateBlur();
             checkUi_listViewPadding();

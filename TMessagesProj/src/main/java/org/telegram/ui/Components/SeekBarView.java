@@ -456,9 +456,13 @@ public class SeekBarView extends FrameLayout {
             drawProgressBar(canvas, rect, innerPaint1);
         }
         if (bufferedProgress > 0) {
-            innerPaint1.setColor(getThemedColor(Theme.key_player_progressCachedBackground));
-            rect.set(left, top, selectorWidth / 2f + bufferedProgress * (getMeasuredWidth() - selectorWidth), bottom);
-            drawProgressBar(canvas, rect, innerPaint1);
+            float bufRight = selectorWidth / 2f + bufferedProgress * (getMeasuredWidth() - selectorWidth);
+            float bufLeft = left + thumbX;
+            if (bufRight > bufLeft) {
+                innerPaint1.setColor(getThemedColor(Theme.key_player_progressCachedBackground));
+                rect.set(bufLeft, top, bufRight, bottom);
+                drawProgressBar(canvas, rect, innerPaint1);
+            }
         }
         if (twoSided) {
             canvas.drawRect(getMeasuredWidth() / 2 - AndroidUtilities.dp(1), getMeasuredHeight() / 2 - AndroidUtilities.dp(6), getMeasuredWidth() / 2 + AndroidUtilities.dp(1), getMeasuredHeight() / 2 + AndroidUtilities.dp(6), outerPaint1);
@@ -670,19 +674,24 @@ public class SeekBarView extends FrameLayout {
 
     private void drawProgressBar(Canvas canvas, RectF rect, Paint paint) {
         float radius = AndroidUtilities.dp(3);
-        if (paint == outerPaint1 && rect.width() > AndroidUtilities.dp(8)) {
+        if (paint == outerPaint1 && rect.width() > AndroidUtilities.dp(6)) {
             wavePath.reset();
             float cy = rect.centerY();
-            float waveAmp = AndroidUtilities.dp(2.2f);
-            float waveLength = AndroidUtilities.dp(16f);
+            float waveAmp = AndroidUtilities.dp(2.8f);
+            float waveLength = AndroidUtilities.dp(18f);
             float startX = rect.left;
             float endX = rect.right;
-            float phase = (SystemClock.elapsedRealtime() % 2000L) / 2000f * (float) (Math.PI * 2);
+            boolean isPlaying = !org.telegram.messenger.MediaController.getInstance().isAudioPaused();
+            float phase = isPlaying ? (SystemClock.elapsedRealtime() % 1400L) / 1400f * (float) (Math.PI * 2) : 0;
             wavePath.moveTo(startX, cy);
-            for (float x = startX; x <= endX; x += AndroidUtilities.dp(2)) {
-                float y = cy + (float) Math.sin((x - startX) / waveLength * (Math.PI * 2) - phase) * waveAmp;
+            float step = AndroidUtilities.dp(2);
+            for (float x = startX; x <= endX; x += step) {
+                float taper = Math.min(1f, Math.min((x - startX) / AndroidUtilities.dp(8), (endX - x) / AndroidUtilities.dp(8)));
+                float curAmp = waveAmp * Math.max(0f, taper);
+                float y = cy + (float) Math.sin((x - startX) / waveLength * (Math.PI * 2) - phase) * curAmp;
                 wavePath.lineTo(x, y);
             }
+            wavePath.lineTo(endX, cy);
             float oldStroke = paint.getStrokeWidth();
             Paint.Style oldStyle = paint.getStyle();
             paint.setStyle(Paint.Style.STROKE);
@@ -692,7 +701,9 @@ public class SeekBarView extends FrameLayout {
             canvas.drawPath(wavePath, paint);
             paint.setStyle(oldStyle);
             paint.setStrokeWidth(oldStroke);
-            postInvalidateOnAnimation();
+            if (isPlaying) {
+                invalidate();
+            }
             return;
         }
         if (timestamps == null || timestamps.isEmpty()) {

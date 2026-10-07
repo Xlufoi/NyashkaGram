@@ -3709,9 +3709,10 @@ public class SharedMediaLayout extends FrameLayout implements NotificationCenter
             topPanelLayout.setPadding(dp(11), dp(21), dp(11), dp(21));
 
             BlurredBackgroundDrawable topPanelLayoutBackground = iBlur3FactoryLiquidGlass.create(topPanelLayout, BlurredBackgroundProviderImpl.topPanel(resourcesProvider));
-            topPanelLayoutBackground.setRadius(dp(24));
+            topPanelLayoutBackground.setRadius(dp(10));
             topPanelLayoutBackground.setPadding(dp(7));
             topPanelLayout.setBlurredBackground(topPanelLayoutBackground);
+            topPanelLayout.setDefaultRadiusDp(10);
 
             fragmentContextViewWrapper = new FrameLayout(context);
             topPanelLayout.addView(fragmentContextViewWrapper);
@@ -3748,7 +3749,7 @@ public class SharedMediaLayout extends FrameLayout implements NotificationCenter
             };
             fragmentContextViewWrapper.addView(fragmentContextView);
             topPanelLayout.setCallFragmentContextView(fragmentContextView);
-            addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 0, 48 -14, 0, 0));
+            addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 12, 48 - 14, 12, 0));
 
             fragmentContextView.setDelegate((start, show) -> {
                 if (!start) {

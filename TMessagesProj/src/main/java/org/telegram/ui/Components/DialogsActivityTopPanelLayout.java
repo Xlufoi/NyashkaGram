@@ -71,7 +71,7 @@ public class DialogsActivityTopPanelLayout extends AnimatedLinearLayout {
         }
     }
 
-    private int defaultRadiusDp = 20;
+    private int defaultRadiusDp = 10;
 
     public void setDefaultRadiusDp(int defaultRadius) {
         this.defaultRadiusDp = defaultRadius;
@@ -104,7 +104,7 @@ public class DialogsActivityTopPanelLayout extends AnimatedLinearLayout {
 
         solidPaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite));
         solidPaint.setAlpha((int) (getMetadata().getTotalVisibility() * 255));
-        canvas.drawRoundRect(clipRectF, dp(20), dp(20), solidPaint);
+        canvas.drawRoundRect(clipRectF, dp(10), dp(10), solidPaint);
 
         View callDrawnView = null;
         if (callFragmentContextView != null) {
