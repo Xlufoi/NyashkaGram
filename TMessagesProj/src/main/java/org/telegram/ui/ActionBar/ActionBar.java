@@ -2287,10 +2287,11 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 int sideMargin = dp(5);
                 int bottomMargin = dp(2);
                 AndroidUtilities.rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
-                canvas.drawRoundRect(AndroidUtilities.rectTmp, dp(12), dp(12), blurScrimPaint);
+                final float cardRadius = dp(20);
+                canvas.drawRoundRect(AndroidUtilities.rectTmp, cardRadius, cardRadius, blurScrimPaint);
 
                 cardHeaderClipPath.rewind();
-                cardHeaderClipPath.addRoundRect(AndroidUtilities.rectTmp, dp(12), dp(12), android.graphics.Path.Direction.CW);
+                cardHeaderClipPath.addRoundRect(AndroidUtilities.rectTmp, cardRadius, cardRadius, android.graphics.Path.Direction.CW);
                 canvas.save();
                 canvas.clipPath(cardHeaderClipPath);
                 cardClipped = true;

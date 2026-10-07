@@ -158,12 +158,12 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
 
             int pillColor = Theme.getColor(Theme.key_chat_attachCamera, resourcesProvider);
             paintCounterBackground.setColor(Theme.multAlpha(pillColor, alpha));
-            float pillWidth = Math.min(viewWidth - dp(8), dp(64));
-            float pillHeight = dp(32);
+            float pillWidth = viewWidth - dp(6);
+            float pillHeight = getHeight() - dp(6);
             float cx = viewWidth / 2f;
-            float cy = dp(16);
+            float cy = getHeight() / 2f;
             tmpRectF.set(cx - pillWidth / 2f, cy - pillHeight / 2f, cx + pillWidth / 2f, cy + pillHeight / 2f);
-            final float r = dp(8);
+            final float r = dp(10);
             final float s = lerp(0.6f, 1, selectedFactor) * MathUtils.clamp(attachScale, 0, 1);
             canvas.save();
             canvas.scale(s, s, tmpRectF.centerX(), tmpRectF.centerY());
