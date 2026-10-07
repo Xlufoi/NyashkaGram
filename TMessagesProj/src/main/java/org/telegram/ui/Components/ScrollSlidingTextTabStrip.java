@@ -165,7 +165,7 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
         this.resourcesProvider = resourcesProvider;
 
         selectorDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, null);
-        float rad = AndroidUtilities.dpf2(14);
+        float rad = AndroidUtilities.dpf2(10);
         selectorDrawable.setCornerRadii(new float[]{rad, rad, rad, rad, rad, rad, rad, rad});
 //        selectorDrawable.setCornerRadii(new float[]{rad, rad, rad, rad, 0, 0, 0, 0});
 
@@ -658,7 +658,7 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
 //            tab.setBackground(Theme.createSelectorDrawable(Theme.multAlpha(processColor(Theme.getColor(activeTextColorKey, resourcesProvider)), .15f), 3));
             tab.setBackground(
                 new InsetDrawable(
-                    Theme.createSelectorDrawable(Theme.multAlpha(processColor(Theme.getColor(activeTextColorKey, resourcesProvider)), .15f), Theme.RIPPLE_MASK_ROUNDRECT_6DP, dp(14)),
+                    Theme.createSelectorDrawable(Theme.multAlpha(processColor(Theme.getColor(activeTextColorKey, resourcesProvider)), .15f), Theme.RIPPLE_MASK_ROUNDRECT_6DP, dp(10)),
                     dp(4), dp(4), dp(4), dp(4)
                 )
             );

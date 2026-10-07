@@ -2710,7 +2710,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             @Override
             protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-                final int height = Math.max(dp(44), getMeasuredHeight());
+                final int height = Math.max(dp(DEFAULT_HEIGHT), getMeasuredHeight());
                 if (animatorInputFieldHeight.getFactor() > 0) {
                     animatorInputFieldHeight.animateTo(height);
                 } else {
@@ -2745,22 +2745,9 @@ public class ChatActivityEnterView extends FrameLayout implements
                 }
                 return super.drawChild(canvas, child, drawingTime);
             }
-
-            private final RectF m3InputPillRect = new RectF();
-            private final Paint m3InputPillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-            @Override
-            protected void onDraw(Canvas canvas) {
-                m3InputPillPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
-                m3InputPillRect.set(dp(6), dp(3), getMeasuredWidth() - dp(6), getMeasuredHeight() - dp(3));
-                float r = Math.min(dp(22), m3InputPillRect.height() / 2f);
-                canvas.drawRoundRect(m3InputPillRect, r, r, m3InputPillPaint);
-                super.onDraw(canvas);
-            }
         };
         frameLayout.setClipChildren(false);
-        frameLayout.setWillNotDraw(false);
-        textFieldContainer.addView(frameLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 0, 0, DEFAULT_HEIGHT, 0));
+        textFieldContainer.addView(frameLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 0, 0, DEFAULT_HEIGHT + 8, 0));
 
         emojiButton = new ChatActivityEnterViewAnimatedIconView(context) {
             @Override
@@ -3356,6 +3343,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         sendButtonContainer.addView(audioVideoButtonContainer, LayoutHelper.createFrame(DEFAULT_HEIGHT, DEFAULT_HEIGHT, Gravity.RIGHT | Gravity.BOTTOM));
         audioVideoButtonContainer.setFocusable(true);
         audioVideoButtonContainer.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+        audioVideoButtonContainer.setBackground(Theme.createSimpleSelectorCircleDrawable(dp(DEFAULT_HEIGHT), getThemedColor(Theme.key_chat_messagePanelSend), getThemedColor(Theme.key_chat_messagePanelSendPressed)));
 
 //        audioVideoButtonContainer.setOnTouchListener((view, motionEvent) -> {
 //            createRecordCircle();
@@ -7266,7 +7254,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
     }
 
-    public static final int DEFAULT_HEIGHT = 44;
+    public static final int DEFAULT_HEIGHT = 48;
 
     private boolean resizeForTopViewLastShow;
     private void resizeForTopView(boolean show) {
@@ -7280,7 +7268,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         textFieldContainer.setLayoutParams(layoutParams);
 
         resizeForTopViewLastShow = show;
-        setMinimumHeight(dp(44) + (show ? topView.getLayoutParams().height : 0));
+        setMinimumHeight(dp(DEFAULT_HEIGHT) + (show ? topView.getLayoutParams().height : 0));
         if (stickersExpanded) {
             if (searchingType == 0) {
                 setStickersExpanded(false, true, false);
@@ -11480,6 +11468,9 @@ public class ChatActivityEnterView extends FrameLayout implements
         deleteRichDraftButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_glass_defaultIcon), PorterDuff.Mode.SRC_IN));
         deleteRichDraftButton.setBackground(Theme.createInsetRoundRectDrawable(getThemedColor(Theme.key_listSelector), dp(19), dp(1), dp(3)));
         sendOutlineView.setColorFilter(getThemedColor(Theme.key_telegram_color), PorterDuff.Mode.SRC_IN);
+        if (audioVideoButtonContainer != null) {
+            audioVideoButtonContainer.setBackground(Theme.createSimpleSelectorCircleDrawable(dp(DEFAULT_HEIGHT), getThemedColor(Theme.key_chat_messagePanelSend), getThemedColor(Theme.key_chat_messagePanelSendPressed)));
+        }
     }
 
     private void updateRecordedDeleteIconColors() {

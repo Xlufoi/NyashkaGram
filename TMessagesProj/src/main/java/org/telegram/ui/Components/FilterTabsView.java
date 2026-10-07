@@ -1659,7 +1659,7 @@ public class FilterTabsView extends FrameLayout {
         super.onSizeChanged(w, h, oldw, oldh);
         clipPath.rewind();
         clipPath.addRoundRect(dp(9), dp(9), w - dp(9), h - dp(9),
-            dp(16), dp(16), Path.Direction.CW);
+            dp(11), dp(11), Path.Direction.CW);
     }
 
     @Override

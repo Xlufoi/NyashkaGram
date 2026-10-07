@@ -24,7 +24,7 @@ import org.telegram.ui.Components.inset.InAppKeyboardInsetView;
 import org.telegram.ui.Components.inset.WindowInsetsProvider;
 
 public class ChatInputViewsContainer extends FrameLayout {
-    public static final int INPUT_BUBBLE_RADIUS = 22;
+    public static final int INPUT_BUBBLE_RADIUS = 24;
     public static final int INPUT_KEYBOARD_RADIUS = 29;
 
     public static final int INPUT_BUBBLE_BOTTOM = 9;
@@ -259,10 +259,20 @@ public class ChatInputViewsContainer extends FrameLayout {
 
         final int blurTop = getMeasuredHeight() - currentBlurredHeight;
 
+        boolean hasEnterView = false;
+        for (int i = 0; i < inputIslandBubbleContainer.getChildCount(); i++) {
+            View child = inputIslandBubbleContainer.getChildAt(i);
+            if (child instanceof org.telegram.ui.Components.ChatActivityEnterView && child.getVisibility() == VISIBLE) {
+                hasEnterView = true;
+                break;
+            }
+        }
+        int enterViewRightOffset = hasEnterView ? dp(org.telegram.ui.Components.ChatActivityEnterView.DEFAULT_HEIGHT + 8) : 0;
+
         tmpRect.set(
             Math.round(inputBubbleOffsetLeft),
             0,
-            getMeasuredWidth() - Math.round(inputBubbleOffsetRight),
+            getMeasuredWidth() - Math.round(inputBubbleOffsetRight) - enterViewRightOffset,
             inputBubbleHeightRound
         );
         tmpRect.inset(0, -dp(7));

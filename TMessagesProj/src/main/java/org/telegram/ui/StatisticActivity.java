@@ -780,7 +780,7 @@ public class StatisticActivity extends BaseFragment implements NotificationCente
         contentLayout.addView(viewPagerFixed, LayoutHelper.createFrameMatchParent());
         contentLayout.addView(actionBar);
         if (showTabs) {
-            contentLayout.addView(tabsView, LayoutHelper.createFrame(328 + DialogsActivity.MAIN_TABS_MARGIN * 2, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
+            contentLayout.addView(tabsView, LayoutHelper.createFrame(360 + DialogsActivity.MAIN_TABS_MARGIN * 2, DialogsActivity.MAIN_TABS_HEIGHT_WITH_MARGINS, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
             Bulletin.addDelegate(this, new Bulletin.Delegate() {
                 @Override
                 public int getBottomOffset(int tag) {

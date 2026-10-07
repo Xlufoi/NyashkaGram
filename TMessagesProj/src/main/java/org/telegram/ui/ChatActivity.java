@@ -8223,7 +8223,7 @@ public class ChatActivity extends BaseFragment implements
 
             contentView.addView(hashtagSearchTabs, LayoutHelper.createFrameMarginPx(LayoutHelper.MATCH_PARENT, 50, Gravity.FILL_HORIZONTAL | Gravity.TOP, 0, -dp(5), 0, 0));
         }
-        contentView.addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 12, 0, 12, 0));
+        contentView.addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 0, 0, 0, 0));
 
         contentView.addView(actionBar);
 
@@ -49112,7 +49112,7 @@ public class ChatActivity extends BaseFragment implements
                 * (1f - animatorSearchResultAsListVisibility.getFloatValue())
                 * (1f - getHashtagTabsShownT());
 
-            topPanelLayout.setPadding(dp(7) + (int) sideMenu, dp(7), dp(7), dp(7));
+            topPanelLayout.setPadding(dp(5) + (int) sideMenu, dp(4), dp(5), dp(4));
         }
     }
 

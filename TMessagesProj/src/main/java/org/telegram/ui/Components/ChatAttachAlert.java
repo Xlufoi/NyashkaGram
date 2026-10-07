@@ -2747,7 +2747,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         bottomFadeDrawable = new BlurredBackgroundWithFadeDrawable(
                 iBlur3FactoryFade.create(bottomFadeView, null));
         if (!SharedConfig.chatBlurEnabled() || LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) || true) {
-            bottomFadeDrawable.setFadeHeight(dp(72), true);
+            bottomFadeDrawable.setFadeHeight(dp(79), true);
         }
 
         containerView.addView(bottomFadeView, LayoutHelper.createFrameMatchParent());
@@ -2762,7 +2762,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
         buttonsRecyclerView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
         buttonsRecyclerViewWrapper.addView(buttonsRecyclerView, LayoutHelper.createFrameMatchParent());
-        containerView.addView(buttonsRecyclerViewWrapper, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 70, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
+        containerView.addView(buttonsRecyclerViewWrapper, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 77, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
         buttonsRecyclerView.setOnItemClickListener((view, position) -> {
             BaseFragment lastFragment = baseFragment;
             if (lastFragment == null) {

@@ -299,7 +299,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
     private static final boolean TMP_DISABLE_TOPICS_TWO_COLUMNS = false;
 
-    public static final int MAIN_TABS_HEIGHT = 56;
+    public static final int MAIN_TABS_HEIGHT = 62;
     public static final int MAIN_TABS_MARGIN = 8;
     public static final int MAIN_TABS_HEIGHT_WITH_MARGINS = MAIN_TABS_HEIGHT + MAIN_TABS_MARGIN * 2;
     public static final int FILTER_TABS_HEIGHT = 36;
@@ -4836,7 +4836,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         contentView.addView(searchTabsAndFiltersLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, SEARCH_TABS_HEIGHT, Gravity.TOP, 4, 0, 4, 0));
 
         BlurredBackgroundDrawable searchTabsViewBackground = iBlur3FactoryLiquidGlass.create(searchTabsAndFiltersLayout, BlurredBackgroundProviderImpl.topPanel(resourceProvider));
-        searchTabsViewBackground.setRadius(dp(18));
+        searchTabsViewBackground.setRadius(dp(12));
         searchTabsViewBackground.setPadding(dp(6.666f));
         searchTabsAndFiltersLayout.setPadding(0, dp(7), 0, dp(7));
         searchTabsAndFiltersLayout.setBlurredBackground(searchTabsViewBackground);
@@ -5268,7 +5268,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         if (filterTabsView != null) {
             BlurredBackgroundDrawable filterTabsViewBackground = iBlur3FactoryLiquidGlass.create(filterTabsView, BlurredBackgroundProviderImpl.topPanel(resourceProvider));
-            filterTabsViewBackground.setRadius(dp(18));
+            filterTabsViewBackground.setRadius(dp(12));
             filterTabsViewBackground.setPadding(dp(6.666f));
             filterTabsView.setPadding(0, dp(7), 0, dp(7));
             filterTabsView.setBlurredBackground(filterTabsViewBackground);

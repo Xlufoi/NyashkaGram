@@ -361,7 +361,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         tabsView = new MainTabsLayout(context, resourceProvider);
         tabsView.setClipChildren(false);
         tabsView.setPadding(dp(tabMargin + 4), dp(tabMargin + 4), dp(tabMargin + 4), dp(tabMargin + 4));
-        tabsView.setMaxWidth(dp(328 + tabMargin * 2));
+        tabsView.setMaxWidth(dp(360 + tabMargin * 2));
 
         tabs = new GlassTabView[TABS_COUNT + 1];
         if (isEnabledSettingsSlide()) {
