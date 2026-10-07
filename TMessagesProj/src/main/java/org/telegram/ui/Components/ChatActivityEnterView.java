@@ -3343,7 +3343,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         sendButtonContainer.addView(audioVideoButtonContainer, LayoutHelper.createFrame(DEFAULT_HEIGHT, DEFAULT_HEIGHT, Gravity.RIGHT | Gravity.BOTTOM));
         audioVideoButtonContainer.setFocusable(true);
         audioVideoButtonContainer.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-        audioVideoButtonContainer.setBackground(Theme.createSimpleSelectorCircleDrawable(dp(DEFAULT_HEIGHT), getThemedColor(Theme.key_chat_messagePanelSend), getThemedColor(Theme.key_chat_messagePanelSendPressed)));
+        audioVideoButtonContainer.setBackground(Theme.createSimpleSelectorCircleDrawable(dp(DEFAULT_HEIGHT), getThemedColor(Theme.key_chat_messagePanelSend), Theme.multAlpha(getThemedColor(Theme.key_chat_messagePanelSend), 0.85f)));
 
 //        audioVideoButtonContainer.setOnTouchListener((view, motionEvent) -> {
 //            createRecordCircle();
@@ -11469,7 +11469,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         deleteRichDraftButton.setBackground(Theme.createInsetRoundRectDrawable(getThemedColor(Theme.key_listSelector), dp(19), dp(1), dp(3)));
         sendOutlineView.setColorFilter(getThemedColor(Theme.key_telegram_color), PorterDuff.Mode.SRC_IN);
         if (audioVideoButtonContainer != null) {
-            audioVideoButtonContainer.setBackground(Theme.createSimpleSelectorCircleDrawable(dp(DEFAULT_HEIGHT), getThemedColor(Theme.key_chat_messagePanelSend), getThemedColor(Theme.key_chat_messagePanelSendPressed)));
+            audioVideoButtonContainer.setBackground(Theme.createSimpleSelectorCircleDrawable(dp(DEFAULT_HEIGHT), getThemedColor(Theme.key_chat_messagePanelSend), Theme.multAlpha(getThemedColor(Theme.key_chat_messagePanelSend), 0.85f)));
         }
     }
 
