@@ -2264,7 +2264,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     public boolean doNotDrawGlassHeader;
     public boolean doNotDrawGlassMenu;
     public boolean isFloatingCardHeader;
-    private final Path cardHeaderClipPath = new Path();
+    private final android.graphics.Path cardHeaderClipPath = new android.graphics.Path();
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
@@ -2276,11 +2276,11 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 int topOffset = (occupyStatusBar ? AndroidUtilities.statusBarHeight : 0) + dp(4);
                 int sideMargin = dp(5);
                 int bottomMargin = dp(2);
-                rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
-                canvas.drawRoundRect(rectTmp, dp(12), dp(12), blurScrimPaint);
+                AndroidUtilities.rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
+                canvas.drawRoundRect(AndroidUtilities.rectTmp, dp(12), dp(12), blurScrimPaint);
 
                 cardHeaderClipPath.rewind();
-                cardHeaderClipPath.addRoundRect(rectTmp, dp(12), dp(12), Path.Direction.CW);
+                cardHeaderClipPath.addRoundRect(AndroidUtilities.rectTmp, dp(12), dp(12), android.graphics.Path.Direction.CW);
                 canvas.save();
                 canvas.clipPath(cardHeaderClipPath);
                 cardClipped = true;

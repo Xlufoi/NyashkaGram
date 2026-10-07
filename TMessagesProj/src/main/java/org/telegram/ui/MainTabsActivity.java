@@ -1075,9 +1075,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         tabsViewWrapper.setPadding(systemInsets.left, 0, systemInsets.right, 0);
 
-        final int tabHeight = isTextFreeMode() ? 36 : DialogsActivity.MAIN_TABS_HEIGHT;
-        final int tabMargin = isTextFreeMode() ? 4 : DialogsActivity.MAIN_TABS_MARGIN;
-        final int totalHeight = tabHeight + tabMargin * 2 + navigationBarHeight;
+        final int totalHeight = tabHeightWithMargins + navigationBarHeight;
         ViewGroup.LayoutParams tlp = tabsView.getLayoutParams();
         if (tlp != null && tlp.height != totalHeight) {
             tlp.height = totalHeight;
