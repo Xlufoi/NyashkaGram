@@ -572,21 +572,27 @@ public class SearchDownloadsContainer extends FrameLayout implements Notificatio
                 MessageObject messageObject = getMessage(position);
                 if (messageObject != null) {
                     boolean showReorder = uiCallback.actionModeShowing() && position >= downloadingFilesStartRow && position < downloadingFilesEndRow;
-                    if (type == 1) {
+                    if (type == 1 && holder.itemView instanceof Cell) {
                         Cell view = (Cell) holder.itemView;
                         view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
-                        int oldId = view.sharedDocumentCell.getMessage() == null ? 0 : view.sharedDocumentCell.getMessage().getId();
-                        view.sharedDocumentCell.setDocument(messageObject, true);
-                        messageHashIdTmp.set(view.sharedDocumentCell.getMessage().getId(), view.sharedDocumentCell.getMessage().getDialogId());
-                        view.sharedDocumentCell.setChecked(uiCallback.isSelected(messageHashIdTmp), oldId == messageObject.getId());
-                        view.sharedDocumentCell.showReorderIcon(showReorder, oldId == messageObject.getId());
-                    } else if (type == 2) {
+                        int oldId = (view.sharedDocumentCell != null && view.sharedDocumentCell.getMessage() != null) ? view.sharedDocumentCell.getMessage().getId() : 0;
+                        if (view.sharedDocumentCell != null) {
+                            view.sharedDocumentCell.setDocument(messageObject, true);
+                            if (view.sharedDocumentCell.getMessage() != null) {
+                                messageHashIdTmp.set(view.sharedDocumentCell.getMessage().getId(), view.sharedDocumentCell.getMessage().getDialogId());
+                                view.sharedDocumentCell.setChecked(uiCallback != null && uiCallback.isSelected(messageHashIdTmp), oldId == messageObject.getId());
+                                view.sharedDocumentCell.showReorderIcon(showReorder, oldId == messageObject.getId());
+                            }
+                        }
+                    } else if (type == 2 && holder.itemView instanceof SharedAudioCell) {
                         SharedAudioCell sharedAudioCell = (SharedAudioCell) holder.itemView;
                         int oldId = sharedAudioCell.getMessage() == null ? 0 : sharedAudioCell.getMessage().getId();
                         sharedAudioCell.setMessageObject(messageObject, true);
-                        messageHashIdTmp.set(sharedAudioCell.getMessage().getId(), sharedAudioCell.getMessage().getDialogId());
-                        sharedAudioCell.setChecked(uiCallback.isSelected(messageHashIdTmp), oldId == messageObject.getId());
-                        sharedAudioCell.showReorderIcon(showReorder, oldId == messageObject.getId());
+                        if (sharedAudioCell.getMessage() != null) {
+                            messageHashIdTmp.set(sharedAudioCell.getMessage().getId(), sharedAudioCell.getMessage().getDialogId());
+                            sharedAudioCell.setChecked(uiCallback != null && uiCallback.isSelected(messageHashIdTmp), oldId == messageObject.getId());
+                            sharedAudioCell.showReorderIcon(showReorder, oldId == messageObject.getId());
+                        }
                     }
                 }
             }

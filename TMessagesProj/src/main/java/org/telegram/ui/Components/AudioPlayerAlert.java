@@ -693,8 +693,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 return LocaleController.formatString("AccDescrPlayerDuration", R.string.AccDescrPlayerDuration, time, totalTime);
             }
         });
-        seekBarView.setReportChanges(true);
-        playerLayout.addView(seekBarView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 38 + 6, Gravity.TOP | Gravity.LEFT, 5, 67, 5, 0));
+        playerLayout.addView(seekBarView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.TOP | Gravity.LEFT, 5, 67, 5, 0));
 
         seekBarBufferSpring = new SpringAnimation(new FloatValueHolder(0))
                 .setSpring(new SpringForce()

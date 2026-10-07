@@ -71,7 +71,7 @@ public class DialogsActivityTopPanelLayout extends AnimatedLinearLayout {
         }
     }
 
-    private int defaultRadiusDp = 24;
+    private int defaultRadiusDp = 20;
 
     public void setDefaultRadiusDp(int defaultRadius) {
         this.defaultRadiusDp = defaultRadius;
@@ -96,13 +96,15 @@ public class DialogsActivityTopPanelLayout extends AnimatedLinearLayout {
         return super.verifyDrawable(who) || callFragmentContextView != null && callFragmentContextView.getCapsuleBlobDrawable() == who;
     }
 
+    private final android.graphics.Paint solidPaint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+
     @Override
     protected void dispatchDraw(@NonNull Canvas canvas) {
         if (getMetadata().getTotalVisibility() == 0) return;
 
-        if (backgroundDrawable != null) {
-            backgroundDrawable.draw(canvas);
-        }
+        solidPaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+        solidPaint.setAlpha((int) (getMetadata().getTotalVisibility() * 255));
+        canvas.drawRoundRect(clipRectF, dp(20), dp(20), solidPaint);
 
         View callDrawnView = null;
         if (callFragmentContextView != null) {

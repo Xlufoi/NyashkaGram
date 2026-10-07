@@ -4959,7 +4959,7 @@ public class ChatActivity extends BaseFragment implements
             glassBackgroundDrawableFactory,
             BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate),
             ChatObject.isForum(currentChat));
-        actionBar.doNotDrawGlassHeader = NaConfig.INSTANCE.getMaterialDesign3ChatHeader().Bool();
+        actionBar.doNotDrawGlassHeader = true;
 
         if (chatMode == MODE_PINNED) {
             actionBar.setChatAvatarContainer(avatarContainer);

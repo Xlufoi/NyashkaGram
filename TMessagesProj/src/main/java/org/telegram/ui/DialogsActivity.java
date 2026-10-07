@@ -4926,7 +4926,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
             topPanelLayout.setPadding(dp(11), dp(21), dp(11), dp(21));
             topPanelLayout.setBlurredBackground(topPanelLayoutBackground);
-            topPanelLayout.setDefaultRadiusDp(communityId != 0 ? 18 : 24);
+            topPanelLayout.setDefaultRadiusDp(20);
 
             fragmentLocationContextViewWrapper = new FrameLayout(context);
             topPanelLayout.addView(fragmentLocationContextViewWrapper);
@@ -5711,7 +5711,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         // contentView.addView(dialogsActivityStatusLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP));
 
         if (topPanelLayout != null) {
-            contentView.addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 0, -14, 0, 0));
+            contentView.addView(topPanelLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP, 12, -14, 12, 0));
         }
 
         if (communityId != 0 && initialDialogsType != DIALOGS_TYPE_FORWARD) {

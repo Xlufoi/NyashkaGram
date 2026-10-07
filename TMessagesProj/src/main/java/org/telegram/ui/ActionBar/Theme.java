@@ -9199,7 +9199,7 @@ public class Theme {
             } else if (key == key_windowBackgroundGray) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_50);
             } else if (key == key_dialogBackground) {
-                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_10);
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_50);
             } else if (key == key_actionBarDefault) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_10);
             } else if (key == key_chats_actionBackground) {
@@ -9215,7 +9215,7 @@ public class Theme {
             } else if (key == key_chat_messageTextOut) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_50);
             } else if (key == key_chat_inBubble) {
-                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_100);
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent3_800 : android.R.color.system_accent3_100);
             } else if (key == key_chat_messageTextIn) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_50 : android.R.color.system_neutral1_900);
             } else if (key == key_chat_messagePanelBackground) {
@@ -9241,9 +9241,15 @@ public class Theme {
             } else if (key == key_switchTrack || key == key_switchTrackBlue) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_700 : android.R.color.system_neutral2_200);
             } else if (key == key_glass_tabSelected || key == key_glass_tabSelectedText) {
-                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent2_200 : android.R.color.system_accent2_600);
             } else if (key == key_glass_tabUnselected) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_400 : android.R.color.system_neutral2_600);
+            } else if (key == key_chat_attachCamera) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent2_700 : android.R.color.system_accent2_200);
+            } else if (key == key_chats_unreadCounter || key == key_chats_unreadCounterMuted) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent2_600 : android.R.color.system_accent2_100);
+            } else if (key == key_chats_unreadCounterText || key == key_chats_unreadCounterMutedText) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_50 : android.R.color.system_neutral1_900);
             } else if (key == key_divider) {
                 return 0x00000000; // Flat dividers hidden for M3 Expressive card style
             } else if (key == key_player_background) {

@@ -2263,6 +2263,13 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        if (doNotDrawGlassHeader && !actionModeVisible) {
+            rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
+            blurScrimPaint.setColor(Theme.getColor(Theme.key_actionBarDefault, resourcesProvider));
+            blurScrimPaint.setAlpha(255);
+            canvas.drawRect(rectTmp, blurScrimPaint);
+        }
+
         final int p = dp(6);
         final int s = dp(46);
 
