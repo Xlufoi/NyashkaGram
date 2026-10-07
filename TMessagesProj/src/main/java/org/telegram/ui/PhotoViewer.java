@@ -6883,10 +6883,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         muteButton.setScaleType(ImageView.ScaleType.CENTER);
         muteButton.setImageDrawable(muteDrawable = new MuteDrawable(parentActivity));
         muteButton.setColorFilter(new PorterDuffColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_IN));
-        muteButton.setBackground(iBlur3FactoryFrostedLiquidGlass.create(muteButton)
-            .setColorProvider(BlurredBackgroundProviderImpl.photoViewer(null))
-            .setPadding(dp(4))
-            .setRadius(dp(16)));
+        muteButton.setBackground(Theme.createRoundRectDrawable(dp(12), 0xE61E1E1E));
         ScaleStateListAnimator.apply(muteButton);
         containerView.addView(muteButton, LayoutHelper.createFrame(40, 40, Gravity.LEFT | Gravity.BOTTOM, 8, 0, 0, -4));
         muteButton.setOnClickListener(v -> {
@@ -7559,7 +7556,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         };
         pickerViewSendButton.setCircleSize(dp(52), dp(38));
         pickerViewSendButton.newCounterPos = true;
-        pickerViewSendButton.setBlurredBackgroundDrawable(iBlur3FactoryFrostedLiquidGlass.create(pickerViewSendButton).setColorProvider(BlurredBackgroundProviderImpl.photoViewer(resourcesProvider)));
+        pickerViewSendButton.setBlurredBackgroundDrawable(null);
         containerView.addView(pickerViewSendButton, LayoutHelper.createFrame(120, 120, Gravity.RIGHT | Gravity.BOTTOM, 0, 0, 8, 2f));
         pickerViewSendButton.setContentDescription(getString("Send", R.string.Send));
         ScaleStateListAnimator.apply(pickerViewSendButton);
@@ -7680,12 +7677,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         });
 
         pollAttachButtons = new PhotoViewerPollAttachButtons(parentActivity);
-        pollAttachButtons.editButton.setBackground(iBlur3FactoryFrostedLiquidGlass.create(pollAttachButtons.editButton)
-            .setColorProvider(BlurredBackgroundProviderImpl.photoViewer(resourcesProvider))
-            .setRadius(dp(18)).setPadding(dp(7)));
-        pollAttachButtons.replaceButton.setBackground(iBlur3FactoryFrostedLiquidGlass.create(pollAttachButtons.replaceButton)
-                .setColorProvider(BlurredBackgroundProviderImpl.photoViewer(resourcesProvider))
-                .setRadius(dp(18)).setPadding(dp(7)));
+        pollAttachButtons.editButton.setBackground(Theme.createRoundRectDrawable(dp(12), 0xE61E1E1E));
+        pollAttachButtons.replaceButton.setBackground(Theme.createRoundRectDrawable(dp(12), 0xE61E1E1E));
         pollAttachButtons.setVisibility(View.GONE);
         pollAttachButtons.editButton.setOnClickListener(v -> animatorPollAttachButtonsVisibility.setValue(false, true));
         pollAttachButtons.replaceButton.setOnClickListener(v -> {
@@ -7754,17 +7747,14 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         };
         itemsLayout.setOrientation(LinearLayout.HORIZONTAL);
         itemsLayout.setPadding(dp(2), 0, dp(2), 0);
-        itemsLayout.setBackground(iBlur3FactoryFrostedLiquidGlass.create(itemsLayout)
-            .setColorProvider(BlurredBackgroundProviderImpl.photoViewer(resourcesProvider))
-            .setPadding(dp(2))
-            .setRadius(dp(22)));
+        itemsLayout.setBackground(Theme.createRoundRectDrawable(dp(12), 0xE61E1E1E));
 
         pickerView.addView(itemsLayout, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 48, Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 3, 63, 0));
 
         cropItem = new ImageView(parentActivity);
         cropItem.setScaleType(ImageView.ScaleType.CENTER);
         cropItem.setImageResource(R.drawable.media_crop);
-        cropItem.setBackground(Theme.createInsetRoundRectDrawable(0x10FFFFFF, dp(22), dp(4), dp(6)));
+        cropItem.setBackground(Theme.createInsetRoundRectDrawable(0x1aFFFFFF, dp(8), dp(4), dp(4)));
         itemsLayout.addView(cropItem, LayoutHelper.createLinear(48, 48));
         cropItem.setOnClickListener(v -> {
             cancelStickerClippingMode();
@@ -7791,7 +7781,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         rotateItem = new ImageView(parentActivity);
         rotateItem.setScaleType(ImageView.ScaleType.CENTER);
         rotateItem.setImageResource(R.drawable.msg_photo_rotate);
-        rotateItem.setBackground(Theme.createInsetRoundRectDrawable(0x10FFFFFF, dp(22), dp(4), dp(6)));
+        rotateItem.setBackground(Theme.createInsetRoundRectDrawable(0x1aFFFFFF, dp(8), dp(4), dp(4)));
         itemsLayout.addView(rotateItem, LayoutHelper.createLinear(48, 48));
         rotateItem.setOnClickListener(v -> cropRotate(-90));
         rotateItem.setContentDescription(getString("AccDescrRotate", R.string.AccDescrRotate));
@@ -7799,7 +7789,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         mirrorItem = new ImageView(parentActivity);
         mirrorItem.setScaleType(ImageView.ScaleType.CENTER);
         mirrorItem.setImageResource(R.drawable.media_flip);
-        mirrorItem.setBackground(Theme.createInsetRoundRectDrawable(0x10FFFFFF, dp(22), dp(4), dp(6)));
+        mirrorItem.setBackground(Theme.createInsetRoundRectDrawable(0x1aFFFFFF, dp(8), dp(4), dp(4)));
         itemsLayout.addView(mirrorItem, LayoutHelper.createLinear(48, 48));
         mirrorItem.setOnClickListener(v -> cropMirror());
         mirrorItem.setContentDescription(getString("AccDescrMirror", R.string.AccDescrMirror));
@@ -7807,7 +7797,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         paintItem = new ImageView(parentActivity);
         paintItem.setScaleType(ImageView.ScaleType.CENTER);
         paintItem.setImageResource(R.drawable.media_draw);
-        paintItem.setBackground(Theme.createInsetRoundRectDrawable(0x10FFFFFF, dp(22), dp(4), dp(6)));
+        paintItem.setBackground(Theme.createInsetRoundRectDrawable(0x1aFFFFFF, dp(8), dp(4), dp(4)));
         itemsLayout.addView(paintItem, LayoutHelper.createLinear(48, 48));
         paintItem.setOnClickListener(v -> {
             cancelStickerClippingMode();
@@ -7833,7 +7823,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
         compressItem = new VideoCompressButton(parentActivity);
         compressItem.setTag(1);
-        compressItem.setBackground(Theme.createInsetRoundRectDrawable(0x10FFFFFF, dp(22), dp(4), dp(6)));
+        compressItem.setBackground(Theme.createInsetRoundRectDrawable(0x1aFFFFFF, dp(8), dp(4), dp(4)));
 
         selectedCompression = selectCompression();
         compressItem.setState(videoConvertSupported && compressionsCount > 1, muteVideo, Math.min(resultWidth, resultHeight));
@@ -7876,7 +7866,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         tuneItem = new ImageView(parentActivity);
         tuneItem.setScaleType(ImageView.ScaleType.CENTER);
         tuneItem.setImageResource(R.drawable.media_settings);
-        tuneItem.setBackground(Theme.createInsetRoundRectDrawable(0x10FFFFFF, dp(22), dp(4), dp(6)));
+        tuneItem.setBackground(Theme.createInsetRoundRectDrawable(0x1aFFFFFF, dp(8), dp(4), dp(4)));
         itemsLayout.addView(tuneItem, LayoutHelper.createLinear(48, 48));
         tuneItem.setOnClickListener(v -> {
             if (v.getAlpha() < .9f) return;

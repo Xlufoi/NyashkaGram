@@ -1547,18 +1547,21 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
             checkAvatarContainerWidth(animatorAvatarContainerWidth.isAnimating());
         }
 
+        int cardSideOffset = (isFloatingCardHeader && !actionModeVisible) ? dp(5) : 0;
+        int cardTopOffset = (isFloatingCardHeader && !actionModeVisible) ? dp(2) : 0;
+
         int textLeft;
         if (backButtonImageView != null && backButtonImageView.getVisibility() != GONE) {
-            backButtonImageView.layout(0, additionalTop, backButtonImageView.getMeasuredWidth(), additionalTop + backButtonImageView.getMeasuredHeight());
-            textLeft = glassMode ? dp(76) : dp(AndroidUtilities.isTablet() ? 80 : 72);
+            backButtonImageView.layout(cardSideOffset, additionalTop + cardTopOffset, cardSideOffset + backButtonImageView.getMeasuredWidth(), additionalTop + cardTopOffset + backButtonImageView.getMeasuredHeight());
+            textLeft = (glassMode ? dp(76) : dp(AndroidUtilities.isTablet() ? 80 : 72)) + cardSideOffset;
         } else {
-            textLeft = glassMode ? dp(24) : dp(AndroidUtilities.isTablet() ? 26 : 18);
+            textLeft = (glassMode ? dp(24) : dp(AndroidUtilities.isTablet() ? 26 : 18)) + cardSideOffset;
         }
         textLeft += additionalTextLeft;
 
         if (menu != null && menu.getVisibility() != GONE) {
-            int menuLeft = menu.searchFieldVisible() ? dp(menuOccupyBack ? 0 : AndroidUtilities.isTablet() ? 74 : 66) : (getMeasuredWidth()) - menu.getMeasuredWidth();
-            menu.layout(menuLeft, additionalTop, menuLeft + menu.getMeasuredWidth(), additionalTop + menu.getMeasuredHeight());
+            int menuLeft = menu.searchFieldVisible() ? dp(menuOccupyBack ? 0 : AndroidUtilities.isTablet() ? 74 : 66) : (getMeasuredWidth()) - menu.getMeasuredWidth() - cardSideOffset;
+            menu.layout(menuLeft, additionalTop + cardTopOffset, menuLeft + menu.getMeasuredWidth(), additionalTop + cardTopOffset + menu.getMeasuredHeight());
         }
 
         for (int i = 0; i < 2; i++) {
@@ -2260,14 +2263,31 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
 
     public boolean doNotDrawGlassHeader;
     public boolean doNotDrawGlassMenu;
+    public boolean isFloatingCardHeader;
+    private final Path cardHeaderClipPath = new Path();
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        boolean cardClipped = false;
         if (doNotDrawGlassHeader && !actionModeVisible) {
-            rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
             blurScrimPaint.setColor(Theme.getColor(Theme.key_actionBarDefault, resourcesProvider));
             blurScrimPaint.setAlpha(255);
-            canvas.drawRect(rectTmp, blurScrimPaint);
+            if (isFloatingCardHeader) {
+                int topOffset = (occupyStatusBar ? AndroidUtilities.statusBarHeight : 0) + dp(4);
+                int sideMargin = dp(5);
+                int bottomMargin = dp(2);
+                rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
+                canvas.drawRoundRect(rectTmp, dp(12), dp(12), blurScrimPaint);
+
+                cardHeaderClipPath.rewind();
+                cardHeaderClipPath.addRoundRect(rectTmp, dp(12), dp(12), Path.Direction.CW);
+                canvas.save();
+                canvas.clipPath(cardHeaderClipPath);
+                cardClipped = true;
+            } else {
+                rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
+                canvas.drawRect(rectTmp, blurScrimPaint);
+            }
         }
 
         final int p = dp(6);
@@ -2333,6 +2353,9 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
         }
 
         super.dispatchDraw(canvas);
+        if (cardClipped) {
+            canvas.restore();
+        }
     }
 
     public void setForceSkipTouches(boolean forceSkipTouches) {

@@ -4960,6 +4960,7 @@ public class ChatActivity extends BaseFragment implements
             BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate),
             ChatObject.isForum(currentChat));
         actionBar.doNotDrawGlassHeader = true;
+        actionBar.isFloatingCardHeader = true;
 
         if (chatMode == MODE_PINNED) {
             actionBar.setChatAvatarContainer(avatarContainer);

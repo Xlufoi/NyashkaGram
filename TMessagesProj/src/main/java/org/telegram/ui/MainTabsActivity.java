@@ -432,8 +432,8 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         iBlur3FactoryGlass.setLiquidGlassEffectAllowed(LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS));
 
         tabsViewBackground = iBlur3FactoryGlass.create(tabsView, BlurredBackgroundProviderImpl.mainTabs(resourceProvider));
-        tabsViewBackground.setRadius(dp(16));
-        tabsViewBackground.setPadding(dp(tabMargin - 0.334f));
+        tabsViewBackground.setRadius(dp(16), dp(16), 0, 0, true);
+        tabsViewBackground.setPadding(0);
         tabsView.setBackground(tabsViewBackground);
 
         BlurredBackgroundDrawableViewFactory iBlur3FactoryFade = new BlurredBackgroundDrawableViewFactory(iBlur3SourceColor);
@@ -1073,7 +1073,21 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
             }
         }
 
-        tabsViewWrapper.setPadding(systemInsets.left, 0, systemInsets.right, navigationBarHeight);
+        tabsViewWrapper.setPadding(systemInsets.left, 0, systemInsets.right, 0);
+
+        final int tabHeight = isTextFreeMode() ? 36 : DialogsActivity.MAIN_TABS_HEIGHT;
+        final int tabMargin = isTextFreeMode() ? 4 : DialogsActivity.MAIN_TABS_MARGIN;
+        final int totalHeight = tabHeight + tabMargin * 2 + navigationBarHeight;
+        ViewGroup.LayoutParams tlp = tabsView.getLayoutParams();
+        if (tlp != null && tlp.height != totalHeight) {
+            tlp.height = totalHeight;
+            tabsView.setLayoutParams(tlp);
+        }
+        tabsView.setPadding(dp(tabMargin + 4), dp(tabMargin + 4), dp(tabMargin + 4), dp(tabMargin + 4) + navigationBarHeight);
+        if (tabsViewBackground != null) {
+            tabsViewBackground.setRadius(dp(16), dp(16), 0, 0, true);
+            tabsViewBackground.setPadding(0);
+        }
 
         final WindowInsetsCompat consumed = isUpdateLayoutVisible ?
             insets.inset(0, 0, 0, navigationBarHeight) : insets;

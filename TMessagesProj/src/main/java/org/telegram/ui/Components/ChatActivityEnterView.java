@@ -2753,7 +2753,7 @@ public class ChatActivityEnterView extends FrameLayout implements
             protected void onDraw(Canvas canvas) {
                 m3InputPillPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
                 m3InputPillRect.set(dp(6), dp(3), getMeasuredWidth() - dp(6), getMeasuredHeight() - dp(3));
-                float r = m3InputPillRect.height() / 2f;
+                float r = Math.min(dp(22), m3InputPillRect.height() / 2f);
                 canvas.drawRoundRect(m3InputPillRect, r, r, m3InputPillPaint);
                 super.onDraw(canvas);
             }
