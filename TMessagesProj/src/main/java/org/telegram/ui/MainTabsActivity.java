@@ -432,8 +432,8 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         iBlur3FactoryGlass.setLiquidGlassEffectAllowed(LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS));
 
         tabsViewBackground = iBlur3FactoryGlass.create(tabsView, BlurredBackgroundProviderImpl.mainTabs(resourceProvider));
-        tabsViewBackground.setRadius(dp(16), dp(16), 0, 0, true);
-        tabsViewBackground.setPadding(0);
+        tabsViewBackground.setRadius(dp(16));
+        tabsViewBackground.setPadding(dp(tabMargin - 0.334f));
         tabsView.setBackground(tabsViewBackground);
 
         BlurredBackgroundDrawableViewFactory iBlur3FactoryFade = new BlurredBackgroundDrawableViewFactory(iBlur3SourceColor);
@@ -1073,19 +1073,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
             }
         }
 
-        tabsViewWrapper.setPadding(systemInsets.left, 0, systemInsets.right, 0);
-
-        final int totalHeight = tabHeightWithMargins + navigationBarHeight;
-        ViewGroup.LayoutParams tlp = tabsView.getLayoutParams();
-        if (tlp != null && tlp.height != totalHeight) {
-            tlp.height = totalHeight;
-            tabsView.setLayoutParams(tlp);
-        }
-        tabsView.setPadding(dp(tabMargin + 4), dp(tabMargin + 4), dp(tabMargin + 4), dp(tabMargin + 4) + navigationBarHeight);
-        if (tabsViewBackground != null) {
-            tabsViewBackground.setRadius(dp(16), dp(16), 0, 0, true);
-            tabsViewBackground.setPadding(0);
-        }
+        tabsViewWrapper.setPadding(systemInsets.left, 0, systemInsets.right, navigationBarHeight);
 
         final WindowInsetsCompat consumed = isUpdateLayoutVisible ?
             insets.inset(0, 0, 0, navigationBarHeight) : insets;
@@ -1219,8 +1207,8 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         final float scale = lerp(0.85f, 1f, factor);
 
         tabsViewWrapper.setTranslationY(lerp(hiddenY, normalY, factor));
-        tabsView.setClickable(factor > 1);
-        tabsView.setEnabled(factor > 1);
+        tabsView.setClickable(factor >= 1f);
+        tabsView.setEnabled(factor >= 1f);
         tabsView.setAlpha(factor);
         tabsView.setVisibility(factor > 0 ? View.VISIBLE : View.GONE);
     }

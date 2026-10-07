@@ -1658,6 +1658,8 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 default:
                     childTop = lp.topMargin;
             }
+            childLeft += cardSideOffset;
+            childTop += cardTopOffset;
             child.layout(childLeft, childTop, childLeft + width, childTop + height);
         }
     }
@@ -2270,9 +2272,17 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     protected void dispatchDraw(Canvas canvas) {
         boolean cardClipped = false;
         if (doNotDrawGlassHeader && !actionModeVisible) {
-            blurScrimPaint.setColor(Theme.getColor(Theme.key_actionBarDefault, resourcesProvider));
-            blurScrimPaint.setAlpha(255);
             if (isFloatingCardHeader) {
+                int cardColor = Theme.getColor(Theme.key_chat_messagePanelBackground);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    try {
+                        boolean isDark = Theme.isCurrentThemeDark();
+                        cardColor = getContext().getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_100);
+                    } catch (Throwable ignore) {
+                    }
+                }
+                blurScrimPaint.setColor(cardColor);
+                blurScrimPaint.setAlpha(255);
                 int topOffset = (occupyStatusBar ? AndroidUtilities.statusBarHeight : 0) + dp(4);
                 int sideMargin = dp(5);
                 int bottomMargin = dp(2);
@@ -2285,6 +2295,8 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 canvas.clipPath(cardHeaderClipPath);
                 cardClipped = true;
             } else {
+                blurScrimPaint.setColor(Theme.getColor(Theme.key_actionBarDefault, resourcesProvider));
+                blurScrimPaint.setAlpha(255);
                 rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
                 canvas.drawRect(rectTmp, blurScrimPaint);
             }

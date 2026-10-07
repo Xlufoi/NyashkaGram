@@ -2753,12 +2753,12 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         containerView.addView(bottomFadeView, LayoutHelper.createFrameMatchParent());
 
         BlurredBackgroundDrawable tabsViewBackground = iBlur3FactoryLiquidGlass.create(buttonsRecyclerViewWrapper, BlurredBackgroundProviderImpl.mainTabs(resourcesProvider));
-        tabsViewBackground.setRadius(dp(56 / 2f));
+        tabsViewBackground.setRadius(dp(12));
         tabsViewBackground.setPadding(dp(7));
         buttonsRecyclerViewWrapper.setBackground(tabsViewBackground);
         buttonsRecyclerView.setPadding(dp(11), dp(11), dp(11), dp(11));
         buttonsRecyclerView.setClipToOutline(true);
-        buttonsRecyclerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(11), dp(56 / 2f)));
+        buttonsRecyclerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(11), dp(12)));
 
         buttonsRecyclerView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
         buttonsRecyclerViewWrapper.addView(buttonsRecyclerView, LayoutHelper.createFrameMatchParent());

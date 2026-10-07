@@ -1701,7 +1701,7 @@ public class LPhotoPaintView extends SizeNotifierFrameLayoutPhoto implements IPh
     private BlurredBackgroundDrawable blurredBackgroundDrawableForTools;
 
     public void setBlurredBackgroundDrawableForTools(BlurredBackgroundDrawable d) {
-        blurredBackgroundDrawableForTools = d.setPadding(dp(4));
+        blurredBackgroundDrawableForTools = d != null ? d.setPadding(dp(4)) : null;
     }
 
     @Override

@@ -16524,8 +16524,10 @@ public class ChatActivityEnterView extends FrameLayout implements
 
         public void setBlurredBackgroundDrawable(BlurredBackgroundDrawable blurredBackgroundDrawable) {
             this.blurredBackgroundDrawable = blurredBackgroundDrawable;
-            this.blurredBackgroundDrawable.setRadius(dp(22));
-            this.blurredBackgroundDrawable.setPadding(dp(4));
+            if (this.blurredBackgroundDrawable != null) {
+                this.blurredBackgroundDrawable.setRadius(dp(22));
+                this.blurredBackgroundDrawable.setPadding(dp(4));
+            }
         }
 
         public boolean newCounterPos;
