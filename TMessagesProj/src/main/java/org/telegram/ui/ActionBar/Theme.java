@@ -4182,8 +4182,8 @@ public class Theme {
                 }
             }
             if ("Default".equals(theme)) {
-                applyingTheme = themesDict.get("Blue");
-                applyingTheme.currentAccentId = DEFALT_THEME_ACCENT_ID;
+                currentNightTheme = themeDarkBlue;
+                currentNightTheme.currentAccentId = DEFALT_THEME_ACCENT_ID;
             } else if ("Dark".equals(theme)) {
                 currentNightTheme = themeDarkBlue;
                 themeDarkBlue.currentAccentId = 9;
@@ -4427,6 +4427,15 @@ public class Theme {
         int switchToTheme = needSwitchToTheme();
         if (switchToTheme == 2) {
             applyingTheme = currentNightTheme;
+        } else {
+            applyingTheme = currentDayTheme;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (switchToTheme == 2 && themesDict.containsKey("Monet Dark")) {
+                applyingTheme = themesDict.get("Monet Dark");
+            } else if (switchToTheme != 2 && themesDict.containsKey("Monet Light")) {
+                applyingTheme = themesDict.get("Monet Light");
+            }
         }
         applyTheme(applyingTheme, false, false, switchToTheme == 2);
         AndroidUtilities.runOnUIThread(Theme::checkAutoNightThemeConditions);
@@ -9189,14 +9198,38 @@ public class Theme {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_10);
             } else if (key == key_windowBackgroundGray) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_800 : android.R.color.system_neutral2_50);
+            } else if (key == key_dialogBackground) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_20);
             } else if (key == key_actionBarDefault || key == key_chats_actionBackground) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_actionBarDefaultTitle) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_50 : android.R.color.system_neutral1_900);
+            } else if (key == key_actionBarDefaultIcon) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_100 : android.R.color.system_neutral1_800);
+            } else if (key == key_chats_actionIcon) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_50);
             } else if (key == key_chat_outBubble) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_700 : android.R.color.system_accent1_100);
             } else if (key == key_chat_inBubble) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_50);
             } else if (key == key_chat_messagePanelBackground) {
                 return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_10);
+            } else if (key == key_chat_messagePanelSend || key == key_featuredStickers_addButton || key == key_featuredStickers_addButton2) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_featuredStickers_buttonText) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral1_900 : android.R.color.system_neutral1_50);
+            } else if (key == key_windowBackgroundWhiteBlueHeader) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_windowBackgroundWhiteBlueText || key == key_windowBackgroundWhiteBlueText4) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_switchTrackChecked || key == key_switchTrackBlueChecked) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_600 : android.R.color.system_accent1_200);
+            } else if (key == key_switchTrack || key == key_switchTrackBlue) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_700 : android.R.color.system_neutral2_200);
+            } else if (key == key_glass_tabSelected || key == key_glass_tabSelectedText) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent1_200 : android.R.color.system_accent1_600);
+            } else if (key == key_glass_tabUnselected) {
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_neutral2_400 : android.R.color.system_neutral2_600);
             } else if (key == key_divider) {
                 return 0x00000000; // Flat dividers hidden for M3 Expressive card style
             }
