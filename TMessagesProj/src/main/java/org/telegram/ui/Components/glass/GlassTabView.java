@@ -162,7 +162,7 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
             float cx = viewWidth / 2f;
             float cy = dp(16);
             tmpRectF.set(cx - pillWidth / 2f, cy - pillHeight / 2f, cx + pillWidth / 2f, cy + pillHeight / 2f);
-            final float r = pillHeight / 2f;
+            final float r = dp(12);
             final float s = lerp(0.6f, 1, selectedFactor) * MathUtils.clamp(attachScale, 0, 1);
             canvas.save();
             canvas.scale(s, s, tmpRectF.centerX(), tmpRectF.centerY());

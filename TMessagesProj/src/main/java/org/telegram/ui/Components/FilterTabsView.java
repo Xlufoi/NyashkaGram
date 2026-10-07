@@ -1035,7 +1035,7 @@ public class FilterTabsView extends FrameLayout {
         deletePaint.setStrokeWidth(dp(1.5f));
 
         selectorDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, null);
-        float rad = AndroidUtilities.dpf2(14);
+        float rad = AndroidUtilities.dpf2(10);
         selectorDrawable.setCornerRadii(new float[]{rad, rad, rad, rad, rad, rad, rad, rad});
         selectorDrawable.setColor(Theme.getColor(tabLineColorKey, resourcesProvider));
 

@@ -818,10 +818,15 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                     }
 
                     int nominalSlotLeft = sidePadding + i * (nominalButtonWidth + distPerGap);
-
                     int buttonActualWidth = button.getMeasuredWidth();
 
-                    if (buttonActualWidth == 0) {
+                    if (button == playButton) {
+                        button.measure(
+                            MeasureSpec.makeMeasureSpec(dp(84), MeasureSpec.EXACTLY),
+                            MeasureSpec.makeMeasureSpec(dp(54), MeasureSpec.EXACTLY)
+                        );
+                        buttonActualWidth = button.getMeasuredWidth();
+                    } else if (buttonActualWidth == 0) {
                          button.measure(
                             MeasureSpec.makeMeasureSpec(dp(48), MeasureSpec.AT_MOST),
                             MeasureSpec.makeMeasureSpec(dp(48), MeasureSpec.EXACTLY)
@@ -832,8 +837,9 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
 
                     int centeringOffset = (nominalButtonWidth - buttonActualWidth) / 2;
                     int actualButtonLeft = nominalSlotLeft + centeringOffset;
+                    int actualTop = button == playButton ? dp(6) : t;
 
-                    button.layout(actualButtonLeft, t, actualButtonLeft + buttonActualWidth, t + button.getMeasuredHeight());
+                    button.layout(actualButtonLeft, actualTop, actualButtonLeft + buttonActualWidth, actualTop + button.getMeasuredHeight());
                 }
             }
         };

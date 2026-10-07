@@ -766,7 +766,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 if (blurredBackground && drawBlur && actionModeColor != 0) {
                     rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
                     blurScrimPaint.setColor(actionModeColor);
-                    contentView.drawBlurRect(canvas, 0, rectTmp, blurScrimPaint, true);
+                    canvas.drawRect(rectTmp, blurScrimPaint);
                 }
                 super.dispatchDraw(canvas);
             }
@@ -2317,11 +2317,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
         if (blurredBackground && actionBarColor != Color.TRANSPARENT) {
             rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
             blurScrimPaint.setColor(actionBarColor);
-            if (adaptiveBackground) {
-                contentView.drawBlurRect(canvas, getY(), rectTmp, blurScrimPaint, true, 1.0f - onTopAnimated);
-            } else {
-                contentView.drawBlurRect(canvas, getY(), rectTmp, blurScrimPaint, true);
-            }
+            canvas.drawRect(rectTmp, blurScrimPaint);
         }
 
         isAnimationsAllowed = true;

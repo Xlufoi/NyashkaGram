@@ -451,8 +451,10 @@ public class SeekBarView extends FrameLayout {
         float left = selectorWidth / 2f, right = getMeasuredWidth() - selectorWidth / 2;
         float top = centerY - AndroidUtilities.dp(lineWidthDp) / 2f, bottom = centerY + AndroidUtilities.dp(lineWidthDp) / 2f;
 
-        rect.set(left, top, right, bottom);
-        drawProgressBar(canvas, rect, innerPaint1);
+        rect.set(left + thumbX, top, right, bottom);
+        if (rect.left < rect.right) {
+            drawProgressBar(canvas, rect, innerPaint1);
+        }
         if (bufferedProgress > 0) {
             innerPaint1.setColor(getThemedColor(Theme.key_player_progressCachedBackground));
             rect.set(left, top, selectorWidth / 2f + bufferedProgress * (getMeasuredWidth() - selectorWidth), bottom);
@@ -675,9 +677,10 @@ public class SeekBarView extends FrameLayout {
             float waveLength = AndroidUtilities.dp(16f);
             float startX = rect.left;
             float endX = rect.right;
+            float phase = (SystemClock.elapsedRealtime() % 2000L) / 2000f * (float) (Math.PI * 2);
             wavePath.moveTo(startX, cy);
             for (float x = startX; x <= endX; x += AndroidUtilities.dp(2)) {
-                float y = cy + (float) Math.sin((x - startX) / waveLength * (Math.PI * 2)) * waveAmp;
+                float y = cy + (float) Math.sin((x - startX) / waveLength * (Math.PI * 2) - phase) * waveAmp;
                 wavePath.lineTo(x, y);
             }
             float oldStroke = paint.getStrokeWidth();
@@ -689,6 +692,7 @@ public class SeekBarView extends FrameLayout {
             canvas.drawPath(wavePath, paint);
             paint.setStyle(oldStyle);
             paint.setStrokeWidth(oldStroke);
+            postInvalidateOnAnimation();
             return;
         }
         if (timestamps == null || timestamps.isEmpty()) {

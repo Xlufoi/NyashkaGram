@@ -61,6 +61,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
     private final Path clipPath = new Path();
     private final RectF clipRectF = new RectF();
+    private final android.graphics.Paint solidPaint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
 
     private void checkBoundsAndClipping() {
         final float bgHeight = getMetadata().getTotalHeight();
@@ -68,14 +69,14 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
         clipRectF.set(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getPaddingTop() + bgHeight);
 
-        final float r = Math.min(dp(18), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
+        final float r = Math.min(dp(12), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
         clipPath.rewind();
         clipPath.addRoundRect(clipRectF, r, r, Path.Direction.CW);
 
         if (backgroundDrawable != null) {
             backgroundDrawable.setAlpha((int) (bgAlpha * 255));
             backgroundDrawable.setBounds(getPaddingLeft() - dp(7), 0, getMeasuredWidth() - getPaddingRight() + dp(7), getPaddingTop() + getPaddingBottom() + (int) bgHeight);
-            backgroundDrawable.setRadius(Math.min(dp(18), bgHeight / 2));
+            backgroundDrawable.setRadius(Math.min(dp(12), bgHeight / 2));
         }
     }
 
@@ -84,9 +85,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
             backgroundDrawable.updateColors();
         }
 
-        final int color = Theme.getColor(Theme.key_windowBackgroundWhite);
-        final int alpha = Color.alpha(color);
-
+        solidPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelBackground));
         invalidate();
     }
 
@@ -106,9 +105,9 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
     protected void dispatchDraw(@NonNull Canvas canvas) {
         if (getMetadata().getTotalVisibility() == 0) return;
 
-        if (backgroundDrawable != null) {
-            backgroundDrawable.draw(canvas);
-        }
+        solidPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelBackground));
+        solidPaint.setAlpha((int) (getMetadata().getTotalVisibility() * 255));
+        canvas.drawRoundRect(clipRectF, dp(12), dp(12), solidPaint);
 
         boolean callDrawn = false;
         if (callFragmentContextView != null) {

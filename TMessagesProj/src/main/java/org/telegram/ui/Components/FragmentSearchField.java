@@ -188,6 +188,7 @@ public class FragmentSearchField extends FrameLayout implements FactorAnimator.T
     protected void dispatchDraw(@NonNull Canvas canvas) {
         canvas.save();
         if (bg != null) {
+            bg.setAlpha(255);
             bg.setBounds(
                 getPaddingLeft(),
                 getPaddingTop(),
@@ -196,20 +197,12 @@ public class FragmentSearchField extends FrameLayout implements FactorAnimator.T
             );
             bg.draw(canvas);
         }
-        if (blurredBackgroundDrawable != null) {
-            blurredBackgroundDrawable.setBounds(
-                    getPaddingLeft() - dp(4),
-                    getPaddingTop() - dp(4),
-                    getWidth() - getPaddingRight() + dp(4),
-                    (getHeight() - getPaddingBottom()) + dp(4));
-            blurredBackgroundDrawable.draw(canvas);
-        }
         super.dispatchDraw(canvas);
         canvas.restore();
     }
 
     public void setupBlurredBackground(BlurredBackgroundDrawable drawable) {
-        drawable.setRadius(dp(26));
+        drawable.setRadius(dp(14));
         drawable.setPadding(dp(4));
         blurredBackgroundDrawable = drawable;
     }
@@ -279,8 +272,8 @@ public class FragmentSearchField extends FrameLayout implements FactorAnimator.T
             pillBgColor = isWhiteBackground ? getThemedColor(Theme.key_windowBackgroundWhite) : getThemedColor(Theme.key_windowBackgroundWhiteBlackText, isDark ? 0.08f : 0.05f);
         }
         bg = isSectionBackground ?
-            Theme.createRoundRectDrawableShadowed(dp(26), getThemedColor(Theme.key_windowBackgroundWhite)) :
-            Theme.createRoundRectDrawable(dp(26), pillBgColor);
+            Theme.createRoundRectDrawableShadowed(dp(14), getThemedColor(Theme.key_windowBackgroundWhite)) :
+            Theme.createRoundRectDrawable(dp(14), pillBgColor);
         searchIcon.setColorFilter(getThemedColor(Theme.key_windowBackgroundWhiteBlackText, 0.6f), PorterDuff.Mode.MULTIPLY);
         closeIcon.setColorFilter(getThemedColor(Theme.key_windowBackgroundWhiteBlackText, 0.6f), PorterDuff.Mode.MULTIPLY);
         closeIcon.setBackground(Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector), 1, dp(17)));
