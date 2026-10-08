@@ -61,6 +61,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
     private final Path clipPath = new Path();
     private final RectF clipRectF = new RectF();
+    private final float[] radii = new float[8];
     private final android.graphics.Paint solidPaint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
 
     private void checkBoundsAndClipping() {
@@ -70,13 +71,21 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
         clipRectF.set(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getPaddingTop() + bgHeight);
 
         final float r = Math.min(dp(12), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
+        radii[0] = 0;
+        radii[1] = 0;
+        radii[2] = 0;
+        radii[3] = 0;
+        radii[4] = r;
+        radii[5] = r;
+        radii[6] = r;
+        radii[7] = r;
         clipPath.rewind();
-        clipPath.addRoundRect(clipRectF, r, r, Path.Direction.CW);
+        clipPath.addRoundRect(clipRectF, radii, Path.Direction.CW);
 
         if (backgroundDrawable != null) {
             backgroundDrawable.setAlpha((int) (bgAlpha * 255));
             backgroundDrawable.setBounds(getPaddingLeft() - dp(7), 0, getMeasuredWidth() - getPaddingRight() + dp(7), getPaddingTop() + getPaddingBottom() + (int) bgHeight);
-            backgroundDrawable.setRadius(r);
+            backgroundDrawable.setRadius(0, 0, r, r);
         }
     }
 
@@ -107,8 +116,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
         solidPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelBackground));
         solidPaint.setAlpha((int) (getMetadata().getTotalVisibility() * 255));
-        final float r = Math.min(dp(12), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
-        canvas.drawRoundRect(clipRectF, r, r, solidPaint);
+        canvas.drawPath(clipPath, solidPaint);
 
         boolean callDrawn = false;
         if (callFragmentContextView != null) {

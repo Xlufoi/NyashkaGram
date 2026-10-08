@@ -837,7 +837,7 @@ public class TextCell extends FrameLayout {
             if (paint == null) {
                 paint = Theme.dividerPaint;
             }
-            canvas.drawLine(LocaleController.isRTL ? 0 : dp(imageView.getVisibility() == VISIBLE ? (inDialogs ? 72 : 58) : 20), getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? dp(imageView.getVisibility() == VISIBLE ? (inDialogs ? 72 : 58) : 20) : 0), getMeasuredHeight() - 1, paint);
+            canvas.drawLine(LocaleController.isRTL ? 0 : dp(imageView.getVisibility() == VISIBLE ? (inDialogs ? 72 : 58) : 16), getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? dp(imageView.getVisibility() == VISIBLE ? (inDialogs ? 72 : 58) : 16) : 0), getMeasuredHeight() - 1, paint);
         }
     }
 
