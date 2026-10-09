@@ -297,6 +297,7 @@ import org.telegram.ui.Components.chat.ViewPositionWatcher;
 import org.telegram.ui.Components.chat.WallpaperBitmapProvider;
 import org.telegram.ui.Components.blur3.source.BlurredBackgroundSource;
 import org.telegram.ui.Components.blur3.source.BlurredBackgroundSourceBitmap;
+import org.telegram.ui.Components.blur3.source.BlurredBackgroundSourceColor;
 import org.telegram.ui.Components.blur3.source.BlurredBackgroundSourceRenderNode;
 import org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable;
 import org.telegram.ui.Components.chat.layouts.ChatActivityFadeView;
@@ -491,6 +492,10 @@ public class ChatActivity extends BaseFragment implements
 
     private BlurredBackgroundColorProviderThemed blurredBackgroundColorProvider;
     private BlurredBackgroundColorProviderThemed blurredBackgroundColorProviderWhite;
+    private BlurredBackgroundColorProviderThemed chatInputSolidColorProvider;
+    private BlurredBackgroundColorProviderThemed underKeyboardSolidColorProvider;
+    private BlurredBackgroundSourceColor chatInputSolidSource;
+    private BlurredBackgroundDrawableViewFactory chatInputSolidFactory;
 
     private final ReferenceList<View> glassAttachedViews = new ReferenceList<>();
     private final ReferenceList<BlurredBackgroundDrawable> glassAttachedDrawables = new ReferenceList<>();
@@ -3881,6 +3886,21 @@ public class ChatActivity extends BaseFragment implements
                 return super.getBackgroundColor();
             }
         };
+        chatInputSolidSource = new BlurredBackgroundSourceColor();
+        chatInputSolidSource.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+        chatInputSolidFactory = new BlurredBackgroundDrawableViewFactory(chatInputSolidSource);
+        chatInputSolidColorProvider = new BlurredBackgroundColorProviderThemed(themeDelegate, Theme.key_chat_messagePanelBackground, 1.0f) {
+            @Override
+            public int getBackgroundColor() {
+                return ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_messagePanelBackground), 255);
+            }
+        };
+        underKeyboardSolidColorProvider = new BlurredBackgroundColorProviderThemed(themeDelegate, Theme.key_chat_emojiPanelBackground, 1.0f) {
+            @Override
+            public int getBackgroundColor() {
+                return ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_emojiPanelBackground), 255);
+            }
+        };
 
         if (textSelectionHelper == null) {
             Timer.Task t1 = Timer.start(t, "new ChatActivityTextSelectionHelper");
@@ -4988,9 +5008,9 @@ public class ChatActivity extends BaseFragment implements
         chatInputViewsContainer.setClipChildren(false);
         chatInputViewsContainer.setWindowInsetsProvider(windowInsetsStateHolder);
         chatInputViewsContainer.setInputIslandBubbleDrawable(
-            glassBackgroundDrawableFactory.create(chatInputViewsContainer, blurredBackgroundColorProvider));
+            chatInputSolidFactory.create(chatInputViewsContainer, chatInputSolidColorProvider));
         chatInputViewsContainer.setUnderKeyboardBackgroundDrawable(
-            glassBackgroundDrawableFactoryFrosted.create(chatInputViewsContainer, blurredBackgroundColorProvider));
+            chatInputSolidFactory.create(chatInputViewsContainer, underKeyboardSolidColorProvider));
 
 
         chatInputBubbleContainer = chatInputViewsContainer.getInputIslandBubbleContainer();
@@ -18137,7 +18157,7 @@ public class ChatActivity extends BaseFragment implements
                 botCommandsMenuContainer.setBackgroundDrawable(drawable);
             }
             if (chatActivityEnterView != null && child == chatActivityEnterView.controlsView) {
-                chatActivityEnterView.controlsView.setBlurredBackgroundFactory(glassBackgroundDrawableFactory);
+                chatActivityEnterView.controlsView.setBlurredBackgroundFactory(chatInputSolidFactory != null ? chatInputSolidFactory : glassBackgroundDrawableFactory);
             }
         }
 
@@ -43867,6 +43887,15 @@ public class ChatActivity extends BaseFragment implements
             }
             if (blurredBackgroundColorProviderWhite != null) {
                 blurredBackgroundColorProviderWhite.updateColors();
+            }
+            if (chatInputSolidSource != null) {
+                chatInputSolidSource.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+            }
+            if (chatInputSolidColorProvider != null) {
+                chatInputSolidColorProvider.updateColors();
+            }
+            if (underKeyboardSolidColorProvider != null) {
+                underKeyboardSolidColorProvider.updateColors();
             }
 
             if (chatActivityEnterView != null) {

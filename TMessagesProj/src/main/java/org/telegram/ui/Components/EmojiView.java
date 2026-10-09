@@ -811,7 +811,7 @@ public class EmojiView extends FrameLayout implements
             addView(backgroundView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, searchFieldHeight));
 
             box = new FrameLayout(context);
-            box.setBackground(Theme.createRoundRectDrawable(dp(18), glassDesign ? getGlassIconColor(0.06f) : getThemedColor(Theme.key_chat_emojiSearchBackground)));
+            box.setBackground(Theme.createRoundRectDrawable(dp(18), getThemedColor(Theme.key_chat_emojiSearchBackground)));
             box.setClipToOutline(true);
             box.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(18)));
             if (type == 2) {
@@ -2846,31 +2846,11 @@ public class EmojiView extends FrameLayout implements
         setAllow(needStickers, needGif, false);
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            scrollableViewNoiseSuppressor = new DownscaleScrollableNoiseSuppressor();
-            blurredBackgroundSourceRenderNode = new BlurredBackgroundSourceRenderNode(null);
-            blurredBackgroundSourceRenderNode.setUnderSource(blurredBackgroundSourceColor);
-            blurredBackgroundSourceRenderNode.setScrollableNoiseSuppressor(scrollableViewNoiseSuppressor, DownscaleScrollableNoiseSuppressor.DRAW_GLASS);
-
-            blurredBackgroundDrawableFactory = new BlurredBackgroundDrawableViewFactory(blurredBackgroundSourceRenderNode);
-            blurredBackgroundDrawableFactory.setLiquidGlassEffectAllowed(LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS));
-            blurredBackgroundDrawableFactory.setOutset(LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? dp(8) : dp(48));
-            blurredBackgroundDrawableFactory.setGlassEngine(glassEngine);
-
-            // glassEngine.addAdditionalInvalidationCondition(() -> !scrollableViewNoiseSuppressor.hasDisplayLists(DownscaleScrollableNoiseSuppressor.DRAW_GLASS));
-        } else {
-            blurredBackgroundSourceRenderNode = null;
-            blurredBackgroundDrawableFactory = new BlurredBackgroundDrawableViewFactory(blurredBackgroundSourceColor);
-            blurredBackgroundDrawableFactory.setGlassEngine(glassEngine);
-
-            scrollableViewNoiseSuppressor = null;
-        }
-
-        blurCaptureMethod = (canvas, position) -> {
-            Blur3Utils.captureRelativeParent(emojiGridView, canvas, position, emojiGridView, EmojiView.this);
-            Blur3Utils.captureRelativeParent(gifGridView, canvas, position, gifGridView, EmojiView.this);
-            Blur3Utils.captureRelativeParent(stickersGridView, canvas, position, stickersGridView, EmojiView.this);
-        };
+        blurredBackgroundSourceRenderNode = null;
+        blurredBackgroundDrawableFactory = new BlurredBackgroundDrawableViewFactory(blurredBackgroundSourceColor);
+        blurredBackgroundDrawableFactory.setGlassEngine(glassEngine);
+        scrollableViewNoiseSuppressor = null;
+        blurCaptureMethod = null;
 
         setBlurredBackgroundDrawableFactory(blurredBackgroundDrawableFactory);
 
@@ -5927,11 +5907,11 @@ public class EmojiView extends FrameLayout implements
                 searchField.backgroundView.setBackground(null);
             }
             searchField.shadowView.setBackgroundColor(getThemedColor(Theme.key_chat_emojiPanelShadowLine));
-            searchField.searchStateDrawable.setColor(glassDesign ? getGlassIconColor(0.4f) : getThemedColor(Theme.key_chat_emojiSearchIcon));
-            Theme.setDrawableColor(searchField.box.getBackground(), glassDesign ? getGlassIconColor(0.06f) : getThemedColor(Theme.key_chat_emojiSearchBackground));
+            searchField.searchStateDrawable.setColor(getThemedColor(Theme.key_chat_emojiSearchIcon));
+            Theme.setDrawableColor(searchField.box.getBackground(), getThemedColor(Theme.key_chat_emojiSearchBackground));
             searchField.box.invalidate();
-            searchField.searchEditText.setHintTextColor(glassDesign ? getGlassIconColor(0.45f) : getThemedColor(Theme.key_chat_emojiSearchIcon));
-            searchField.searchEditText.setTextColor(glassDesign ? getGlassIconColor(0.8f) : getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
+            searchField.searchEditText.setHintTextColor(getThemedColor(Theme.key_chat_emojiSearchIcon));
+            searchField.searchEditText.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
         }
         if (dotPaint != null) {
             dotPaint.setColor(getThemedColor(Theme.key_chat_emojiPanelNewTrending));

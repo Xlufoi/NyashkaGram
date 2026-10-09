@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -36,6 +37,7 @@ import org.telegram.ui.Components.LayoutHelper;
 public class VoIPToggleButton extends FrameLayout {
 
     Paint circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final RectF rectF = new RectF();
     private boolean drawBackground = true;
     private boolean drawRipple = true;
     private boolean animateBackground;
@@ -149,11 +151,13 @@ public class VoIPToggleButton extends FrameLayout {
         float cx = getWidth() / 2f;
         float cy = dp(diameter) / 2f;
         float radius = dp(diameter) / 2f;
+        float cornerRadius = dp(16);
+        rectF.set(cx - radius, cy - radius, cx + radius, cy + radius);
         if (drawBackground) {
-            canvas.drawCircle(cx, cy, radius, circlePaint);
+            canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, circlePaint);
         }
         if (rippleDrawable == null) {
-            rippleDrawable = Theme.createSimpleSelectorCircleDrawable(dp(diameter), 0, Color.BLACK);
+            rippleDrawable = Theme.createSimpleSelectorRoundRectDrawable((int) cornerRadius, 0, Color.BLACK);
             rippleDrawable.setCallback(this);
         }
         if (drawRipple) {

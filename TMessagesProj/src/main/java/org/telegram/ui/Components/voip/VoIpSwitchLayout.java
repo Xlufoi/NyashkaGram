@@ -12,6 +12,7 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -262,6 +263,7 @@ public class VoIpSwitchLayout extends FrameLayout {
         private final Paint whiteCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint darkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Path clipPath = new Path();
+        private final RectF rectF = new RectF();
         private final int maxRadius = AndroidUtilities.dp(ITEM_SIZE / 2f);
         private int unselectedRadius = maxRadius;
         private int selectedRadius = 0;
@@ -402,31 +404,42 @@ public class VoIpSwitchLayout extends FrameLayout {
             float top = getY() + ((View) ((View) getParent()).getParent()).getY();
             backgroundProvider.setLightTranslation(left, top);
 
+            final float cornerRadius = AndroidUtilities.dp(16);
+
             if (singleIcon != null) {
                 if (singleIconBackgroundAlphaPercent > 20) {
                     darkPaint.setAlpha((int) (VoIPBackgroundProvider.DARK_LIGHT_DEFAULT_ALPHA * singleIconBackgroundAlphaPercent / 100f));
                     whiteCirclePaint.setAlpha((int) (255 * singleIconBackgroundAlphaPercent / 100f));
-                    canvas.drawCircle(cx, cy, maxRadius, whiteCirclePaint);
+                    rectF.set(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
+                    canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, whiteCirclePaint);
                     singleIcon.draw(canvas, maskPaint);
                     singleIcon.draw(canvas, darkPaint); //dimming icons
                 } else {
-                    canvas.drawCircle(cx, cy, maxRadius, backgroundProvider.getLightPaint()); //add a light background
-                    if(backgroundProvider.isReveal()) {
-                        canvas.drawCircle(cx, cy, maxRadius, backgroundProvider.getRevealPaint());
+                    rectF.set(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
+                    canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, backgroundProvider.getLightPaint()); //add a light background
+                    if (backgroundProvider.isReveal()) {
+                        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, backgroundProvider.getRevealPaint());
                     }
                     singleIcon.draw(canvas);
                 }
+                canvas.restore();
                 return;
             }
-            if (selectedIcon == null || unSelectedIcon == null) return;
+            if (selectedIcon == null || unSelectedIcon == null) {
+                canvas.restore();
+                return;
+            }
 
             boolean isUnSelected = unselectedRadius == maxRadius && selectedRadius == 0;
             boolean isSelected = selectedRadius == maxRadius && unselectedRadius == 0;
 
             if (selectedRadius == maxRadius && unselectedRadius > 0 && unselectedRadius != maxRadius) {
                 //in the process of changing from selected to NOT selected.
-                canvas.drawCircle(cx, cy, selectedRadius, whiteCirclePaint);
-                canvas.drawCircle(cx, cy, unselectedRadius, maskPaint);
+                rectF.set(cx - selectedRadius, cy - selectedRadius, cx + selectedRadius, cy + selectedRadius);
+                canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, whiteCirclePaint);
+                rectF.set(cx - unselectedRadius, cy - unselectedRadius, cx + unselectedRadius, cy + unselectedRadius);
+                float curCorner = Math.min(cornerRadius, (float) unselectedRadius);
+                canvas.drawRoundRect(rectF, curCorner, curCorner, maskPaint);
 
                 selectedIcon.setAlpha(255);
                 selectedIcon.draw(canvas, maskPaint);
@@ -434,26 +447,30 @@ public class VoIpSwitchLayout extends FrameLayout {
                 selectedIcon.draw(canvas); //dimming icons
 
                 clipPath.reset();
-                clipPath.addCircle(cx, cy, unselectedRadius, Path.Direction.CW);
+                clipPath.addRoundRect(rectF, curCorner, curCorner, Path.Direction.CW);
                 canvas.clipPath(clipPath);
-                canvas.drawCircle(cx, cy, unselectedRadius, maskPaint); //remove all background
+                canvas.drawRoundRect(rectF, curCorner, curCorner, maskPaint); //remove all background
             }
 
             if (isUnSelected || unselectedRadius > 0) {
                 //not selected or in the process of changing from selected to NOT selected
-                canvas.drawCircle(cx, cy, unselectedRadius, backgroundProvider.getLightPaint()); //add a light background
+                rectF.set(cx - unselectedRadius, cy - unselectedRadius, cx + unselectedRadius, cy + unselectedRadius);
+                float curCorner = Math.min(cornerRadius, (float) unselectedRadius);
+                canvas.drawRoundRect(rectF, curCorner, curCorner, backgroundProvider.getLightPaint()); //add a light background
                 if (backgroundProvider.isReveal()) {
-                    canvas.drawCircle(cx, cy, unselectedRadius, backgroundProvider.getRevealPaint());
+                    canvas.drawRoundRect(rectF, curCorner, curCorner, backgroundProvider.getRevealPaint());
                 }
                 unSelectedIcon.draw(canvas);
             }
 
             if (isSelected || (selectedRadius > 0 && unselectedRadius == maxRadius)) {
                 //selected and not in the process of changing or in the process of changing from NOT selected to selected.
+                rectF.set(cx - selectedRadius, cy - selectedRadius, cx + selectedRadius, cy + selectedRadius);
+                float curCorner = Math.min(cornerRadius, (float) selectedRadius);
                 clipPath.reset();
-                clipPath.addCircle(cx, cy, selectedRadius, Path.Direction.CW);
+                clipPath.addRoundRect(rectF, curCorner, curCorner, Path.Direction.CW);
                 canvas.clipPath(clipPath);
-                canvas.drawCircle(cx, cy, selectedRadius, whiteCirclePaint); //circular background
+                canvas.drawRoundRect(rectF, curCorner, curCorner, whiteCirclePaint); //squircle background
                 selectedIcon.setAlpha(255);
                 selectedIcon.draw(canvas, maskPaint);
                 selectedIcon.setAlpha((int) (255 * VoIPBackgroundProvider.DARK_LIGHT_PERCENT));
