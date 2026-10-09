@@ -70,7 +70,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
 
         clipRectF.set(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getPaddingTop() + bgHeight);
 
-        final float r = Math.min(dp(12), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
+        final float r = Math.min(dp(16), Math.min(clipRectF.width(), clipRectF.height()) / 2f);
         radii[0] = 0;
         radii[1] = 0;
         radii[2] = 0;

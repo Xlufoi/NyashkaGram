@@ -97,7 +97,14 @@ public class UpdateHelper extends BaseRemoteHelper {
         update.version = json.version;
         update.can_not_skip = json.canNotSkip;
         if (json.url != null) {
-            update.url = json.url;
+            if (json.url.contains("github.com") && !json.url.contains("Xlufoi/NyashkaGram")) {
+                update.url = org.telegram.messenger.BuildVars.GITHUB_RELEASE_URL;
+            } else {
+                update.url = json.url;
+            }
+            update.flags |= 4;
+        } else {
+            update.url = org.telegram.messenger.BuildVars.GITHUB_RELEASE_URL;
             update.flags |= 4;
         }
         if (NekoXConfig.autoUpdateReleaseChannel == 0 && !update.can_not_skip) {

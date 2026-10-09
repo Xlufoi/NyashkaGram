@@ -9391,7 +9391,7 @@ public class ChatActivity extends BaseFragment implements
         checkUi_topPanelLayoutWidth();
         topPanelLayout.setBlurredBackground(glassBackgroundDrawableFactory.create(topPanelLayout)
             .setColorProvider(BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate))
-            .setRadius(0, 0, dp(12), dp(12))
+            .setRadius(0, 0, dp(16), dp(16))
             .setPadding(dp(7)));
 
         if (chatMode == MODE_SEARCH) {

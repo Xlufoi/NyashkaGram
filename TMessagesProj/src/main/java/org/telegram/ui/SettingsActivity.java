@@ -1130,6 +1130,27 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             counterView.setText(LocaleController.formatNumber(counter, ','));
         }
 
+        private boolean needDivider;
+
+        public void setDivider(boolean divider) {
+            needDivider = divider;
+            setWillNotDraw(!needDivider);
+            invalidate();
+        }
+
+        @Override
+        protected void dispatchDraw(Canvas canvas) {
+            super.dispatchDraw(canvas);
+            if (needDivider) {
+                Paint paint = resourcesProvider != null ? resourcesProvider.getPaint(Theme.key_paint_divider) : null;
+                if (paint == null) {
+                    paint = Theme.dividerPaint;
+                }
+                int offset = dp(64);
+                canvas.drawLine(LocaleController.isRTL ? 0 : offset, getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? offset : 0), getMeasuredHeight() - 1, paint);
+            }
+        }
+
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(
@@ -1148,7 +1169,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
 
             @Override
             public void bindView(View view, UItem item, boolean divider, UniversalAdapter adapter, UniversalRecyclerView listView) {
-                ((AccountCell) view).set(item.intValue);
+                AccountCell cell = (AccountCell) view;
+                cell.set(item.intValue);
+                cell.setDivider(divider);
             }
 
             public static UItem of(int id, int account) {
@@ -1268,6 +1291,27 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             valueView.setText(value);
         }
 
+        private boolean needDivider;
+
+        public void setDivider(boolean divider) {
+            needDivider = divider;
+            setWillNotDraw(!needDivider);
+            invalidate();
+        }
+
+        @Override
+        protected void dispatchDraw(Canvas canvas) {
+            super.dispatchDraw(canvas);
+            if (needDivider) {
+                Paint paint = resourcesProvider != null ? resourcesProvider.getPaint(Theme.key_paint_divider) : null;
+                if (paint == null) {
+                    paint = Theme.dividerPaint;
+                }
+                int offset = dp(LocaleController.isRTL ? 20 : (iconLayout.getVisibility() == View.VISIBLE ? 64 : 20));
+                canvas.drawLine(LocaleController.isRTL ? 0 : offset, getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? offset : 0), getMeasuredHeight() - 1, paint);
+            }
+        }
+
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(
@@ -1345,12 +1389,14 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             public void bindView(View view, UItem item, boolean divider, UniversalAdapter adapter, UniversalRecyclerView listView) {
                 int iconColorTop    = (int) item.longValue;
                 int iconColorBottom = (int) (item.longValue >>> 32);
-                ((SettingCell) view).set(
+                SettingCell cell = (SettingCell) view;
+                cell.set(
                     iconColorTop, iconColorBottom, item.iconResId,
                     item.text,
                     item.subtext,
                     item.textValue
                 );
+                cell.setDivider(divider);
             }
 
             public static UItem of(int id, int iconColorTop, int iconColorBottom, int icon, CharSequence title) {
