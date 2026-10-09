@@ -2266,6 +2266,8 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     public boolean doNotDrawGlassHeader;
     public boolean doNotDrawGlassMenu;
     public boolean isFloatingCardHeader;
+    public boolean hasPinnedPanel;
+    public org.telegram.messenger.GenericProvider<Void, Boolean> pinnedPanelVisibilityProvider;
     private final android.graphics.Path cardHeaderClipPath = new android.graphics.Path();
 
     @Override
@@ -2288,12 +2290,14 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 int bottomMargin = dp(2);
                 AndroidUtilities.rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
                 final float cardRadius = dp(16);
+                boolean showPinned = pinnedPanelVisibilityProvider != null ? Boolean.TRUE.equals(pinnedPanelVisibilityProvider.provide(null)) : hasPinnedPanel;
+                final float bottomRadius = showPinned ? 0 : cardRadius;
                 cardHeaderClipPath.rewind();
                 cardHeaderClipPath.addRoundRect(AndroidUtilities.rectTmp, new float[] {
                     cardRadius, cardRadius,
                     cardRadius, cardRadius,
-                    0, 0,
-                    0, 0
+                    bottomRadius, bottomRadius,
+                    bottomRadius, bottomRadius
                 }, android.graphics.Path.Direction.CW);
                 canvas.drawPath(cardHeaderClipPath, blurScrimPaint);
 

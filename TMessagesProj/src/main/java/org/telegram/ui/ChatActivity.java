@@ -4473,6 +4473,13 @@ public class ChatActivity extends BaseFragment implements
             invalidateMessagesVisiblePart();
             checkUi_messagesSearchListPadding();
             checkUi_topFade();
+            if (actionBar != null) {
+                boolean hasPinned = topPanelLayout != null && topPanelLayout.getMetadata().getTotalVisibility() > 0 && topPanelLayout.getMetadata().getTotalHeight() > 0;
+                if (actionBar.hasPinnedPanel != hasPinned) {
+                    actionBar.hasPinnedPanel = hasPinned;
+                    actionBar.invalidate();
+                }
+            }
         });
         if (avatarContainer != null) {
             avatarContainer.onDestroy();
@@ -4961,6 +4968,7 @@ public class ChatActivity extends BaseFragment implements
             ChatObject.isForum(currentChat));
         actionBar.doNotDrawGlassHeader = true;
         actionBar.isFloatingCardHeader = true;
+        actionBar.pinnedPanelVisibilityProvider = unused -> topPanelLayout != null && topPanelLayout.getMetadata().getTotalVisibility() > 0 && topPanelLayout.getMetadata().getTotalHeight() > 0;
 
         if (chatMode == MODE_PINNED) {
             actionBar.setChatAvatarContainer(avatarContainer);

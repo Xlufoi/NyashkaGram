@@ -662,7 +662,7 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                 containerView.setPadding(0, 0, 0, 0);
                 containerView.setBackground(shadowDrawable);
 
-                containerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(8), dp(20)));
+                containerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(8), dp(28)));
                 containerView.setClipToOutline(true);
 
                 drawBackground = false;

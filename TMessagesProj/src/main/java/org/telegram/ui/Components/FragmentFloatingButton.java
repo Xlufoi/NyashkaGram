@@ -70,7 +70,7 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
 
         ScaleStateListAnimator.apply(this);
         if (!isSubButton) {
-            setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(18)));
+            setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(16)));
             setTranslationZ(dpf2(1f));
         }
 
@@ -163,7 +163,7 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
         } else {
             imageView.setColorFilter(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider), PorterDuff.Mode.SRC_IN);
             progressView.setProgressColor(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider));
-            setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(18),
+            setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(16),
                 Theme.getColor(Theme.key_featuredStickers_addButton, resourcesProvider),
                 Theme.getColor(Theme.key_featuredStickers_addButtonPressed, resourcesProvider)
             ));
