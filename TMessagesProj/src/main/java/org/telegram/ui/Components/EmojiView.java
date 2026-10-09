@@ -6557,6 +6557,9 @@ public class EmojiView extends FrameLayout implements
     }
 
     private int getThemedColor(int key) {
+        if (key == Theme.key_chat_emojiPanelBackground) {
+            key = Theme.key_chat_messagePanelBackground;
+        }
         if (resourcesProvider != null) {
             return resourcesProvider.getColor(key);
         }

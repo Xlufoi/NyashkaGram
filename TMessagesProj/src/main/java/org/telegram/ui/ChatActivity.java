@@ -3895,10 +3895,10 @@ public class ChatActivity extends BaseFragment implements
                 return ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_messagePanelBackground), 255);
             }
         };
-        underKeyboardSolidColorProvider = new BlurredBackgroundColorProviderThemed(themeDelegate, Theme.key_chat_emojiPanelBackground, 1.0f) {
+        underKeyboardSolidColorProvider = new BlurredBackgroundColorProviderThemed(themeDelegate, Theme.key_chat_messagePanelBackground, 1.0f) {
             @Override
             public int getBackgroundColor() {
-                return ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_emojiPanelBackground), 255);
+                return ColorUtils.setAlphaComponent(getThemedColor(Theme.key_chat_messagePanelBackground), 255);
             }
         };
 

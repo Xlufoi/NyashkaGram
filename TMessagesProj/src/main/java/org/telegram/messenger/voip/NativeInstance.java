@@ -190,7 +190,7 @@ public class NativeInstance {
         stopBarrier = new CountDownLatch(1);
         stopNative();
         try {
-            stopBarrier.await();
+            stopBarrier.await(1500, java.util.concurrent.TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             FileLog.e(e);
         }

@@ -485,9 +485,24 @@ public class VoIPFragment implements
                     }
                 }
             }
-            instance.callingUserTextureView.renderer.release();
-            instance.currentUserTextureView.renderer.release();
-            instance.callingUserMiniTextureRenderer.release();
+            final VoIPTextureView callingTV = instance.callingUserTextureView;
+            final VoIPTextureView currentTV = instance.currentUserTextureView;
+            final org.webrtc.TextureViewRenderer miniRenderer = instance.callingUserMiniTextureRenderer;
+            Utilities.globalQueue.postRunnable(() -> {
+                try {
+                    if (callingTV != null && callingTV.renderer != null) {
+                        callingTV.renderer.release();
+                    }
+                    if (currentTV != null && currentTV.renderer != null) {
+                        currentTV.renderer.release();
+                    }
+                    if (miniRenderer != null) {
+                        miniRenderer.release();
+                    }
+                } catch (Throwable e) {
+                    FileLog.e(e);
+                }
+            });
             instance.destroy();
         }
         instance = null;

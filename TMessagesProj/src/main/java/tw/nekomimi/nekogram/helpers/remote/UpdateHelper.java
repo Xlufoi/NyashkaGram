@@ -179,13 +179,98 @@ public class UpdateHelper extends BaseRemoteHelper {
         }
     }
 
+    private boolean isVersionNewer(String remoteVer, String currentVer) {
+        if (remoteVer == null || currentVer == null) return false;
+        remoteVer = remoteVer.replaceAll("^[vV]", "").trim();
+        currentVer = currentVer.replaceAll("^[vV]", "").trim();
+        String[] rParts = remoteVer.split("[.\\-_]");
+        String[] cParts = currentVer.split("[.\\-_]");
+        int len = Math.max(rParts.length, cParts.length);
+        for (int i = 0; i < len; i++) {
+            int r = 0, c = 0;
+            if (i < rParts.length) {
+                try { r = Integer.parseInt(rParts[i]); } catch (Exception ignored) {}
+            }
+            if (i < cParts.length) {
+                try { c = Integer.parseInt(cParts[i]); } catch (Exception ignored) {}
+            }
+            if (r > c) return true;
+            if (r < c) return false;
+        }
+        return false;
+    }
+
     public void checkNewVersionAvailable(Delegate delegate) {
         checkNewVersionAvailable(delegate, false);
     }
 
     public void checkNewVersionAvailable(Delegate delegate, boolean updateAlways_) {
         updateAlways = updateAlways_;
-        load(delegate);
+        org.telegram.messenger.Utilities.globalQueue.postRunnable(() -> {
+            java.net.HttpURLConnection conn = null;
+            try {
+                java.net.URL url = new java.net.URL("https://api.github.com/repos/Xlufoi/NyashkaGram/releases/latest");
+                conn = (java.net.HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(15000);
+                conn.setRequestProperty("User-Agent", "NyashkaGram-Android");
+                conn.setRequestProperty("Accept", "application/vnd.github.v3+json");
+                int code = conn.getResponseCode();
+                if (code == java.net.HttpURLConnection.HTTP_OK) {
+                    java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(conn.getInputStream(), java.nio.charset.StandardCharsets.UTF_8));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    reader.close();
+                    JSONObject obj = new JSONObject(sb.toString());
+                    String tagName = obj.optString("tag_name", "");
+                    String body = obj.optString("body", "");
+                    String htmlUrl = obj.optString("html_url", "https://github.com/Xlufoi/NyashkaGram/releases");
+                    String downloadUrl = null;
+                    org.json.JSONArray assets = obj.optJSONArray("assets");
+                    if (assets != null) {
+                        for (int i = 0; i < assets.length(); i++) {
+                            JSONObject asset = assets.getJSONObject(i);
+                            String assetName = asset.optString("name", "");
+                            if (assetName.endsWith(".apk")) {
+                                if (downloadUrl == null || assetName.contains("arm64") || assetName.contains("universal")) {
+                                    downloadUrl = asset.optString("browser_download_url", htmlUrl);
+                                }
+                            }
+                        }
+                    }
+                    if (downloadUrl == null) {
+                        downloadUrl = htmlUrl;
+                    }
+
+                    boolean isNewer = isVersionNewer(tagName, BuildConfig.VERSION_NAME);
+                    if (isNewer || updateAlways_) {
+                        TLRPC.TL_help_appUpdate update = new TLRPC.TL_help_appUpdate();
+                        update.version = tagName;
+                        update.text = body;
+                        update.url = downloadUrl;
+                        update.flags |= 4;
+                        org.telegram.messenger.AndroidUtilities.runOnUIThread(() -> delegate.onTLResponse(update, null));
+                        return;
+                    } else {
+                        org.telegram.messenger.AndroidUtilities.runOnUIThread(() -> delegate.onTLResponse(null, null));
+                        return;
+                    }
+                }
+            } catch (Throwable e) {
+                org.telegram.messenger.FileLog.e(e);
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.disconnect();
+                    } catch (Throwable ignored) {}
+                }
+            }
+            load(delegate);
+        });
     }
 
     public static class Update {

@@ -2241,7 +2241,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         };
         actionBar.alwaysApplyColorFilterToBackButton();
         actionBar.setForcedMenuWidth(dp(46));
-        // actionBar.setBackgroundColor(getThemedColor(Theme.key_dialogBackground));
+        actionBar.doNotDrawGlassHeader = true;
+        actionBar.setBackgroundColor(getThemedColor(Theme.key_dialogBackground));
         actionBar.setBackButtonDrawable(new BackDrawable(false));
         actionBar.setItemsColor(getThemedColor(Theme.key_dialogTextBlack), false);
         actionBar.setItemsBackgroundColor(getThemedColor(Theme.key_dialogButtonSelector), false);
@@ -4155,7 +4156,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
             .setStrokeWidth(dpf2(1), dpf2(2 / 3f))
             .build();
 
-        actionBar.setupGlass(iBlur3FactoryLiquidGlass, colorProvider);
+        actionBar.doNotDrawGlassHeader = true;
+        actionBar.setBackgroundColor(getThemedColor(Theme.key_dialogBackground));
         animatorCurrentVisibleLayout.replace((long) LAYOUT_TYPE_PHOTO, false);
     }
 
@@ -5608,7 +5610,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         // captionContainer.setBackgroundColor(getThemedColor(forceDarkTheme ? Theme.key_voipgroup_listViewBackground : Theme.key_dialogBackground));
         // topCommentContainer.setBackgroundColor(getThemedColor(Theme.key_dialogBackground));
 
-        // actionBar.setBackgroundColor(forceDarkTheme ? getThemedColor(Theme.key_voipgroup_actionBar) : getThemedColor(Theme.key_dialogBackground));
+        actionBar.doNotDrawGlassHeader = true;
+        actionBar.setBackgroundColor(forceDarkTheme ? getThemedColor(Theme.key_voipgroup_actionBar) : getThemedColor(Theme.key_dialogBackground));
         actionBar.setItemsColor(forceDarkTheme ? getThemedColor(Theme.key_voipgroup_actionBarItems) : getThemedColor(Theme.key_dialogTextBlack), false);
         actionBar.setItemsBackgroundColor(forceDarkTheme ? getThemedColor(Theme.key_voipgroup_actionBarItemsSelector) : getThemedColor(Theme.key_dialogButtonSelector), false);
         actionBar.setTitleColor(forceDarkTheme ? getThemedColor(Theme.key_voipgroup_actionBarItems) : getThemedColor(Theme.key_dialogTextBlack));

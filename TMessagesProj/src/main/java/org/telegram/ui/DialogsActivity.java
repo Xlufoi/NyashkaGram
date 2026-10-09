@@ -1743,6 +1743,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             super(context);
             parentPage = page;
             additionalClipBottom = dp(200);
+            setItemViewCacheSize(20);
+            setHasFixedSize(true);
         }
 
         public void prepareSelectorForAnimation() {

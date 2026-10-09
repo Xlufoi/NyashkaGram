@@ -4191,14 +4191,19 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 				}
 				currentStreamRequestTimestamp.clear();
 			} else {
-				Instance.FinalState state = tgVoip[CAPTURE_DEVICE_CAMERA].stop();
-				updateTrafficStats(tgVoip[CAPTURE_DEVICE_CAMERA], state.trafficStats);
-				onTgVoipStop(state);
+				NativeInstance nativeInst = tgVoip[CAPTURE_DEVICE_CAMERA];
+				Utilities.globalQueue.postRunnable(() -> {
+					Instance.FinalState state = nativeInst.stop();
+					AndroidUtilities.runOnUIThread(() -> {
+						updateTrafficStats(nativeInst, state != null ? state.trafficStats : null);
+						onTgVoipStop(state);
+						Instance.destroyInstance();
+					});
+				});
 			}
 			prevTrafficStats = null;
 			callStartTime = 0;
 			tgVoip[CAPTURE_DEVICE_CAMERA] = null;
-			Instance.destroyInstance();
 		}
 		destroyConverting();
 		if (tgVoip[CAPTURE_DEVICE_SCREEN] != null) {
