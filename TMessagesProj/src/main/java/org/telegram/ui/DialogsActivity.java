@@ -1743,8 +1743,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             super(context);
             parentPage = page;
             additionalClipBottom = dp(200);
-            setItemViewCacheSize(20);
+            setItemViewCacheSize(25);
             setHasFixedSize(true);
+            setNestedScrollingEnabled(false);
+            setOverScrollMode(OVER_SCROLL_IF_CONTENT_SCROLLS);
         }
 
         public void prepareSelectorForAnimation() {
@@ -4184,7 +4186,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             viewPage.listView = new DialogsRecyclerView(context, viewPage);
             viewPage.listView.addEdgeEffectListener(() -> viewPage.listView.postOnAnimation(this::blur3_InvalidateBlur));
             viewPage.scroller = new RecyclerListViewScroller(viewPage.listView);
-            viewPage.listView.setAllowStopHeaveOperations(true);
+            viewPage.listView.setAllowStopHeaveOperations(false);
             viewPage.listView.setAccessibilityEnabled(false);
             viewPage.listView.setAnimateEmptyView(true, RecyclerListView.EMPTY_VIEW_ANIMATION_TYPE_ALPHA);
             viewPage.listView.setClipToPadding(false);

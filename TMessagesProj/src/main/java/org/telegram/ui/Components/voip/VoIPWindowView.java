@@ -138,6 +138,7 @@ public class VoIPWindowView extends FrameLayout {
             } else {
                 int account = UserConfig.selectedAccount;
                 notificationsLocker.lock();
+                AndroidUtilities.runOnUIThread(notificationsLocker::unlock, animDuration + 100);
                 animate().translationY(getMeasuredHeight()).alpha(0f).setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {

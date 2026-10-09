@@ -4213,10 +4213,18 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 		}
 		for (int a = 0; a < captureDevice.length; a++) {
 			if (captureDevice[a] != 0) {
-				if (destroyCaptureDevice[a]) {
-					NativeInstance.destroyVideoCapturer(captureDevice[a]);
-				}
+				final long dev = captureDevice[a];
+				final boolean destroy = destroyCaptureDevice[a];
 				captureDevice[a] = 0;
+				if (destroy) {
+					Utilities.globalQueue.postRunnable(() -> {
+						try {
+							NativeInstance.destroyVideoCapturer(dev);
+						} catch (Throwable e) {
+							FileLog.e(e);
+						}
+					});
+				}
 			}
 		}
 		cpuWakelock.release();
@@ -4248,7 +4256,11 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 						}
 					});
 				}
-				am.abandonAudioFocus(this);
+				Utilities.globalQueue.postRunnable(() -> {
+					try {
+						am.abandonAudioFocus(this);
+					} catch (Throwable ignore) {}
+				});
 			}
 			try {
 				am.unregisterMediaButtonEventReceiver(new ComponentName(this, VoIPMediaButtonReceiver.class));
@@ -4266,7 +4278,11 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 			});
 		}
 		if (hasAudioFocus) {
-			am.abandonAudioFocus(this);
+			Utilities.globalQueue.postRunnable(() -> {
+				try {
+					am.abandonAudioFocus(this);
+				} catch (Throwable ignore) {}
+			});
 		}
 
 		if (USE_CONNECTION_SERVICE) {
@@ -4298,6 +4314,10 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 
 	public long getGroupCallID() {
 		return groupCall != null && groupCall.call != null ? groupCall.call.id : 0;
+	}
+
+	public boolean isCallEnded() {
+		return isCallEnded || currentState == STATE_ENDED || currentState == STATE_HANGING_UP;
 	}
 
 	public void hangUp() {

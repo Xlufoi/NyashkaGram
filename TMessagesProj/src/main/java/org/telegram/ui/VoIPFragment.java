@@ -475,9 +475,11 @@ public class VoIPFragment implements
 
     public static void clearInstance() {
         if (instance != null) {
-            if (VoIPService.getSharedInstance() != null) {
+            AndroidUtilities.cancelRunOnUIThread(instance.stopAnimatingBgRunnable);
+            VoIPService service = VoIPService.getSharedInstance();
+            if (service != null && !service.isCallEnded() && service.getCallState() != VoIPService.STATE_ENDED && service.getCallState() != VoIPService.STATE_HANGING_UP) {
                 int h = instance.windowView.getMeasuredHeight();
-                if (instance.canSwitchToPip && !VoIPService.getSharedInstance().isConverting()) {
+                if (instance.canSwitchToPip && !service.isConverting()) {
                     VoIPPiPView.show(instance.activity, instance.currentAccount, instance.windowView.getMeasuredWidth(), h, VoIPPiPView.ANIMATION_ENTER_TYPE_SCALE);
                     if (instance.lastInsets != null) {
                         VoIPPiPView.topInset = instance.lastInsets.getSystemWindowInsetTop();

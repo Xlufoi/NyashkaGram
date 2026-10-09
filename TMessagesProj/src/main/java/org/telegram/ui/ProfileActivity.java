@@ -6790,13 +6790,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         if (isTopic) {
             return 0;
         }
-        if (chatId != 0) {
-            TLRPC.Chat chatLocal = getMessagesController().getChat(chatId);
-            if (ChatObject.isForum(chatLocal)) {
-                return dp(needInsetForStories() ? 24 : 38);
-            }
-        }
-        return dp(50);
+        return AndroidUtilities.dp(50);
     }
 
     private void updateTtlIcon() {
@@ -10425,7 +10419,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             updateStar();
         }
         final AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(playProfileAnimation == 2 ? 250 : 180);
+        animatorSet.setDuration(480);
         listView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         ActionBarMenu menu = actionBar.createMenu();
         if (menu.getItem(10) == null) {
@@ -10747,7 +10741,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 fragmentView.invalidate();
             }
         });
-        animatorSet.setInterpolator(playProfileAnimation == 2 ? CubicBezierInterpolator.DEFAULT : new DecelerateInterpolator());
+        animatorSet.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
 
         AndroidUtilities.runOnUIThread(animatorSet::start, 50);
         return animatorSet;
