@@ -136,14 +136,11 @@ public class VoIPWindowView extends FrameLayout {
 
                 }
             } else {
-                int account = UserConfig.selectedAccount;
-                notificationsLocker.lock();
-                AndroidUtilities.runOnUIThread(notificationsLocker::unlock, animDuration + 100);
+                AndroidUtilities.unlockOrientation(activity);
+                OrientationHelper.cameraRotationDisabled = false;
                 animate().translationY(getMeasuredHeight()).alpha(0f).setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        notificationsLocker.unlock();
-                        AndroidUtilities.unlockOrientation(activity);
                         if (getParent() != null) {
                             WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
                             setVisibility(View.GONE);
@@ -152,8 +149,6 @@ public class VoIPWindowView extends FrameLayout {
                             } catch (Exception ignore) {
 
                             }
-
-                            OrientationHelper.cameraRotationDisabled = false;
                         }
                     }
                 }).setDuration(animDuration).setInterpolator(CubicBezierInterpolator.DEFAULT).start();

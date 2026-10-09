@@ -1126,8 +1126,39 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             int r = /*isMetaballWorking && !hasStories ? roundRadiusCollapse : */roundRadiusExpand;
             if (r > 0) {
                 clipPath.rewind();
-                AndroidUtilities.rectTmp.set(inset, inset, thisWidth - inset, thisHeight - inset);
-                clipPath.addRoundRect(AndroidUtilities.rectTmp, r, r, Path.Direction.CW);
+                float left = inset;
+                float top = inset;
+                float right = thisWidth - inset;
+                float bottom = thisHeight - inset;
+                AndroidUtilities.rectTmp.set(left, top, right, bottom);
+
+                if (progressToExpand < 0.95f) {
+                    float cx = (left + right) / 2f;
+                    float cy = (top + bottom) / 2f;
+                    float baseRadius = Math.min(right - left, bottom - top) / 2f;
+                    long time = SystemClock.uptimeMillis();
+                    float angleOffset = (float) ((time % 20000L) / 20000.0 * 2.0 * Math.PI);
+                    int steps = 144;
+                    float expandBlend = progressToExpand / 0.95f;
+                    float amplitude = (1f - expandBlend) * 0.12f;
+
+                    for (int i = 0; i < steps; i++) {
+                        double theta = 2.0 * Math.PI * i / steps;
+                        double wave = Math.cos(12.0 * (theta - angleOffset));
+                        float rCurrent = baseRadius * (1f - amplitude * 0.5f + (float) (amplitude * 0.5f * wave));
+                        float x = cx + (float) (rCurrent * Math.cos(theta));
+                        float y = cy + (float) (rCurrent * Math.sin(theta));
+                        if (i == 0) {
+                            clipPath.moveTo(x, y);
+                        } else {
+                            clipPath.lineTo(x, y);
+                        }
+                    }
+                    clipPath.close();
+                    postInvalidateOnAnimation();
+                } else {
+                    clipPath.addRoundRect(AndroidUtilities.rectTmp, r, r, Path.Direction.CW);
+                }
                 canvas.clipPath(clipPath);
             }
 

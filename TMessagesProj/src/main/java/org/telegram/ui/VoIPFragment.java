@@ -573,6 +573,7 @@ public class VoIPFragment implements
             addPeopleSheet.dismiss();
             addPeopleSheet = null;
         }
+        notificationsLocker.unlock();
     }
 
     @Override

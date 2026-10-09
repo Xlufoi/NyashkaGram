@@ -87,10 +87,7 @@ public class ViewPagerFixed extends FrameLayout {
     private int maximumVelocity;
     private boolean startedTracking;
     private boolean maybeStartTracking;
-    private static final Interpolator interpolator = t -> {
-        --t;
-        return t * t * t * t * t + 1.0F;
-    };
+    private static final Interpolator interpolator = CubicBezierInterpolator.EASE_OUT_QUINT;
 
     AnimationNotificationsLocker notificationsLocker = new AnimationNotificationsLocker();
 
@@ -771,9 +768,9 @@ public class ViewPagerFixed extends FrameLayout {
                     duration = 4 * Math.round(1000.0f * Math.abs(distance / velX));
                 } else {
                     float pageDelta = dx / getMeasuredWidth();
-                    duration = (int) ((pageDelta + 1.0f) * 100.0f);
+                    duration = (int) ((pageDelta + 1.0f) * 160.0f);
                 }
-                duration = Math.max(150, Math.min(duration, 600));
+                duration = Math.max(280, Math.min(duration, 480));
 
                 tabsAnimation.setDuration(duration);
                 tabsAnimation.addListener(new AnimatorListenerAdapter() {
@@ -1026,7 +1023,7 @@ public class ViewPagerFixed extends FrameLayout {
             });
             tabsAnimation.playTogether(animator);
             tabsAnimation.setInterpolator(interpolator);
-            tabsAnimation.setDuration(220);
+            tabsAnimation.setDuration(320);
             tabsAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animator) {
@@ -1199,9 +1196,9 @@ public class ViewPagerFixed extends FrameLayout {
                 duration = 4 * Math.round(1000.0f * Math.abs(distance / velX));
             } else {
                 float pageDelta = dx / getMeasuredWidth();
-                duration = (int) ((pageDelta + 1.0f) * 100.0f);
+                duration = (int) ((pageDelta + 1.0f) * 160.0f);
             }
-            duration = Math.max(150, Math.min(duration, 600));
+            duration = Math.max(280, Math.min(duration, 480));
 
             tabsAnimation.setDuration(duration);
             tabsAnimation.addListener(new AnimatorListenerAdapter() {
