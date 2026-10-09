@@ -502,8 +502,7 @@ public class SessionCell extends FrameLayout {
             }
         }
         if (needDivider) {
-            int margin = currentType == 1 ? 49 : 72;
-            canvas.drawLine(LocaleController.isRTL ? 0 : dp(margin), getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? dp(margin) : 0), getMeasuredHeight() - 1, Theme.dividerPaint);
+            canvas.drawLine(0, getMeasuredHeight() - 1, getMeasuredWidth(), getMeasuredHeight() - 1, Theme.dividerPaint);
         }
     }
 

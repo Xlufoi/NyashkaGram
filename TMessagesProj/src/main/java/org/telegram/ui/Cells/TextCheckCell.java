@@ -415,8 +415,7 @@ public class TextCheckCell extends FrameLayout {
         if (needDivider) {
             Paint dividerPaint = resourcesProvider != null ? resourcesProvider.getPaint(Theme.key_paint_divider) : Theme.dividerPaint;
             if (dividerPaint != null) {
-                int offset = AndroidUtilities.dp(imageView != null && imageView.getVisibility() == View.VISIBLE ? 58 : padding);
-                canvas.drawLine(LocaleController.isRTL ? 0 : offset, getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? offset : 0), getMeasuredHeight() - 1, dividerPaint);
+                canvas.drawLine(0, getMeasuredHeight() - 1, getMeasuredWidth(), getMeasuredHeight() - 1, dividerPaint);
             }
         }
     }

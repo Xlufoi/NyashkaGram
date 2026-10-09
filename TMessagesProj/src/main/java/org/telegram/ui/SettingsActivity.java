@@ -1146,8 +1146,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 if (paint == null) {
                     paint = Theme.dividerPaint;
                 }
-                int offset = dp(64);
-                canvas.drawLine(LocaleController.isRTL ? 0 : offset, getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? offset : 0), getMeasuredHeight() - 1, paint);
+                canvas.drawLine(0, getMeasuredHeight() - 1, getMeasuredWidth(), getMeasuredHeight() - 1, paint);
             }
         }
 
@@ -1307,8 +1306,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 if (paint == null) {
                     paint = Theme.dividerPaint;
                 }
-                int offset = dp(LocaleController.isRTL ? 20 : (iconLayout.getVisibility() == View.VISIBLE ? 64 : 20));
-                canvas.drawLine(LocaleController.isRTL ? 0 : offset, getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? offset : 0), getMeasuredHeight() - 1, paint);
+                canvas.drawLine(0, getMeasuredHeight() - 1, getMeasuredWidth(), getMeasuredHeight() - 1, paint);
             }
         }
 

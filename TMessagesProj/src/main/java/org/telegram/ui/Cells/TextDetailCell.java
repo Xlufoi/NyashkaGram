@@ -276,9 +276,9 @@ public class TextDetailCell extends FrameLayout {
             Paint paint = resourcesProvider != null ? resourcesProvider.getPaint(Theme.key_paint_divider) : Theme.dividerPaint;
             if (paint == null) paint = Theme.dividerPaint;
             canvas.drawLine(
-                LocaleController.isRTL ? 0 : dp(20),
+                0,
                 getMeasuredHeight() - 1,
-                getMeasuredWidth() - (LocaleController.isRTL ? dp(20) : 0),
+                getMeasuredWidth(),
                 getMeasuredHeight() - 1,
                 paint
             );

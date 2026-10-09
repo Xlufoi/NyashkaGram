@@ -138,7 +138,7 @@ public class TextDetailSettingsCell extends FrameLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         if (needDivider && Theme.dividerPaint != null) {
-            canvas.drawLine(LocaleController.isRTL ? 0 : AndroidUtilities.dp(imageView.getVisibility() == VISIBLE ? 71 : 16), getMeasuredHeight() - 1, getMeasuredWidth() - (LocaleController.isRTL ? AndroidUtilities.dp(imageView.getVisibility() == VISIBLE ? 71 : 16) : 0), getMeasuredHeight() - 1, Theme.dividerPaint);
+            canvas.drawLine(0, getMeasuredHeight() - 1, getMeasuredWidth(), getMeasuredHeight() - 1, Theme.dividerPaint);
         }
     }
 }

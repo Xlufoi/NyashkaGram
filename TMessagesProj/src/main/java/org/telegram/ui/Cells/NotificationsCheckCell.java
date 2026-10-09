@@ -210,11 +210,10 @@ public class NotificationsCheckCell extends FrameLayout {
         if (needDivider) {
             Paint dividerPaint = resourcesProvider != null ? resourcesProvider.getPaint(Theme.key_paint_divider) : Theme.dividerPaint;
             if (dividerPaint != null) {
-                int offset = dp(imageView != null ? 64 : 16);
                 canvas.drawLine(
-                    LocaleController.isRTL ? 0 : offset,
+                    0,
                     getMeasuredHeight() - 1,
-                    getMeasuredWidth() - (LocaleController.isRTL ? offset : 0),
+                    getMeasuredWidth(),
                     getMeasuredHeight() - 1,
                     dividerPaint
                 );

@@ -1792,9 +1792,6 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                     itemInternals.add(new ItemInternal(VIEW_TYPE_EMPTY, dialogsEmptyType()));
                 }
             } else {
-                if (folderId == 0 && dialogsCount > 10 && dialogsType == DialogsActivity.DIALOGS_TYPE_DEFAULT) {
-                    itemInternals.add(new ItemInternal(VIEW_TYPE_NEW_CHAT_HINT));
-                }
                 itemInternals.add(new ItemInternal(VIEW_TYPE_LAST_EMPTY));
             }
         }
