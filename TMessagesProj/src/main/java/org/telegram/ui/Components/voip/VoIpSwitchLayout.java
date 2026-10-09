@@ -25,6 +25,9 @@ import androidx.annotation.NonNull;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.R;
+import android.view.animation.OvershootInterpolator;
+import org.telegram.ui.Components.ButtonBounce;
+import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.RLottieDrawable;
 
@@ -271,36 +274,56 @@ public class VoIpSwitchLayout extends FrameLayout {
         private int singleIconBackgroundAlphaPercent = 0;
         private OnBtnClickedListener onBtnClickedListener;
         private ValueAnimator animator;
+        private ValueAnimator morphAnimator;
+        private float morphProgress = 0f;
+        private final ButtonBounce buttonBounce = new ButtonBounce(this, 1f, 3.5f);
         private final VoIPBackgroundProvider backgroundProvider;
 
         public void setSelectedState(boolean selectedState, boolean animate, Type type) {
+            if (morphAnimator != null) {
+                morphAnimator.removeAllUpdateListeners();
+                morphAnimator.cancel();
+                morphAnimator = null;
+            }
             if (animator != null && animator.isRunning()) {
                 animator.removeAllUpdateListeners();
                 animator.cancel();
+                animator = null;
                 animate = false;
             }
             if (animate) {
-                if (singleIcon != null) {
-                    if (animator != null) {
-                        animator.removeAllUpdateListeners();
-                        animator.cancel();
+                float targetMorph = selectedState ? 1f : 0f;
+                morphAnimator = ValueAnimator.ofFloat(morphProgress, targetMorph);
+                morphAnimator.addUpdateListener(animation -> {
+                    morphProgress = (float) animation.getAnimatedValue();
+                    invalidate();
+                });
+                if (selectedState) {
+                    morphAnimator.setInterpolator(new OvershootInterpolator(1.6f));
+                    morphAnimator.setDuration(320);
+                    if (selectedIcon != null) {
+                        selectedIcon.setCurrentFrame(0, false);
+                        selectedIcon.start();
                     }
+                } else {
+                    morphAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
+                    morphAnimator.setDuration(280);
+                }
+                morphAnimator.start();
+
+                if (singleIcon != null) {
                     animator = selectedState ? ValueAnimator.ofInt(20, 100) : ValueAnimator.ofInt(100, 20);
                     animator.addUpdateListener(animation -> {
                         singleIconBackgroundAlphaPercent = (int) animation.getAnimatedValue();
                         invalidate();
                     });
-                    animator.setDuration(200);
+                    animator.setDuration(280);
                     animator.start();
                     if (type == Type.CAMERA) {
                         singleIcon.setCurrentFrame(0, false);
                         singleIcon.start();
                     }
                 } else {
-                    if (animator != null) {
-                        animator.removeAllUpdateListeners();
-                        animator.cancel();
-                    }
                     animator = ValueAnimator.ofInt(0, maxRadius);
                     if (selectedState) {
                         unselectedRadius = maxRadius;
@@ -311,43 +334,46 @@ public class VoIpSwitchLayout extends FrameLayout {
                         animator.addListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                unselectedRadius = 0; //switched to selected state
+                                unselectedRadius = 0;
                                 invalidate();
                             }
                         });
-                        animator.setDuration(200);
+                        animator.setDuration(280);
                         animator.start();
-                        selectedIcon.setCurrentFrame(0, false);
-                        selectedIcon.start();
                     } else {
                         selectedRadius = maxRadius;
                         animator.addUpdateListener(animation -> {
                             unselectedRadius = (int) animation.getAnimatedValue();
                             invalidate();
                         });
-                        animator.setDuration(200);
                         animator.addListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                selectedRadius = 0; //switched to NOT selected state
+                                selectedRadius = 0;
                                 invalidate();
                             }
                         });
+                        animator.setDuration(280);
                         animator.start();
                     }
                 }
             } else {
-                if (selectedState) {
-                    selectedRadius = maxRadius;
-                    unselectedRadius = 0;
-                    singleIconBackgroundAlphaPercent = 100;
-                    if (type == Type.VIDEO || type == Type.MICRO) {
-                        selectedIcon.setCurrentFrame(selectedIcon.getFramesCount() - 1, false);
-                    }
+                morphProgress = selectedState ? 1f : 0f;
+                if (singleIcon != null) {
+                    singleIconBackgroundAlphaPercent = selectedState ? 100 : 20;
                 } else {
-                    selectedRadius = 0;
-                    unselectedRadius = maxRadius;
-                    singleIconBackgroundAlphaPercent = 20;
+                    if (selectedState) {
+                        selectedRadius = maxRadius;
+                        unselectedRadius = 0;
+                        singleIconBackgroundAlphaPercent = 100;
+                        if (type == Type.VIDEO || type == Type.MICRO) {
+                            selectedIcon.setCurrentFrame(selectedIcon.getFramesCount() - 1, false);
+                        }
+                    } else {
+                        selectedRadius = 0;
+                        unselectedRadius = maxRadius;
+                        singleIconBackgroundAlphaPercent = 20;
+                    }
                 }
             }
             isSelectedState = selectedState;
@@ -377,26 +403,15 @@ public class VoIpSwitchLayout extends FrameLayout {
             darkPaint.setAlpha(VoIPBackgroundProvider.DARK_LIGHT_DEFAULT_ALPHA);
         }
 
-        private ValueAnimator pressedScaleAnimator;
-        private float pressedScale = 1.0f;
-
         private void setPressedBtn(boolean pressed) {
-            if (pressedScaleAnimator != null) {
-                pressedScaleAnimator.cancel();
-            }
-            pressedScaleAnimator = ValueAnimator.ofFloat(pressedScale, pressed ? 0.8f : 1f);
-            pressedScaleAnimator.addUpdateListener(animation -> {
-                pressedScale = (float) animation.getAnimatedValue();
-                invalidate();
-            });
-            pressedScaleAnimator.setDuration(150);
-            pressedScaleAnimator.start();
+            buttonBounce.setPressed(pressed);
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
             canvas.save();
-            canvas.scale(pressedScale, pressedScale, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
+            float bounceScale = buttonBounce.getScale(0.12f);
+            canvas.scale(bounceScale, bounceScale, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
             float cx = getWidth() / 2f;
             float cy = getHeight() / 2f;
 
@@ -404,21 +419,22 @@ public class VoIpSwitchLayout extends FrameLayout {
             float top = getY() + ((View) ((View) getParent()).getParent()).getY();
             backgroundProvider.setLightTranslation(left, top);
 
-            final float cornerRadius = AndroidUtilities.dp(16);
+            rectF.set(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
+            float currentCornerRadius = AndroidUtilities.lerp(maxRadius, AndroidUtilities.dp(16), Math.max(0f, Math.min(1.15f, morphProgress)));
 
             if (singleIcon != null) {
-                if (singleIconBackgroundAlphaPercent > 20) {
-                    darkPaint.setAlpha((int) (VoIPBackgroundProvider.DARK_LIGHT_DEFAULT_ALPHA * singleIconBackgroundAlphaPercent / 100f));
-                    whiteCirclePaint.setAlpha((int) (255 * singleIconBackgroundAlphaPercent / 100f));
-                    rectF.set(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
-                    canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, whiteCirclePaint);
+                float p = Math.max((singleIconBackgroundAlphaPercent - 20) / 80f, morphProgress);
+                float singleCorner = AndroidUtilities.lerp(maxRadius, AndroidUtilities.dp(16), Math.max(0f, Math.min(1.15f, p)));
+                if (singleIconBackgroundAlphaPercent > 20 || morphProgress > 0f) {
+                    darkPaint.setAlpha((int) (VoIPBackgroundProvider.DARK_LIGHT_DEFAULT_ALPHA * p));
+                    whiteCirclePaint.setAlpha((int) (255 * p));
+                    canvas.drawRoundRect(rectF, singleCorner, singleCorner, whiteCirclePaint);
                     singleIcon.draw(canvas, maskPaint);
-                    singleIcon.draw(canvas, darkPaint); //dimming icons
+                    singleIcon.draw(canvas, darkPaint);
                 } else {
-                    rectF.set(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
-                    canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, backgroundProvider.getLightPaint()); //add a light background
+                    canvas.drawRoundRect(rectF, singleCorner, singleCorner, backgroundProvider.getLightPaint());
                     if (backgroundProvider.isReveal()) {
-                        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, backgroundProvider.getRevealPaint());
+                        canvas.drawRoundRect(rectF, singleCorner, singleCorner, backgroundProvider.getRevealPaint());
                     }
                     singleIcon.draw(canvas);
                 }
@@ -430,59 +446,49 @@ public class VoIpSwitchLayout extends FrameLayout {
                 return;
             }
 
-            boolean isUnSelected = unselectedRadius == maxRadius && selectedRadius == 0;
-            boolean isSelected = selectedRadius == maxRadius && unselectedRadius == 0;
-
-            if (selectedRadius == maxRadius && unselectedRadius > 0 && unselectedRadius != maxRadius) {
-                //in the process of changing from selected to NOT selected.
-                rectF.set(cx - selectedRadius, cy - selectedRadius, cx + selectedRadius, cy + selectedRadius);
-                canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, whiteCirclePaint);
-                rectF.set(cx - unselectedRadius, cy - unselectedRadius, cx + unselectedRadius, cy + unselectedRadius);
-                float curCorner = Math.min(cornerRadius, (float) unselectedRadius);
-                canvas.drawRoundRect(rectF, curCorner, curCorner, maskPaint);
-
-                selectedIcon.setAlpha(255);
-                selectedIcon.draw(canvas, maskPaint);
-                selectedIcon.setAlpha((int) (255 * VoIPBackgroundProvider.DARK_LIGHT_PERCENT));
-                selectedIcon.draw(canvas); //dimming icons
-
-                clipPath.reset();
-                clipPath.addRoundRect(rectF, curCorner, curCorner, Path.Direction.CW);
-                canvas.clipPath(clipPath);
-                canvas.drawRoundRect(rectF, curCorner, curCorner, maskPaint); //remove all background
-            }
-
-            if (isUnSelected || unselectedRadius > 0) {
-                //not selected or in the process of changing from selected to NOT selected
-                rectF.set(cx - unselectedRadius, cy - unselectedRadius, cx + unselectedRadius, cy + unselectedRadius);
-                float curCorner = Math.min(cornerRadius, (float) unselectedRadius);
-                canvas.drawRoundRect(rectF, curCorner, curCorner, backgroundProvider.getLightPaint()); //add a light background
+            if (morphProgress <= 0f) {
+                canvas.drawRoundRect(rectF, maxRadius, maxRadius, backgroundProvider.getLightPaint());
                 if (backgroundProvider.isReveal()) {
-                    canvas.drawRoundRect(rectF, curCorner, curCorner, backgroundProvider.getRevealPaint());
+                    canvas.drawRoundRect(rectF, maxRadius, maxRadius, backgroundProvider.getRevealPaint());
                 }
+                unSelectedIcon.setAlpha(255);
                 unSelectedIcon.draw(canvas);
-            }
-
-            if (isSelected || (selectedRadius > 0 && unselectedRadius == maxRadius)) {
-                //selected and not in the process of changing or in the process of changing from NOT selected to selected.
-                rectF.set(cx - selectedRadius, cy - selectedRadius, cx + selectedRadius, cy + selectedRadius);
-                float curCorner = Math.min(cornerRadius, (float) selectedRadius);
-                clipPath.reset();
-                clipPath.addRoundRect(rectF, curCorner, curCorner, Path.Direction.CW);
-                canvas.clipPath(clipPath);
-                canvas.drawRoundRect(rectF, curCorner, curCorner, whiteCirclePaint); //squircle background
+            } else if (morphProgress >= 1f) {
+                canvas.drawRoundRect(rectF, AndroidUtilities.dp(16), AndroidUtilities.dp(16), whiteCirclePaint);
                 selectedIcon.setAlpha(255);
                 selectedIcon.draw(canvas, maskPaint);
                 selectedIcon.setAlpha((int) (255 * VoIPBackgroundProvider.DARK_LIGHT_PERCENT));
-                selectedIcon.draw(canvas); //dimming icons
+                selectedIcon.draw(canvas);
+            } else {
+                canvas.drawRoundRect(rectF, currentCornerRadius, currentCornerRadius, backgroundProvider.getLightPaint());
+                if (backgroundProvider.isReveal()) {
+                    canvas.drawRoundRect(rectF, currentCornerRadius, currentCornerRadius, backgroundProvider.getRevealPaint());
+                }
+
+                int whiteAlpha = (int) (255 * Math.min(1f, morphProgress));
+                if (whiteAlpha > 0) {
+                    whiteCirclePaint.setAlpha(whiteAlpha);
+                    canvas.drawRoundRect(rectF, currentCornerRadius, currentCornerRadius, whiteCirclePaint);
+                }
+
+                int unselectedAlpha = (int) (255 * (1f - Math.min(1f, morphProgress)));
+                if (unselectedAlpha > 0) {
+                    unSelectedIcon.setAlpha(unselectedAlpha);
+                    unSelectedIcon.draw(canvas);
+                }
+
+                if (whiteAlpha > 0) {
+                    selectedIcon.setAlpha(whiteAlpha);
+                    selectedIcon.draw(canvas, maskPaint);
+                    selectedIcon.setAlpha((int) (whiteAlpha * VoIPBackgroundProvider.DARK_LIGHT_PERCENT));
+                    selectedIcon.draw(canvas);
+                }
             }
             canvas.restore();
         }
 
         private boolean isAnimating() {
-            boolean isUnSelected = unselectedRadius == maxRadius && selectedRadius == 0;
-            boolean isSelected = selectedRadius == maxRadius && unselectedRadius == 0;
-            return !isUnSelected && !isSelected;
+            return false;
         }
 
         private float startX;

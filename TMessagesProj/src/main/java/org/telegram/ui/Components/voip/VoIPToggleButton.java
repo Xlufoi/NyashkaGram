@@ -28,8 +28,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 
+import android.view.animation.OvershootInterpolator;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.ui.ActionBar.Theme;
+import org.telegram.ui.Components.ButtonBounce;
 import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.LayoutHelper;
 
@@ -38,6 +40,7 @@ public class VoIPToggleButton extends FrameLayout {
 
     Paint circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF rectF = new RectF();
+    private final ButtonBounce buttonBounce = new ButtonBounce(this, 1f, 3.5f);
     private boolean drawBackground = true;
     private boolean drawRipple = true;
     private boolean animateBackground;
@@ -78,8 +81,6 @@ public class VoIPToggleButton extends FrameLayout {
 
     private final float diameter;
     private ValueAnimator checkAnimator;
-    private ValueAnimator pressedScaleAnimator;
-    private float pressedScale = 1.0f;
 
     public VoIPToggleButton(@NonNull Context context, float diameter) {
         super(context);
@@ -123,24 +124,22 @@ public class VoIPToggleButton extends FrameLayout {
         drawRipple = value;
     }
 
+    @Override
+    protected void dispatchSetPressed(boolean pressed) {
+        super.dispatchSetPressed(pressed);
+        setPressedBtn(pressed);
+    }
+
     public void setPressedBtn(boolean pressed) {
-        if (pressedScaleAnimator != null) {
-            pressedScaleAnimator.cancel();
-        }
-        pressedScaleAnimator = ValueAnimator.ofFloat(pressedScale, pressed ? 0.8f : 1f);
-        pressedScaleAnimator.addUpdateListener(animation -> {
-            pressedScale = (float) animation.getAnimatedValue();
-            invalidate();
-        });
-        pressedScaleAnimator.setDuration(150);
-        pressedScaleAnimator.start();
+        buttonBounce.setPressed(pressed);
     }
 
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
-        canvas.scale(pressedScale, pressedScale, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
+        float bounceScale = buttonBounce.getScale(0.12f);
+        canvas.scale(bounceScale, bounceScale, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
 
         if (animateBackground && replaceProgress != 0) {
             circlePaint.setColor(ColorUtils.blendARGB(backgroundColor, animateToBackgroundColor, replaceProgress));
@@ -151,13 +150,13 @@ public class VoIPToggleButton extends FrameLayout {
         float cx = getWidth() / 2f;
         float cy = dp(diameter) / 2f;
         float radius = dp(diameter) / 2f;
-        float cornerRadius = dp(16);
+        float cornerRadius = checkable ? AndroidUtilities.lerp(radius, dp(16), Math.max(0f, Math.min(1.15f, checkedProgress))) : radius;
         rectF.set(cx - radius, cy - radius, cx + radius, cy + radius);
         if (drawBackground) {
             canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, circlePaint);
         }
         if (rippleDrawable == null) {
-            rippleDrawable = Theme.createSimpleSelectorRoundRectDrawable((int) cornerRadius, 0, Color.BLACK);
+            rippleDrawable = Theme.createSimpleSelectorRoundRectDrawable((int) dp(16), 0, Color.BLACK);
             rippleDrawable.setCallback(this);
         }
         if (drawRipple) {
@@ -433,7 +432,13 @@ public class VoIPToggleButton extends FrameLayout {
                         setBackgroundColor(backgroundCheck1, backgroundCheck2);
                     }
                 });
-                checkAnimator.setDuration(150);
+                if (checked) {
+                    checkAnimator.setInterpolator(new OvershootInterpolator(1.6f));
+                    checkAnimator.setDuration(320);
+                } else {
+                    checkAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
+                    checkAnimator.setDuration(280);
+                }
                 checkAnimator.start();
             } else {
                 checkedProgress = checked ? 1f : 0;
