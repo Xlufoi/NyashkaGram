@@ -1132,20 +1132,46 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 float bottom = thisHeight - inset;
                 AndroidUtilities.rectTmp.set(left, top, right, bottom);
 
-                if (progressToExpand < 0.95f) {
+                if (progressToExpand < 1f) {
                     float cx = (left + right) / 2f;
                     float cy = (top + bottom) / 2f;
                     float baseRadius = Math.min(right - left, bottom - top) / 2f;
+                    float halfW = (right - left) / 2f;
+                    float halfH = (bottom - top) / 2f;
+                    float cornerR = Math.max(0f, r);
                     long time = SystemClock.uptimeMillis();
                     float angleOffset = (float) ((time % 20000L) / 20000.0 * 2.0 * Math.PI);
                     int steps = 144;
-                    float expandBlend = progressToExpand / 0.95f;
-                    float amplitude = (1f - expandBlend) * 0.12f;
+                    float t = Math.max(0f, Math.min(1f, progressToExpand));
+                    float smooth = (1f - t) * (1f - t);
+                    float amplitude = smooth * 0.12f;
 
                     for (int i = 0; i < steps; i++) {
                         double theta = 2.0 * Math.PI * i / steps;
                         double wave = Math.cos(12.0 * (theta - angleOffset));
-                        float rCurrent = baseRadius * (1f - amplitude * 0.5f + (float) (amplitude * 0.5f * wave));
+                        float rCookie = baseRadius * (1f - amplitude * 0.5f + (float) (amplitude * 0.5f * wave));
+
+                        float ct = (float) Math.abs(Math.cos(theta));
+                        float st = (float) Math.abs(Math.sin(theta));
+                        float rTarget;
+                        if (cornerR <= 0f) {
+                            rTarget = (ct * halfH <= st * halfW) ? (halfH / Math.max(st, 1e-4f)) : (halfW / Math.max(ct, 1e-4f));
+                        } else {
+                            float ox = Math.max(0f, halfW - cornerR);
+                            float oy = Math.max(0f, halfH - cornerR);
+                            if (st * halfW <= ct * oy) {
+                                rTarget = halfW / Math.max(ct, 1e-4f);
+                            } else if (ct * halfH <= st * ox) {
+                                rTarget = halfH / Math.max(st, 1e-4f);
+                            } else {
+                                float b = -(ox * ct + oy * st);
+                                float c = ox * ox + oy * oy - cornerR * cornerR;
+                                float disc = Math.max(0f, b * b - c);
+                                rTarget = -b + (float) Math.sqrt(disc);
+                            }
+                        }
+
+                        float rCurrent = rCookie * (1f - t) + rTarget * t;
                         float x = cx + (float) (rCurrent * Math.cos(theta));
                         float y = cy + (float) (rCurrent * Math.sin(theta));
                         if (i == 0) {
@@ -8931,10 +8957,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         expandAnimatorValues[1] = 1f;
                         if (storyView != null && !storyView.isEmpty()) {
                             expandAnimator.setInterpolator(new FastOutSlowInInterpolator());
-                            expandAnimator.setDuration((long) ((1f - value) * 1.3f * 250f / durationFactor));
+                            expandAnimator.setDuration((long) ((1f - value) * 1.3f * 380f / durationFactor));
                         } else {
-                            expandAnimator.setInterpolator(CubicBezierInterpolator.EASE_BOTH);
-                            expandAnimator.setDuration((long) ((1f - value) * 250f / durationFactor));
+                            expandAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
+                            expandAnimator.setDuration((long) ((1f - value) * 380f / durationFactor));
                         }
                         expandAnimator.addListener(new AnimatorListenerAdapter() {
                             @Override

@@ -136,6 +136,7 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
             }
 
             ScaleStateListAnimator.apply(button, .13f, 2f);
+            button.setDrawBackground(false);
             button.setVisibility(GONE);
             button.setOnClickListener(v -> {
                 if (onClickListeners[buttonId] != null) {
@@ -414,9 +415,28 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
     @Override
     protected boolean drawChild(@NonNull Canvas canvas, View child, long drawingTime) {
         if (child == container && containerDrawable != null) {
+            float minLeft = getMeasuredWidth();
+            float maxRight = 0;
+            boolean hasActionButtons = false;
+
+            for (final ButtonHolder holder : buttonHolders) {
+                if (holder != null && holder.button.getVisibility() == VISIBLE && holder.button.getAlpha() > 0) {
+                    hasActionButtons = true;
+                    minLeft = Math.min(minLeft, holder.button.getX() + dp(6));
+                    maxRight = Math.max(maxRight, holder.button.getX() + holder.button.getWidth() - dp(6));
+                }
+            }
+
+            float barLeft = totalWidthLeft + dp(1);
+            float barRight = getMeasuredWidth() - dp(1) - totalWidthRight;
+            if (hasActionButtons) {
+                barLeft = Math.min(barLeft, minLeft);
+                barRight = Math.max(barRight, maxRight);
+            }
+
             tmpRect.set(
-                totalWidthLeft + dp(1), 0,
-                getMeasuredWidth() - dp(1) - totalWidthRight,
+                barLeft, 0,
+                barRight,
                 getMeasuredHeight());
 
             tmpRect.round(AndroidUtilities.rectTmp2);

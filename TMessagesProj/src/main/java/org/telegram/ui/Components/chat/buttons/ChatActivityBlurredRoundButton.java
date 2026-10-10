@@ -49,15 +49,25 @@ public class ChatActivityBlurredRoundButton extends FrameLayout implements Facto
     private CircularProgressDrawable loadingIndicatorDrawable;
     private Theme.ResourcesProvider resourcesProvider;
 
+    private boolean drawBackground = true;
+    public void setDrawBackground(boolean draw) {
+        drawBackground = draw;
+        invalidate();
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        backgroundDrawable.setBounds(0, 0, w, h);
+        if (backgroundDrawable != null) {
+            backgroundDrawable.setBounds(0, 0, w, h);
+        }
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        backgroundDrawable.draw(canvas);
+        if (drawBackground && backgroundDrawable != null) {
+            backgroundDrawable.draw(canvas);
+        }
         super.draw(canvas);
     }
 
