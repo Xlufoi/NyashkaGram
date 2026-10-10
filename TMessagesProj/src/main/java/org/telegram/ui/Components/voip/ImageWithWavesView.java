@@ -31,7 +31,46 @@ public class ImageWithWavesView extends FrameLayout {
         avatarWavesDrawable = new AvatarWavesDrawable(AndroidUtilities.dp(104), AndroidUtilities.dp(111), AndroidUtilities.dp(12), 8);
         avatarWavesDrawable.setAmplitude(3f);
         avatarWavesDrawable.setShowWaves(true, this);
-        backupImageView = new BackupImageView(context);
+        backupImageView = new BackupImageView(context) {
+            private final android.graphics.Path clipPath = new android.graphics.Path();
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                int w = getMeasuredWidth();
+                int h = getMeasuredHeight();
+                if (w > 0 && h > 0) {
+                    clipPath.rewind();
+                    float cx = w / 2f;
+                    float cy = h / 2f;
+                    float baseRadius = Math.min(w, h) / 2f;
+                    long time = android.os.SystemClock.uptimeMillis();
+                    float angleOffset = (float) ((time % 20000L) / 20000.0 * 2.0 * Math.PI);
+                    int steps = 144;
+                    float amplitude = 0.12f;
+
+                    for (int i = 0; i < steps; i++) {
+                        double theta = 2.0 * Math.PI * i / steps;
+                        double wave = Math.cos(12.0 * (theta - angleOffset));
+                        float rCurrent = baseRadius * (1f - amplitude * 0.5f + (float) (amplitude * 0.5f * wave));
+                        float x = cx + (float) (rCurrent * Math.cos(theta));
+                        float y = cy + (float) (rCurrent * Math.sin(theta));
+                        if (i == 0) {
+                            clipPath.moveTo(x, y);
+                        } else {
+                            clipPath.lineTo(x, y);
+                        }
+                    }
+                    clipPath.close();
+                    canvas.save();
+                    canvas.clipPath(clipPath);
+                    super.onDraw(canvas);
+                    canvas.restore();
+                    postInvalidateOnAnimation();
+                } else {
+                    super.onDraw(canvas);
+                }
+            }
+        };
         addView(backupImageView, LayoutHelper.createFrame(135, 135, Gravity.CENTER));
         setWillNotDraw(false);
         animatorSet = new AnimatorSet();

@@ -7681,7 +7681,7 @@ public class ChatActivity extends BaseFragment implements
             mentionContainer.setAlpha(0f);
         }
         mentionContainer.setDialogId(dialog_id);
-        mentionContainer.setBackgroundDrawable(glassBackgroundDrawableFactoryFrosted.create(mentionContainer, blurredBackgroundColorProviderWhite));
+        mentionContainer.setBackgroundDrawable(chatInputSolidFactory.create(mentionContainer, chatInputSolidColorProvider));
         {
             final int indexToAdd = chatActivityFadeView != null ? contentView.indexOfChild(chatActivityFadeView) : -1;
             contentView.addView(mentionContainer, indexToAdd, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 110, Gravity.LEFT | Gravity.BOTTOM));
@@ -8820,7 +8820,7 @@ public class ChatActivity extends BaseFragment implements
         bottomOverlay.addView(bottomOverlayText, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.CENTER));
 
 
-        bottomChannelButtonsLayout = new ChatActivityChannelButtonsLayout(context, resourceProvider, blurredBackgroundColorProvider, glassBackgroundDrawableFactory) {
+        bottomChannelButtonsLayout = new ChatActivityChannelButtonsLayout(context, resourceProvider, chatInputSolidColorProvider, chatInputSolidFactory) {
             @Override
             public void setVisibility(int visibility) {
                 super.setVisibility(visibility);
