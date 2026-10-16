@@ -433,12 +433,51 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         ScaleStateListAnimator.apply(avatarContainer);
 
         avatarDrawable = new AvatarDrawable();
-        avatarView = new BackupImageView(context);
-        avatarView.setRoundRadius(dp(90));
+        avatarView = new BackupImageView(context) {
+            private final android.graphics.Path clipPath = new android.graphics.Path();
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                int w = getMeasuredWidth();
+                int h = getMeasuredHeight();
+                if (w > 0 && h > 0) {
+                    clipPath.rewind();
+                    float cx = w / 2f;
+                    float cy = h / 2f;
+                    float baseRadius = Math.min(w, h) / 2f;
+                    long time = android.os.SystemClock.uptimeMillis();
+                    float angleOffset = (float) ((time % 20000L) / 20000.0 * 2.0 * Math.PI);
+                    int steps = 144;
+                    float amplitude = 0.12f;
+
+                    for (int i = 0; i < steps; i++) {
+                        double theta = 2.0 * Math.PI * i / steps;
+                        double wave = Math.cos(12.0 * (theta - angleOffset));
+                        float rCurrent = baseRadius * (1f - amplitude * 0.5f + (float) (amplitude * 0.5f * wave));
+                        float x = cx + (float) (rCurrent * Math.cos(theta));
+                        float y = cy + (float) (rCurrent * Math.sin(theta));
+                        if (i == 0) {
+                            clipPath.moveTo(x, y);
+                        } else {
+                            clipPath.lineTo(x, y);
+                        }
+                    }
+                    clipPath.close();
+                    canvas.save();
+                    canvas.clipPath(clipPath);
+                    super.onDraw(canvas);
+                    canvas.restore();
+                    postInvalidateOnAnimation();
+                } else {
+                    super.onDraw(canvas);
+                }
+            }
+        };
         avatarContainer.addView(avatarView, LayoutHelper.createFrame(90, 90, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 15, 0, 0));
 
         avatarProgressView = new RadialProgressView(context) {
             private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            private final android.graphics.Path clipPath = new android.graphics.Path();
 
             {
                 paint.setColor(0x55000000);
@@ -447,8 +486,37 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             @Override
             protected void onDraw(Canvas canvas) {
                 if (avatarView != null && avatarView.getImageReceiver().hasNotThumb()) {
-                    paint.setAlpha((int) (0x55 * avatarView.getImageReceiver().getCurrentAlpha()));
-                    canvas.drawCircle(getMeasuredWidth() / 2.0f, getMeasuredHeight() / 2.0f, getMeasuredWidth() / 2.0f, paint);
+                    int w = getMeasuredWidth();
+                    int h = getMeasuredHeight();
+                    if (w > 0 && h > 0) {
+                        clipPath.rewind();
+                        float cx = w / 2f;
+                        float cy = h / 2f;
+                        float baseRadius = Math.min(w, h) / 2f;
+                        long time = android.os.SystemClock.uptimeMillis();
+                        float angleOffset = (float) ((time % 20000L) / 20000.0 * 2.0 * Math.PI);
+                        int steps = 144;
+                        float amplitude = 0.12f;
+
+                        for (int i = 0; i < steps; i++) {
+                            double theta = 2.0 * Math.PI * i / steps;
+                            double wave = Math.cos(12.0 * (theta - angleOffset));
+                            float rCurrent = baseRadius * (1f - amplitude * 0.5f + (float) (amplitude * 0.5f * wave));
+                            float x = cx + (float) (rCurrent * Math.cos(theta));
+                            float y = cy + (float) (rCurrent * Math.sin(theta));
+                            if (i == 0) {
+                                clipPath.moveTo(x, y);
+                            } else {
+                                clipPath.lineTo(x, y);
+                            }
+                        }
+                        clipPath.close();
+                        canvas.save();
+                        canvas.clipPath(clipPath);
+                        paint.setAlpha((int) (0x55 * avatarView.getImageReceiver().getCurrentAlpha()));
+                        canvas.drawRect(0, 0, w, h, paint);
+                        canvas.restore();
+                    }
                 }
                 super.onDraw(canvas);
             }

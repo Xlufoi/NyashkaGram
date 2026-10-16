@@ -56,6 +56,12 @@ public class GooglePushListenerServiceProvider implements PushListenerController
                                 }
                                 SharedConfig.pushStringStatus = "__FIREBASE_FAILED__";
                                 PushListenerController.sendRegistrationToServer(getPushType(), null);
+                                AndroidUtilities.runOnUIThread(() -> {
+                                    for (int a : SharedConfig.activeAccounts) {
+                                        org.telegram.tgnet.ConnectionsManager.getInstance(a).setPushConnectionEnabled(true);
+                                    }
+                                    ApplicationLoader.startPushService();
+                                });
                                 return;
                             }
                             String token = task.getResult();
@@ -65,6 +71,13 @@ public class GooglePushListenerServiceProvider implements PushListenerController
                         });
             } catch (Throwable e) {
                 FileLog.e(e);
+                SharedConfig.pushStringStatus = "__FIREBASE_FAILED__";
+                AndroidUtilities.runOnUIThread(() -> {
+                    for (int a : SharedConfig.activeAccounts) {
+                        org.telegram.tgnet.ConnectionsManager.getInstance(a).setPushConnectionEnabled(true);
+                    }
+                    ApplicationLoader.startPushService();
+                });
             }
         });
     }

@@ -306,11 +306,18 @@ public class ConnectionsManager extends BaseController {
     }
 
     public boolean isPushConnectionEnabled() {
-        SharedPreferences preferences = MessagesController.getGlobalNotificationsSettings();
+        if (xyz.nextalone.nagram.NaConfig.INSTANCE.getPushServiceType().Int() == 0 || TextUtils.isEmpty(SharedConfig.pushString) || "__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus)) {
+            return true;
+        }
+        SharedPreferences preferences = MessagesController.getNotificationsSettings(currentAccount);
+        if (preferences.contains("pushConnection")) {
+            return preferences.getBoolean("pushConnection", true);
+        }
+        preferences = MessagesController.getGlobalNotificationsSettings();
         if (preferences.contains("pushConnection")) {
             return preferences.getBoolean("pushConnection", true);
         } else {
-            return MessagesController.getMainSettings(UserConfig.selectedAccount).getBoolean("backgroundConnection", false);
+            return MessagesController.getMainSettings(UserConfig.selectedAccount).getBoolean("backgroundConnection", true);
         }
     }
 

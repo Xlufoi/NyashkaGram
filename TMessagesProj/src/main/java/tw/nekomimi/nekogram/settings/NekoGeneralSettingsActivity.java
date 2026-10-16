@@ -546,6 +546,11 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                 updateRows();
                 listAdapter.notifyDataSetChanged();
             } else if (key.equals(NaConfig.INSTANCE.getPushServiceType().getKey())) {
+                PushListenerController.resetProvider();
+                for (int a : SharedConfig.activeAccounts) {
+                    ConnectionsManager.getInstance(a).setPushConnectionEnabled(true);
+                }
+                ApplicationLoader.startPushService();
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NaConfig.INSTANCE.getPushServiceTypeInAppDialog().getKey())) {
                 ApplicationLoader.applicationContext.stopService(new Intent(ApplicationLoader.applicationContext, NotificationsService.class));

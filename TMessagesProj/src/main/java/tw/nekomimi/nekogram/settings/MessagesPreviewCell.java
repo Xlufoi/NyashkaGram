@@ -29,6 +29,7 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.INavigationLayout;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Cells.ChatMessageCell;
+import org.telegram.ui.Components.AvatarDrawable;
 import org.telegram.ui.Components.BackgroundGradientDrawable;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.MotionBackgroundDrawable;
@@ -95,7 +96,7 @@ public class MessagesPreviewCell extends LinearLayout {
         text.forwards = 12;
         text.fwd_from = new TLRPC.TL_messageFwdHeader();
         text.fwd_from.flags = 32;
-        text.fwd_from.from_name = "monk 🥺";
+        text.fwd_from.from_name = LocaleController.getString(R.string.MessagePreviewForwardName);
         text.fwd_from.date = date - 86400;
         messages[0] = new MessageObject(account, text, true, false);
 
@@ -124,20 +125,22 @@ public class MessagesPreviewCell extends LinearLayout {
         messages[1] = new MessageObject(account, pollMessage, true, false);
 
         TLRPC.TL_message linkMessage = createMessage(44, date + 240);
-        String url = "https://nagram.app";
-        String appName = LocaleController.getString(R.string.NekoX);
-        linkMessage.message = url;
-        TLRPC.TL_messageEntityUrl urlEntity = new TLRPC.TL_messageEntityUrl();
-        urlEntity.offset = 0;
-        urlEntity.length = linkMessage.message.length();
-        linkMessage.entities.add(urlEntity);
-        linkMessage.flags |= TLRPC.MESSAGE_FLAG_HAS_ENTITIES;
+        String url = "https://cuties.moe";
+        linkMessage.message = LocaleController.getString(R.string.MessagePreviewLinkText);
+        int urlIndex = linkMessage.message.indexOf(url);
+        if (urlIndex >= 0) {
+            TLRPC.TL_messageEntityUrl urlEntity = new TLRPC.TL_messageEntityUrl();
+            urlEntity.offset = urlIndex;
+            urlEntity.length = url.length();
+            linkMessage.entities.add(urlEntity);
+            linkMessage.flags |= TLRPC.MESSAGE_FLAG_HAS_ENTITIES;
+        }
 
         var webPage = new TLRPC.TL_webPage();
-        webPage.description = "Hello " + appName;
-        webPage.display_url = url;
-        webPage.site_name = appName;
-        webPage.title = appName + " App";
+        webPage.description = LocaleController.getString(R.string.MessagePreviewWebDesc);
+        webPage.display_url = "cuties.moe/thigh-highs";
+        webPage.site_name = "cuties.moe";
+        webPage.title = LocaleController.getString(R.string.MessagePreviewWebTitle);
         webPage.type = "article";
         webPage.url = url;
         webPageMedia = new TLRPC.TL_messageMediaWebPage();
@@ -146,8 +149,12 @@ public class MessagesPreviewCell extends LinearLayout {
         messages[2] = new MessageObject(account, linkMessage, true, false);
 
         TimeStringHelper.getForwardsDrawable();
+        String interlocutor = LocaleController.getString(R.string.MessagePreviewSenderName);
         for (int i = 0; i < cells.length; i++) {
-            messages[i].customName = "Nagram";
+            messages[i].customName = interlocutor;
+            AvatarDrawable avatarDrawable = new AvatarDrawable();
+            avatarDrawable.setInfo(5, interlocutor, null);
+            messages[i].customAvatarDrawable = avatarDrawable;
             messages[i].forceAvatar = true;
             cells[i] = new ChatMessageCell(context, account) {
                 @Override
@@ -207,6 +214,9 @@ public class MessagesPreviewCell extends LinearLayout {
     }
 
     private void loadPreviewChannel(int account) {
+        if (android.text.TextUtils.isEmpty(UpdateUtil.channelUsername)) {
+            return;
+        }
         MessagesController controller = MessagesController.getInstance(account);
         TLObject cachedChannel = controller.getUserOrChat(UpdateUtil.channelUsername);
         if (cachedChannel instanceof TLRPC.Chat) {

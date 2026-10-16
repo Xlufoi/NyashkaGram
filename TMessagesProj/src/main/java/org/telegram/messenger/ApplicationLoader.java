@@ -415,12 +415,16 @@ public class ApplicationLoader extends Application {
     }
 
     private static void startPushServiceInternal() {
-        if (PushListenerController.getProvider().hasServices()) {
+        int pushType = NaConfig.INSTANCE.getPushServiceType().Int();
+        boolean isFCMorGMS = pushType == 1 || pushType == 3;
+        if (isFCMorGMS && PushListenerController.getProvider().hasServices() && !"__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus) && !android.text.TextUtils.isEmpty(SharedConfig.pushString)) {
             return;
         }
         SharedPreferences preferences = MessagesController.getNotificationsSettings(UserConfig.selectedAccount);
         boolean enabled;
-        if (preferences.contains("pushService")) {
+        if (pushType == 0 || android.text.TextUtils.isEmpty(SharedConfig.pushString) || "__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus)) {
+            enabled = true;
+        } else if (preferences.contains("pushService")) {
             enabled = preferences.getBoolean("pushService", false);
         } else {
             enabled = MessagesController.getMainSettings(UserConfig.selectedAccount).getBoolean("keepAliveService", false);
@@ -428,13 +432,15 @@ public class ApplicationLoader extends Application {
             editor.putBoolean("pushService", enabled);
             editor.putBoolean("pushConnection", enabled);
             editor.apply();
-            ConnectionsManager.getInstance(UserConfig.selectedAccount).setPushConnectionEnabled(enabled);
+        }
+        for (int a : SharedConfig.activeAccounts) {
+            ConnectionsManager.getInstance(a).setPushConnectionEnabled(enabled);
         }
         if (enabled) {
             AndroidUtilities.runOnUIThread(() -> {
                 try {
                     Log.d("TFOSS", "Starting push service...");
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && NaConfig.INSTANCE.getPushServiceTypeInAppDialog().Bool()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         applicationContext.startForegroundService(createNotificationsServiceIntent());
                     } else {
                         applicationContext.startService(createNotificationsServiceIntent());
@@ -448,7 +454,7 @@ public class ApplicationLoader extends Application {
                     am.cancel(pendingIntent);
                     am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 10 * 60 * 1000, pendingIntent);
                 } catch (Throwable e) {
-                    Log.e("TFOSS", "Failed to start push service");
+                    Log.e("TFOSS", "Failed to start push service", e);
                 }
             });
 

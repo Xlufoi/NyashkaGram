@@ -1143,7 +1143,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     float angleOffset = (float) ((time % 20000L) / 20000.0 * 2.0 * Math.PI);
                     int steps = 144;
                     float t = Math.max(0f, Math.min(1f, progressToExpand));
-                    float smooth = (1f - t) * (1f - t);
+                    float smooth = (float) Math.pow(1f - t, 0.7);
                     float amplitude = smooth * 0.12f;
 
                     for (int i = 0; i < steps; i++) {
@@ -6673,6 +6673,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         avatarContainer.setTranslationY(lerp((float) Math.ceil(avatarY), 0f, value));
         avatarImage.setRoundRadiusForExpand((int) AndroidUtilities.lerp(getSmallAvatarRoundRadius(), 0f, value));
         avatarImage.setBlurRadiusProgressForExpand(value, avatarScale, isPulledDown);
+        avatarImage.setProgressToExpand(value);
         if (storyView != null) {
             storyView.setExpandProgress(value);
         }
@@ -8957,10 +8958,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         expandAnimatorValues[1] = 1f;
                         if (storyView != null && !storyView.isEmpty()) {
                             expandAnimator.setInterpolator(new FastOutSlowInInterpolator());
-                            expandAnimator.setDuration((long) ((1f - value) * 1.3f * 380f / durationFactor));
+                            expandAnimator.setDuration((long) ((1f - value) * 1.3f * 550f / durationFactor));
                         } else {
                             expandAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
-                            expandAnimator.setDuration((long) ((1f - value) * 380f / durationFactor));
+                            expandAnimator.setDuration((long) ((1f - value) * 550f / durationFactor));
                         }
                         expandAnimator.addListener(new AnimatorListenerAdapter() {
                             @Override
@@ -9057,7 +9058,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         expandAnimatorValues[1] = 0f;
                         expandAnimator.setInterpolator(CubicBezierInterpolator.EASE_BOTH);
                         if (!isInLandscapeMode) {
-                            expandAnimator.setDuration((long) (value * 250f / durationFactor));
+                            expandAnimator.setDuration((long) (value * 450f / durationFactor));
                         } else {
                             expandAnimator.setDuration(0);
                         }
