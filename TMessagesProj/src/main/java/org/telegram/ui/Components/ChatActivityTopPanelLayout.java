@@ -124,7 +124,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
             if (style == FragmentContextView.STYLE_ACTIVE_GROUP_CALL || style == FragmentContextView.STYLE_CONNECTING_GROUP_CALL) {
                 for (int a = 0, N = getEntriesCount(); a < N; a++) {
                     final ListAnimator.Entry<AnimatedLinearLayout.Holder> entry = getEntry(a);
-                    final float top = getPaddingTop() + entry.getRectF().top;
+                    final float top = getPaddingTop() + entry.getRectF().top + entry.getSpacingStart();
                     final View view = entry.item.view;
                     final float alpha = entry.getVisibility();
                     if (alpha <= 0) {
@@ -153,7 +153,7 @@ public class ChatActivityTopPanelLayout extends AnimatedLinearLayout {
         canvas.clipPath(clipPath);
         for (int a = 0, N = getEntriesCount(); a < N; a++) {
             final ListAnimator.Entry<AnimatedLinearLayout.Holder> entry = getEntry(a);
-            final float top = getPaddingTop() + entry.getRectF().top;
+            final float top = getPaddingTop() + entry.getRectF().top + (entry.getSpacingStart() > 0 ? entry.getSpacingStart() / 2f : 0);
             final View view = entry.item.view;
 
             final float position = entry.getPosition();

@@ -181,6 +181,15 @@ public class UpdateHelper extends BaseRemoteHelper {
 
     private boolean isVersionNewer(String remoteVer, String currentVer) {
         if (remoteVer == null || currentVer == null) return false;
+        java.util.regex.Matcher mRemote = java.util.regex.Pattern.compile("nightly-(\\d+)").matcher(remoteVer);
+        if (mRemote.find()) {
+            try {
+                int remoteRun = Integer.parseInt(mRemote.group(1));
+                if (BuildConfig.CI_RUN_NUMBER > 0) {
+                    return remoteRun > BuildConfig.CI_RUN_NUMBER;
+                }
+            } catch (Exception ignored) {}
+        }
         remoteVer = remoteVer.replaceAll("^[vV]", "").trim();
         currentVer = currentVer.replaceAll("^[vV]", "").trim();
         String[] rParts = remoteVer.split("[.\\-_]");
@@ -209,7 +218,7 @@ public class UpdateHelper extends BaseRemoteHelper {
         org.telegram.messenger.Utilities.globalQueue.postRunnable(() -> {
             java.net.HttpURLConnection conn = null;
             try {
-                java.net.URL url = new java.net.URL("https://api.github.com/repos/Xlufoi/NyashkaGram/releases/latest");
+                java.net.URL url = new java.net.URL("https://api.github.com/repos/Xlufoi/NyashkaGram/releases");
                 conn = (java.net.HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setConnectTimeout(10000);
@@ -225,39 +234,42 @@ public class UpdateHelper extends BaseRemoteHelper {
                         sb.append(line);
                     }
                     reader.close();
-                    JSONObject obj = new JSONObject(sb.toString());
-                    String tagName = obj.optString("tag_name", "");
-                    String body = obj.optString("body", "");
-                    String htmlUrl = obj.optString("html_url", "https://github.com/Xlufoi/NyashkaGram/releases");
-                    String downloadUrl = null;
-                    org.json.JSONArray assets = obj.optJSONArray("assets");
-                    if (assets != null) {
-                        for (int i = 0; i < assets.length(); i++) {
-                            JSONObject asset = assets.getJSONObject(i);
-                            String assetName = asset.optString("name", "");
-                            if (assetName.endsWith(".apk")) {
-                                if (downloadUrl == null || assetName.contains("arm64") || assetName.contains("universal")) {
-                                    downloadUrl = asset.optString("browser_download_url", htmlUrl);
+                    org.json.JSONArray releases = new org.json.JSONArray(sb.toString());
+                    if (releases.length() > 0) {
+                        JSONObject obj = releases.getJSONObject(0);
+                        String tagName = obj.optString("tag_name", "");
+                        String body = obj.optString("body", "");
+                        String htmlUrl = obj.optString("html_url", "https://github.com/Xlufoi/NyashkaGram/releases");
+                        String downloadUrl = null;
+                        org.json.JSONArray assets = obj.optJSONArray("assets");
+                        if (assets != null) {
+                            for (int i = 0; i < assets.length(); i++) {
+                                JSONObject asset = assets.getJSONObject(i);
+                                String assetName = asset.optString("name", "");
+                                if (assetName.endsWith(".apk")) {
+                                    if (downloadUrl == null || assetName.contains("arm64") || assetName.contains("universal")) {
+                                        downloadUrl = asset.optString("browser_download_url", htmlUrl);
+                                    }
                                 }
                             }
                         }
-                    }
-                    if (downloadUrl == null) {
-                        downloadUrl = htmlUrl;
-                    }
+                        if (downloadUrl == null) {
+                            downloadUrl = htmlUrl;
+                        }
 
-                    boolean isNewer = isVersionNewer(tagName, BuildConfig.VERSION_NAME);
-                    if (isNewer || updateAlways_) {
-                        TLRPC.TL_help_appUpdate update = new TLRPC.TL_help_appUpdate();
-                        update.version = tagName;
-                        update.text = body;
-                        update.url = downloadUrl;
-                        update.flags |= 4;
-                        org.telegram.messenger.AndroidUtilities.runOnUIThread(() -> delegate.onTLResponse(update, null));
-                        return;
-                    } else {
-                        org.telegram.messenger.AndroidUtilities.runOnUIThread(() -> delegate.onTLResponse(null, null));
-                        return;
+                        boolean isNewer = isVersionNewer(tagName, BuildConfig.VERSION_NAME);
+                        if (isNewer || updateAlways_) {
+                            TLRPC.TL_help_appUpdate update = new TLRPC.TL_help_appUpdate();
+                            update.version = tagName;
+                            update.text = body;
+                            update.url = downloadUrl;
+                            update.flags |= 4;
+                            org.telegram.messenger.AndroidUtilities.runOnUIThread(() -> delegate.onTLResponse(update, null));
+                            return;
+                        } else {
+                            org.telegram.messenger.AndroidUtilities.runOnUIThread(() -> delegate.onTLResponse(null, null));
+                            return;
+                        }
                     }
                 }
             } catch (Throwable e) {

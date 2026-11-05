@@ -84,6 +84,7 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         container.setClipToOutline(true);
         container.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(22)));
         addView(container, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 44, Gravity.CENTER_VERTICAL));
+        setupDrawableForContainer();
     }
 
     public void updateColors() {

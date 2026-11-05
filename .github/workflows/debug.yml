@@ -67,8 +67,9 @@ jobs:
 
       - name: Prepare Signing Keystore
         run: |
-          rm -f TMessagesProj/release.keystore
-          keytool -genkey -v -keystore TMessagesProj/release.keystore -alias key0 -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=NyashkaGram, OU=NyashkaGram, O=NyashkaGram, L=Default, S=Default, C=RU"
+          if [ ! -f TMessagesProj/release.keystore ]; then
+            keytool -genkey -v -keystore TMessagesProj/release.keystore -alias key0 -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=NyashkaGram, OU=NyashkaGram, O=NyashkaGram, L=Default, S=Default, C=RU"
+          fi
 
       - name: Configure Gradle
         run: |
@@ -86,6 +87,7 @@ jobs:
           export ALIAS_NAME="key0"
           export ALIAS_PASS="123456"
           export NATIVE_TARGET="arm64-v8a"
+          export GITHUB_RUN_NUMBER="${{ github.run_number }}"
           ./gradlew TMessagesProj:assembleRelease --build-cache --no-configuration-cache
 
           mkdir -p release_apks

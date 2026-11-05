@@ -8891,7 +8891,7 @@ public class ChatActivity extends BaseFragment implements
             }
         });
         bottomChannelButtonsLayout.setOnButtonsTotalWidthChanged((l, r) -> {
-            chatInputViewsContainer.setInputBubbleOffsets(l, r);
+            chatInputViewsContainer.setInputBubbleOffsets(0, 0);
         });
 
         chatInputBubbleContainer.addView(bottomChannelButtonsLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 56, Gravity.BOTTOM, 0, 0, 0, (44 - 56) / 2));
@@ -12062,6 +12062,7 @@ public class ChatActivity extends BaseFragment implements
         pinnedMessageView.setTag(1);
         topPanelLayout.addView(pinnedMessageView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48));
         topPanelLayout.setPriority(pinnedMessageView, 1);
+        topPanelLayout.setSpacingStart(pinnedMessageView, dp(8));
         topPanelLayout.setDebugName(pinnedMessageView, "pinned message view");
         pinnedMessageView.setOnClickListener(v -> {
             wasManualScroll = true;

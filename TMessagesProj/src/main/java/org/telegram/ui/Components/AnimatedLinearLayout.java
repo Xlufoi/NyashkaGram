@@ -46,6 +46,13 @@ public class AnimatedLinearLayout extends LinearLayout {
         }
     }
 
+    public void setSpacingStart(View child, int spacing) {
+        final Holder holder = viewHolders.get(child);
+        if (holder != null) {
+            holder.spacingStart = spacing;
+        }
+    }
+
     public void setDebugName(View child, String tag) {
         final Holder holder = viewHolders.get(child);
         if (holder != null) {
@@ -172,9 +179,9 @@ public class AnimatedLinearLayout extends LinearLayout {
             final View view = entry.item.view;
             final RectF pos = entry.getRectF();
             if (getOrientation() == VERTICAL) {
-                view.setTranslationY((getPaddingTop() + pos.top) - view.getTop());
+                view.setTranslationY((getPaddingTop() + pos.top + entry.getSpacingStart()) - view.getTop());
             } else {
-                view.setTranslationX((getPaddingLeft() + pos.left) - view.getLeft());
+                view.setTranslationX((getPaddingLeft() + pos.left + entry.getSpacingStart()) - view.getLeft());
             }
 
             final float factor = entry.getVisibility();
@@ -223,9 +230,15 @@ public class AnimatedLinearLayout extends LinearLayout {
         private String tag;
         private int priority;
         private int order;
+        public int spacingStart;
 
         public Holder(@NonNull View view) {
             this.view = view;
+        }
+
+        @Override
+        public int getSpacingStart(boolean isFirst) {
+            return isFirst ? 0 : spacingStart;
         }
 
         @Override

@@ -755,6 +755,10 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
         actionMode = new ActionBarMenu(getContext(), this) {
             @Override
             public void setBackgroundColor(int color) {
+                if (isFloatingCardHeader) {
+                    super.setBackgroundColor(0);
+                    return;
+                }
                 actionModeColor = color;
                 if (!blurredBackground) {
                     super.setBackgroundColor(actionModeColor);
@@ -763,7 +767,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
 
             @Override
             protected void dispatchDraw(Canvas canvas) {
-                if (blurredBackground && drawBlur && actionModeColor != 0) {
+                if (!isFloatingCardHeader && blurredBackground && drawBlur && actionModeColor != 0) {
                     rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
                     blurScrimPaint.setColor(actionModeColor);
                     canvas.drawRect(rectTmp, blurScrimPaint);
@@ -800,7 +804,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
         actionMode.setGlassMode(glassMode);
         actionMode.isActionMode = true;
         actionMode.setClickable(true);
-        if (!glassMode) {
+        if (!glassMode && !isFloatingCardHeader) {
             actionMode.setBackgroundColor(getThemedColor(Theme.key_actionBarActionModeDefault));
         }
         addView(actionMode, indexOfChild(backButtonImageView));
@@ -808,6 +812,11 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) actionMode.getLayoutParams();
         layoutParams.height = LayoutHelper.MATCH_PARENT;
         layoutParams.width = LayoutHelper.MATCH_PARENT;
+        if (isFloatingCardHeader) {
+            layoutParams.leftMargin = dp(5);
+            layoutParams.rightMargin = dp(5);
+            layoutParams.topMargin = dp(2);
+        }
         layoutParams.bottomMargin = extraHeight;
         layoutParams.gravity = Gravity.RIGHT;
         actionMode.setLayoutParams(layoutParams);
@@ -1133,7 +1142,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     }
 
     public void showActionModeTop() {
-        if (occupyStatusBar && actionModeTop == null) {
+        if (occupyStatusBar && actionModeTop == null && !isFloatingCardHeader) {
             actionModeTop = new View(getContext());
             actionModeTop.setBackgroundColor(getThemedColor(Theme.key_actionBarActionModeDefaultTop));
             addView(actionModeTop);
@@ -1547,8 +1556,8 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
             checkAvatarContainerWidth(animatorAvatarContainerWidth.isAnimating());
         }
 
-        int cardSideOffset = (isFloatingCardHeader && !actionModeVisible) ? dp(5) : 0;
-        int cardTopOffset = (isFloatingCardHeader && !actionModeVisible) ? dp(2) : 0;
+        int cardSideOffset = isFloatingCardHeader ? dp(5) : 0;
+        int cardTopOffset = isFloatingCardHeader ? dp(2) : 0;
 
         int textLeft;
         if (backButtonImageView != null && backButtonImageView.getVisibility() != GONE) {
@@ -2273,7 +2282,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     @Override
     protected void dispatchDraw(Canvas canvas) {
         boolean cardClipped = false;
-        if (doNotDrawGlassHeader && !actionModeVisible) {
+        if (doNotDrawGlassHeader) {
             if (isFloatingCardHeader) {
                 int cardColor = Theme.getColor(Theme.key_chat_messagePanelBackground);
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
@@ -2304,7 +2313,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 canvas.save();
                 canvas.clipPath(cardHeaderClipPath);
                 cardClipped = true;
-            } else {
+            } else if (!actionModeVisible) {
                 blurScrimPaint.setColor(Theme.getColor(Theme.key_actionBarDefault, resourcesProvider));
                 blurScrimPaint.setAlpha(255);
                 rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
@@ -2353,17 +2362,17 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 glassDrawable.draw(canvas);
             }
         }
-        if (glassDrawableBack != null && hasBackButton && (!doNotDrawGlassHeader || actionModeVisible)) {
+        if (glassDrawableBack != null && hasBackButton && (!doNotDrawGlassHeader || (actionModeVisible && !isFloatingCardHeader))) {
             glassDrawableBack.setBounds(0, t, s + p * 2, b);
             glassDrawableBack.draw(canvas);
         }
-        if (glassDrawableMenu != null && menuWidth > 0 && !glassOnlyBack && !doNotDrawGlassMenu && (!doNotDrawGlassHeader || actionModeVisible)) {
+        if (glassDrawableMenu != null && menuWidth > 0 && !glassOnlyBack && !doNotDrawGlassMenu && (!doNotDrawGlassHeader || (actionModeVisible && !isFloatingCardHeader))) {
             glassDrawableMenu.setBounds(getWidth() - Math.max(s, menuWidth) - p * 2, t, getWidth(), b);
             glassDrawableMenu.setAlpha(hasForcedMenuWidth ? 255 : (int) (255 * animatorHasMenuItems.getFloatValue()));
             glassDrawableMenu.draw(canvas);
         }
 
-        if (blurredBackground && actionBarColor != Color.TRANSPARENT) {
+        if (!isFloatingCardHeader && blurredBackground && actionBarColor != Color.TRANSPARENT) {
             rectTmp.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
             blurScrimPaint.setColor(actionBarColor);
             canvas.drawRect(rectTmp, blurScrimPaint);
