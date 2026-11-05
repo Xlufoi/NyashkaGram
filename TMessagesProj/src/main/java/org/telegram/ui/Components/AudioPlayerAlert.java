@@ -1075,7 +1075,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                             MediaController.getInstance().playPreviousMessage();
                             prevButton.setProgress(0f);
                             prevButton.playAnimation();
-                            prevButton.triggerMorph();
+                            triggerMorph();
                         }
                         if (pressedCount > 0) {
                             lastUpdateTime = 0;
@@ -1293,7 +1293,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                             MediaController.getInstance().playNextMessage();
                             nextButton.setProgress(0f);
                             nextButton.playAnimation();
-                            nextButton.triggerMorph();
+                            triggerMorph();
                         }
                         AndroidUtilities.cancelRunOnUIThread(pressedRunnable);
                         if (rewindingForwardPressedCount > 0) {
