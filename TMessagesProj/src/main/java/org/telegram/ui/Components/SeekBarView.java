@@ -672,18 +672,20 @@ public class SeekBarView extends FrameLayout {
     }
 
     private final Path wavePath = new Path();
+    private final AnimatedFloat waveAmplitude = new AnimatedFloat(this, 0, 320, CubicBezierInterpolator.EASE_OUT);
 
     private void drawProgressBar(Canvas canvas, RectF rect, Paint paint) {
         float radius = AndroidUtilities.dp(3);
-        if (paint == outerPaint1 && rect.width() > AndroidUtilities.dp(6)) {
+        boolean isPlaying = !MediaController.getInstance().isMessagePaused() && MediaController.getInstance().getPlayingMessageObject() != null;
+        float waveT = waveAmplitude.set(isPlaying ? 1f : 0f);
+        if (paint == outerPaint1 && rect.width() > AndroidUtilities.dp(6) && waveT > 0.001f) {
             wavePath.reset();
             float cy = rect.centerY();
-            float waveAmp = AndroidUtilities.dp(2.8f);
+            float waveAmp = AndroidUtilities.dp(2.8f) * waveT;
             float waveLength = AndroidUtilities.dp(18f);
             float startX = rect.left;
             float endX = rect.right;
-            boolean isPlaying = !MediaController.getInstance().isMessagePaused() && MediaController.getInstance().getPlayingMessageObject() != null;
-            float phase = isPlaying ? (SystemClock.elapsedRealtime() % 1400L) / 1400f * (float) (Math.PI * 2) : 0;
+            float phase = (SystemClock.elapsedRealtime() % 1400L) / 1400f * (float) (Math.PI * 2);
             wavePath.moveTo(startX, cy);
             float step = AndroidUtilities.dp(2);
             for (float x = startX; x <= endX; x += step) {
@@ -702,7 +704,7 @@ public class SeekBarView extends FrameLayout {
             canvas.drawPath(wavePath, paint);
             paint.setStyle(oldStyle);
             paint.setStrokeWidth(oldStroke);
-            if (isPlaying) {
+            if (isPlaying || waveT < 1f) {
                 invalidate();
             }
             return;

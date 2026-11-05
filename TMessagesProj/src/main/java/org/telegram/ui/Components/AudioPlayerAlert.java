@@ -792,11 +792,11 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 }
 
                 int availableWidth = right - left;
-                int t = dp(9);
+                int t = dp(11);
                 int sidePadding = dp(8);
 
-                int playWidth = dp(96);
-                int playHeight = dp(52);
+                int playWidth = dp(56);
+                int playHeight = dp(56);
                 if (playButton != null) {
                     playButton.measure(
                         MeasureSpec.makeMeasureSpec(playWidth, MeasureSpec.EXACTLY),
@@ -808,7 +808,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 int playLeft = centerX - playWidth / 2;
                 int playRight = centerX + playWidth / 2;
                 if (playButton != null) {
-                    playButton.layout(playLeft, dp(7), playRight, dp(7) + playHeight);
+                    playButton.layout(playLeft, dp(5), playRight, dp(5) + playHeight);
                 }
 
                 int leftSectionWidth = playLeft - sidePadding - dp(6);
@@ -1087,6 +1087,27 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 return true;
             }
 
+            private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            private final Paint selectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            private final RectF bgRect = new RectF();
+            private final AnimatedFloat pressProgress = new AnimatedFloat(this, 0, 220, CubicBezierInterpolator.EASE_OUT);
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                float p = pressProgress.set(isPressed() ? 1f : 0f);
+                float radius = AndroidUtilities.dp(22) - AndroidUtilities.dp(10) * p;
+                bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
+                bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                canvas.drawRoundRect(bgRect, radius, radius, bgPaint);
+                if (p > 0.001f) {
+                    int selColor = getThemedColor(Theme.key_listSelector);
+                    selectorPaint.setColor(selColor);
+                    selectorPaint.setAlpha((int) (Color.alpha(selColor) * p));
+                    canvas.drawRoundRect(bgRect, radius, radius, selectorPaint);
+                }
+                super.onDraw(canvas);
+            }
+
             @Override
             public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
                 super.onInitializeAccessibilityNodeInfo(info);
@@ -1098,21 +1119,47 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         prevButton.setLayerColor("Triangle 3", iconColor);
         prevButton.setLayerColor("Triangle 4", iconColor);
         prevButton.setLayerColor("Rectangle 4", iconColor);
-        prevButton.setBackground(Theme.createCircleDrawable(dp(44), getThemedColor(Theme.key_chat_messagePanelBackground)));
+        prevButton.setBackground(null);
         if (messageObject != null && !messageObject.isVoice()) {
             bottomView.addView(prevButton, LayoutHelper.createFrame(44, 44, Gravity.LEFT | Gravity.TOP));
         }
         prevButton.setContentDescription(LocaleController.getString(R.string.AccDescrPrevious));
 
-        buttons[3] = playButton = new ImageView(context);
+        buttons[3] = playButton = new ImageView(context) {
+            private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            private final Paint selectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            private final RectF bgRect = new RectF();
+            private final AnimatedFloat shapeProgress = new AnimatedFloat(this, 0, 320, CubicBezierInterpolator.EASE_OUT);
+            private final AnimatedFloat pressProgress = new AnimatedFloat(this, 0, 200, CubicBezierInterpolator.EASE_OUT);
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                boolean isPlaying = !MediaController.getInstance().isMessagePaused() && MediaController.getInstance().getPlayingMessageObject() != null;
+                float progress = shapeProgress.set(isPlaying ? 1f : 0f);
+                bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
+                float maxRadius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2f;
+                float minRadius = AndroidUtilities.dp(14);
+                float radius = AndroidUtilities.lerp(maxRadius, minRadius, progress);
+                bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                canvas.drawRoundRect(bgRect, radius, radius, bgPaint);
+
+                float p = pressProgress.set(isPressed() ? 1f : 0f);
+                if (p > 0.001f) {
+                    int selColor = getThemedColor(Theme.key_listSelector);
+                    selectorPaint.setColor(selColor);
+                    selectorPaint.setAlpha((int) (Color.alpha(selColor) * p));
+                    canvas.drawRoundRect(bgRect, radius, radius, selectorPaint);
+                }
+
+                super.onDraw(canvas);
+            }
+        };
         playButton.setScaleType(ImageView.ScaleType.CENTER);
         playButton.setImageDrawable(playPauseDrawable = new PlayPauseDrawable(28));
         playPauseDrawable.setPause(!MediaController.getInstance().isMessagePaused(), false);
         playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_player_actionBarTitle), PorterDuff.Mode.MULTIPLY));
-        playButton.setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(26),
-            getThemedColor(Theme.key_chat_messagePanelBackground),
-            Theme.getColor(Theme.key_listSelector, resourcesProvider)));
-        bottomView.addView(playButton, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 56, Gravity.LEFT | Gravity.TOP));
+        playButton.setBackground(null);
+        bottomView.addView(playButton, LayoutHelper.createFrame(56, 56, Gravity.LEFT | Gravity.TOP));
         playButton.setOnClickListener(v -> {
             if (MediaController.getInstance().isDownloadingCurrentMessage()) {
                 return;
@@ -1121,6 +1168,10 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 MediaController.getInstance().playMessage(MediaController.getInstance().getPlayingMessageObject());
             } else {
                 MediaController.getInstance().pauseMessage(MediaController.getInstance().getPlayingMessageObject());
+            }
+            playButton.invalidate();
+            if (seekBarView != null) {
+                seekBarView.invalidate();
             }
         });
 
@@ -1209,6 +1260,27 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 return true;
             }
 
+            private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            private final Paint selectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            private final RectF bgRect = new RectF();
+            private final AnimatedFloat pressProgress = new AnimatedFloat(this, 0, 220, CubicBezierInterpolator.EASE_OUT);
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                float p = pressProgress.set(isPressed() ? 1f : 0f);
+                float radius = AndroidUtilities.dp(22) - AndroidUtilities.dp(10) * p;
+                bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
+                bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                canvas.drawRoundRect(bgRect, radius, radius, bgPaint);
+                if (p > 0.001f) {
+                    int selColor = getThemedColor(Theme.key_listSelector);
+                    selectorPaint.setColor(selColor);
+                    selectorPaint.setAlpha((int) (Color.alpha(selColor) * p));
+                    canvas.drawRoundRect(bgRect, radius, radius, selectorPaint);
+                }
+                super.onDraw(canvas);
+            }
+
             @Override
             public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
                 super.onInitializeAccessibilityNodeInfo(info);
@@ -1222,7 +1294,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         nextButton.setLayerColor("Triangle 4", iconColor);
         nextButton.setLayerColor("Rectangle 4", iconColor);
         nextButton.setRotation(180f);
-        nextButton.setBackground(Theme.createCircleDrawable(dp(44), getThemedColor(Theme.key_chat_messagePanelBackground)));
+        nextButton.setBackground(null);
         if (messageObject != null && !messageObject.isVoice()) {
             bottomView.addView(nextButton, LayoutHelper.createFrame(44, 44, Gravity.LEFT | Gravity.TOP));
         }
@@ -1835,6 +1907,15 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         if (backwardButton != null) {
             backwardButton.setTextColor(getThemedColor(Theme.key_player_button));
         }
+        if (playButton != null) {
+            playButton.invalidate();
+        }
+        if (prevButton != null) {
+            prevButton.invalidate();
+        }
+        if (nextButton != null) {
+            nextButton.invalidate();
+        }
     }
 
     private void onSubItemClick(int id) {
@@ -1994,6 +2075,12 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
     public void didReceivedNotification(int id, int account, Object... args) {
         if (id == NotificationCenter.messagePlayingDidStart || id == NotificationCenter.messagePlayingPlayStateChanged || id == NotificationCenter.messagePlayingDidReset) {
             updateTitle(id == NotificationCenter.messagePlayingDidReset && (Boolean) args[1]);
+            if (playButton != null) {
+                playButton.invalidate();
+            }
+            if (seekBarView != null) {
+                seekBarView.invalidate();
+            }
             if (id == NotificationCenter.messagePlayingDidReset || id == NotificationCenter.messagePlayingPlayStateChanged) {
                 int count = listView.getChildCount();
                 for (int a = 0; a < count; a++) {
@@ -2573,6 +2660,12 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
             } else {
                 playPauseDrawable.setPause(true);
                 playButton.setContentDescription(LocaleController.getString(R.string.AccActionPause));
+            }
+            if (playButton != null) {
+                playButton.invalidate();
+            }
+            if (seekBarView != null) {
+                seekBarView.invalidate();
             }
             String title = messageObject.getMusicTitle();
             String author = messageObject.getMusicAuthor();
