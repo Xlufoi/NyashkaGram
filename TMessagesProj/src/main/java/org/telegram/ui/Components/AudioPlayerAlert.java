@@ -1129,7 +1129,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 float minRadius = AndroidUtilities.dp(12);
                 float radius = AndroidUtilities.lerp(maxRadius, minRadius, p);
                 bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
-                bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                bgPaint.setColor(getMonetTonalColor());
 
                 float curScale = scaleProgress.set(isPressed() ? 0.90f : 1.0f);
                 canvas.save();
@@ -1152,11 +1152,12 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 info.addAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         };
+        int trackAccent = getThemedColor(Theme.key_player_buttonActive);
         prevButton.setScaleType(ImageView.ScaleType.CENTER);
         prevButton.setAnimation(R.raw.player_prev, 20, 20);
-        prevButton.setLayerColor("Triangle 3", iconColor);
-        prevButton.setLayerColor("Triangle 4", iconColor);
-        prevButton.setLayerColor("Rectangle 4", iconColor);
+        prevButton.setLayerColor("Triangle 3", trackAccent);
+        prevButton.setLayerColor("Triangle 4", trackAccent);
+        prevButton.setLayerColor("Rectangle 4", trackAccent);
         prevButton.setBackground(null);
         if (messageObject != null && !messageObject.isVoice()) {
             bottomView.addView(prevButton, LayoutHelper.createFrame(44, 44, Gravity.LEFT | Gravity.TOP));
@@ -1185,7 +1186,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 float maxRadius = getMeasuredHeight() / 2f;
                 float minRadius = AndroidUtilities.dp(14);
                 float radius = AndroidUtilities.lerp(maxRadius, minRadius, progress);
-                bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                bgPaint.setColor(getThemedColor(Theme.key_chats_actionBackground));
 
                 float curScale = scaleProgress.set(isPressed() ? 0.94f : 1.0f);
                 canvas.save();
@@ -1208,7 +1209,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         playButton.setScaleType(ImageView.ScaleType.CENTER);
         playButton.setImageDrawable(playPauseDrawable = new PlayPauseDrawable(28));
         playPauseDrawable.setPause(!MediaController.getInstance().isMessagePaused(), false);
-        playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_player_actionBarTitle), PorterDuff.Mode.MULTIPLY));
+        playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_chats_actionIcon), PorterDuff.Mode.MULTIPLY));
         playButton.setBackground(null);
         bottomView.addView(playButton, LayoutHelper.createFrame(84, 52, Gravity.LEFT | Gravity.TOP));
         playButton.setOnClickListener(v -> {
@@ -1350,7 +1351,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 float minRadius = AndroidUtilities.dp(12);
                 float radius = AndroidUtilities.lerp(maxRadius, minRadius, p);
                 bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
-                bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+                bgPaint.setColor(getMonetTonalColor());
 
                 float curScale = scaleProgress.set(isPressed() ? 0.90f : 1.0f);
                 canvas.save();
@@ -1376,9 +1377,9 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         };
         nextButton.setScaleType(ImageView.ScaleType.CENTER);
         nextButton.setAnimation(R.raw.player_prev, 20, 20);
-        nextButton.setLayerColor("Triangle 3", iconColor);
-        nextButton.setLayerColor("Triangle 4", iconColor);
-        nextButton.setLayerColor("Rectangle 4", iconColor);
+        nextButton.setLayerColor("Triangle 3", trackAccent);
+        nextButton.setLayerColor("Triangle 4", trackAccent);
+        nextButton.setLayerColor("Rectangle 4", trackAccent);
         nextButton.setRotation(180f);
         nextButton.setBackground(null);
         if (messageObject != null && !messageObject.isVoice()) {
@@ -1974,6 +1975,19 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         }
     }
 
+    private int getMonetTonalColor() {
+        if (Build.VERSION.SDK_INT >= 31) {
+            try {
+                boolean isDark = Theme.isCurrentThemeDark();
+                return ApplicationLoader.applicationContext.getColor(isDark ? android.R.color.system_accent2_800 : android.R.color.system_accent2_100);
+            } catch (Exception ignored) {}
+        }
+        boolean isDark = Theme.isCurrentThemeDark();
+        int base = getThemedColor(Theme.key_chat_messagePanelBackground);
+        int accent = getThemedColor(Theme.key_chats_actionBackground);
+        return ColorUtils.blendARGB(base, accent, isDark ? 0.28f : 0.20f);
+    }
+
     public void updateColors() {
         if (playbackSpeedButton != null) {
             float currentPlaybackSpeed = MediaController.getInstance().getPlaybackSpeed(true);
@@ -1994,12 +2008,20 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
             backwardButton.setTextColor(getThemedColor(Theme.key_player_button));
         }
         if (playButton != null) {
+            playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_chats_actionIcon), PorterDuff.Mode.MULTIPLY));
             playButton.invalidate();
         }
+        int accentIcon = getThemedColor(Theme.key_player_buttonActive);
         if (prevButton != null) {
+            prevButton.setLayerColor("Triangle 3", accentIcon);
+            prevButton.setLayerColor("Triangle 4", accentIcon);
+            prevButton.setLayerColor("Rectangle 4", accentIcon);
             prevButton.invalidate();
         }
         if (nextButton != null) {
+            nextButton.setLayerColor("Triangle 3", accentIcon);
+            nextButton.setLayerColor("Triangle 4", accentIcon);
+            nextButton.setLayerColor("Rectangle 4", accentIcon);
             nextButton.invalidate();
         }
     }

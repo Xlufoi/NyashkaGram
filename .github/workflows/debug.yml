@@ -100,20 +100,64 @@ jobs:
           name: NyashkaGram-arm64-v8a
           path: release_apks/*.apk
 
-      - name: Create GitHub Release
+      - name: Create Official First Release
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          tag_name: v1.0.0
+          name: NyashkaGram v1.0.0 (Release)
+          body: |
+            ## 🎉 Первый официальный релиз — NyashkaGram v1.0.0!
+
+            Клиент Telegram с глубокой интеграцией **Material 3 Expressive** и динамическими цветами **Monet (Android 12+)**.
+
+            ### 🎵 Музыкальный плеер (AOSP / Material You):
+            - **Морфящаяся кнопка Play/Pause**:
+              - В паузе — широкая гладкая овальная пилюля (`84x52 dp`).
+              - При воспроизведении — плавно трансформируется в прямоугольный блок с углами («около квадратная»).
+              - Окрашена в основной акцентный цвет Monet темы (`chats_actionBackground`) с высококонтрастной иконкой (`chats_actionIcon`).
+            - **Кнопки переключения треков (Prev / Next)**:
+              - Идеально круглые (`44x44 dp`).
+              - При нажатии плавно трансформируются в скруглённый квадрат с тактильным откликом и векторной анимацией, возвращаясь в круг при отпускании.
+              - Окрашены в тональный вторичный контейнер Monet темы с акцентными иконками (`player_buttonActive`).
+            - **Живой ползунок трека (Squiggly Seekbar)**:
+              - Плавная синусоидальная волна активна строго во время воспроизведения музыки и аккуратно выпрямляется в ровную прямую линию при паузе.
+
+            ### 🎨 Иконка приложения и цветовые варианты:
+            - Установлена новая иконка приложения высокого разрешения из `1793909594296.jpg`.
+            - Подготовлены адаптированные тематические иконки: **Default (Фиолетовая)**, **Blue (Синяя)**, **DarkBlue (Глубокая синяя)**, **DarkGreen (Изумрудная)**, **Neon (Неоновая)**, **Niello (Чёрно-серебряная)**, **Colorful (Закатно-коралловая)**, **Google**.
+            - Новая адаптивная монохромная иконка для Monet-темы Android 13+.
+            - Обновлена круглая иконка в шторке уведомлений и звонках (`ic_launcher_dr`).
+
+            ### ⚡ Производительность и оптимизация:
+            - Принудительная фиксация высокой частоты экрана 120/144 Гц с аппаратным `preferredDisplayModeId`.
+            - Оптимизированный скролл списков чатов (`chatListView`).
+            - Полное вырезание аналитики Sentry, телеметрии и сбора Crashlytics.
+
+            ---
+            - **Архитектура**: arm64-v8a
+            - **Ветка**: `dev`
+            - **Коммит**: `${{ github.sha }}`
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: release_apks/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release (Nightly)
         uses: softprops/action-gh-release@v2
         continue-on-error: true
         with:
           tag_name: nightly-${{ github.run_number }}
-          name: NyashkaGram Nightly #${{ github.run_number }} (arm64-v8a)
+          name: NyashkaGram Nightly #${{ github.run_number }} (v1.0.0)
           body: |
-            ### NyashkaGram Nightly Build (Material 3 Expressive)
+            ### NyashkaGram v1.0.0 Nightly Build #${{ github.run_number }}
+            - Release: **v1.0.0**
             - Architecture: **arm64-v8a (64-bit)**
-            - Design: **Material 3 Expressive**
-            - Branch: `dev`
             - Commit: `${{ github.sha }}`
           draft: false
-          prerelease: true
+          prerelease: false
           files: release_apks/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
