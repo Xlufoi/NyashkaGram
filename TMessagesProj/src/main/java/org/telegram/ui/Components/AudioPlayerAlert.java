@@ -792,11 +792,10 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 }
 
                 int availableWidth = right - left;
-                int t = dp(11);
                 int sidePadding = dp(8);
 
-                int playWidth = dp(56);
-                int playHeight = dp(56);
+                int playWidth = dp(84);
+                int playHeight = dp(52);
                 if (playButton != null) {
                     playButton.measure(
                         MeasureSpec.makeMeasureSpec(playWidth, MeasureSpec.EXACTLY),
@@ -808,40 +807,44 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 int playLeft = centerX - playWidth / 2;
                 int playRight = centerX + playWidth / 2;
                 if (playButton != null) {
-                    playButton.layout(playLeft, dp(5), playRight, dp(5) + playHeight);
+                    playButton.layout(playLeft, dp(7), playRight, dp(7) + playHeight);
                 }
 
                 int leftSectionWidth = playLeft - sidePadding - dp(6);
                 int leftCount = 3;
                 int leftSlotWidth = leftSectionWidth / leftCount;
+                int leftBtnSize = Math.min(dp(44), leftSlotWidth);
+                int leftBtnTop = dp(7) + (playHeight - leftBtnSize) / 2;
                 for (int i = 0; i < 3 && i < buttons.length; i++) {
                     View button = buttons[i];
                     if (button == null) continue;
                     button.measure(
-                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.AT_MOST),
-                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.EXACTLY)
+                        MeasureSpec.makeMeasureSpec(leftBtnSize, MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(leftBtnSize, MeasureSpec.EXACTLY)
                     );
                     int bw = button.getMeasuredWidth();
                     int slotL = sidePadding + i * leftSlotWidth;
                     int bLeft = slotL + (leftSlotWidth - bw) / 2;
-                    button.layout(bLeft, t, bLeft + bw, t + button.getMeasuredHeight());
+                    button.layout(bLeft, leftBtnTop, bLeft + bw, leftBtnTop + button.getMeasuredHeight());
                 }
 
                 int rightSectionStart = playRight + dp(6);
                 int rightSectionWidth = availableWidth - sidePadding - rightSectionStart;
                 int rightCount = Math.max(1, buttons.length - 4);
                 int rightSlotWidth = rightSectionWidth / rightCount;
+                int rightBtnSize = Math.min(dp(44), rightSlotWidth);
+                int rightBtnTop = dp(7) + (playHeight - rightBtnSize) / 2;
                 for (int i = 4; i < buttons.length; i++) {
                     View button = buttons[i];
                     if (button == null) continue;
                     button.measure(
-                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.AT_MOST),
-                        MeasureSpec.makeMeasureSpec(dp(44), MeasureSpec.EXACTLY)
+                        MeasureSpec.makeMeasureSpec(rightBtnSize, MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(rightBtnSize, MeasureSpec.EXACTLY)
                     );
                     int bw = button.getMeasuredWidth();
                     int slotL = rightSectionStart + (i - 4) * rightSlotWidth;
                     int bLeft = slotL + (rightSlotWidth - bw) / 2;
-                    button.layout(bLeft, t, bLeft + bw, t + button.getMeasuredHeight());
+                    button.layout(bLeft, rightBtnTop, bLeft + bw, rightBtnTop + button.getMeasuredHeight());
                 }
             }
         };
@@ -1072,6 +1075,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                             MediaController.getInstance().playPreviousMessage();
                             prevButton.setProgress(0f);
                             prevButton.playAnimation();
+                            prevButton.triggerMorph();
                         }
                         if (pressedCount > 0) {
                             lastUpdateTime = 0;
@@ -1090,14 +1094,47 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
             private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             private final Paint selectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             private final RectF bgRect = new RectF();
-            private final AnimatedFloat pressProgress = new AnimatedFloat(this, 0, 220, CubicBezierInterpolator.EASE_OUT);
+            private final AnimatedFloat morphProgress = new AnimatedFloat(this, 0, 260, CubicBezierInterpolator.EASE_OUT);
+            private final AnimatedFloat scaleProgress = new AnimatedFloat(this, 0, 180, CubicBezierInterpolator.EASE_OUT);
+            private boolean forcedMorph;
+            private final Runnable resetMorph = () -> {
+                forcedMorph = false;
+                invalidate();
+            };
+
+            public void triggerMorph() {
+                forcedMorph = true;
+                AndroidUtilities.cancelRunOnUIThread(resetMorph);
+                AndroidUtilities.runOnUIThread(resetMorph, 280);
+                invalidate();
+            }
+
+            @Override
+            public void setPressed(boolean pressed) {
+                super.setPressed(pressed);
+                if (pressed) {
+                    forcedMorph = true;
+                    AndroidUtilities.cancelRunOnUIThread(resetMorph);
+                } else {
+                    AndroidUtilities.cancelRunOnUIThread(resetMorph);
+                    AndroidUtilities.runOnUIThread(resetMorph, 180);
+                }
+                invalidate();
+            }
 
             @Override
             protected void onDraw(Canvas canvas) {
-                float p = pressProgress.set(isPressed() ? 1f : 0f);
-                float radius = AndroidUtilities.dp(22) - AndroidUtilities.dp(10) * p;
+                float p = morphProgress.set((isPressed() || forcedMorph) ? 1f : 0f);
+                float maxRadius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2f;
+                float minRadius = AndroidUtilities.dp(12);
+                float radius = AndroidUtilities.lerp(maxRadius, minRadius, p);
                 bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
                 bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+
+                float curScale = scaleProgress.set(isPressed() ? 0.90f : 1.0f);
+                canvas.save();
+                canvas.scale(curScale, curScale, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
+
                 canvas.drawRoundRect(bgRect, radius, radius, bgPaint);
                 if (p > 0.001f) {
                     int selColor = getThemedColor(Theme.key_listSelector);
@@ -1106,6 +1143,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                     canvas.drawRoundRect(bgRect, radius, radius, selectorPaint);
                 }
                 super.onDraw(canvas);
+                canvas.restore();
             }
 
             @Override
@@ -1130,17 +1168,29 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
             private final Paint selectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             private final RectF bgRect = new RectF();
             private final AnimatedFloat shapeProgress = new AnimatedFloat(this, 0, 320, CubicBezierInterpolator.EASE_OUT);
+            private final AnimatedFloat scaleProgress = new AnimatedFloat(this, 0, 180, CubicBezierInterpolator.EASE_OUT);
             private final AnimatedFloat pressProgress = new AnimatedFloat(this, 0, 200, CubicBezierInterpolator.EASE_OUT);
+
+            @Override
+            public void setPressed(boolean pressed) {
+                super.setPressed(pressed);
+                invalidate();
+            }
 
             @Override
             protected void onDraw(Canvas canvas) {
                 boolean isPlaying = !MediaController.getInstance().isMessagePaused() && MediaController.getInstance().getPlayingMessageObject() != null;
                 float progress = shapeProgress.set(isPlaying ? 1f : 0f);
                 bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
-                float maxRadius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2f;
+                float maxRadius = getMeasuredHeight() / 2f;
                 float minRadius = AndroidUtilities.dp(14);
                 float radius = AndroidUtilities.lerp(maxRadius, minRadius, progress);
                 bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+
+                float curScale = scaleProgress.set(isPressed() ? 0.94f : 1.0f);
+                canvas.save();
+                canvas.scale(curScale, curScale, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
+
                 canvas.drawRoundRect(bgRect, radius, radius, bgPaint);
 
                 float p = pressProgress.set(isPressed() ? 1f : 0f);
@@ -1152,6 +1202,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                 }
 
                 super.onDraw(canvas);
+                canvas.restore();
             }
         };
         playButton.setScaleType(ImageView.ScaleType.CENTER);
@@ -1159,7 +1210,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         playPauseDrawable.setPause(!MediaController.getInstance().isMessagePaused(), false);
         playButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_player_actionBarTitle), PorterDuff.Mode.MULTIPLY));
         playButton.setBackground(null);
-        bottomView.addView(playButton, LayoutHelper.createFrame(56, 56, Gravity.LEFT | Gravity.TOP));
+        bottomView.addView(playButton, LayoutHelper.createFrame(84, 52, Gravity.LEFT | Gravity.TOP));
         playButton.setOnClickListener(v -> {
             if (MediaController.getInstance().isDownloadingCurrentMessage()) {
                 return;
@@ -1242,6 +1293,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                             MediaController.getInstance().playNextMessage();
                             nextButton.setProgress(0f);
                             nextButton.playAnimation();
+                            nextButton.triggerMorph();
                         }
                         AndroidUtilities.cancelRunOnUIThread(pressedRunnable);
                         if (rewindingForwardPressedCount > 0) {
@@ -1263,14 +1315,47 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
             private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             private final Paint selectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             private final RectF bgRect = new RectF();
-            private final AnimatedFloat pressProgress = new AnimatedFloat(this, 0, 220, CubicBezierInterpolator.EASE_OUT);
+            private final AnimatedFloat morphProgress = new AnimatedFloat(this, 0, 260, CubicBezierInterpolator.EASE_OUT);
+            private final AnimatedFloat scaleProgress = new AnimatedFloat(this, 0, 180, CubicBezierInterpolator.EASE_OUT);
+            private boolean forcedMorph;
+            private final Runnable resetMorph = () -> {
+                forcedMorph = false;
+                invalidate();
+            };
+
+            public void triggerMorph() {
+                forcedMorph = true;
+                AndroidUtilities.cancelRunOnUIThread(resetMorph);
+                AndroidUtilities.runOnUIThread(resetMorph, 280);
+                invalidate();
+            }
+
+            @Override
+            public void setPressed(boolean pressed) {
+                super.setPressed(pressed);
+                if (pressed) {
+                    forcedMorph = true;
+                    AndroidUtilities.cancelRunOnUIThread(resetMorph);
+                } else {
+                    AndroidUtilities.cancelRunOnUIThread(resetMorph);
+                    AndroidUtilities.runOnUIThread(resetMorph, 180);
+                }
+                invalidate();
+            }
 
             @Override
             protected void onDraw(Canvas canvas) {
-                float p = pressProgress.set(isPressed() ? 1f : 0f);
-                float radius = AndroidUtilities.dp(22) - AndroidUtilities.dp(10) * p;
+                float p = morphProgress.set((isPressed() || forcedMorph) ? 1f : 0f);
+                float maxRadius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2f;
+                float minRadius = AndroidUtilities.dp(12);
+                float radius = AndroidUtilities.lerp(maxRadius, minRadius, p);
                 bgRect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
                 bgPaint.setColor(getThemedColor(Theme.key_chat_messagePanelBackground));
+
+                float curScale = scaleProgress.set(isPressed() ? 0.90f : 1.0f);
+                canvas.save();
+                canvas.scale(curScale, curScale, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
+
                 canvas.drawRoundRect(bgRect, radius, radius, bgPaint);
                 if (p > 0.001f) {
                     int selColor = getThemedColor(Theme.key_listSelector);
@@ -1279,6 +1364,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
                     canvas.drawRoundRect(bgRect, radius, radius, selectorPaint);
                 }
                 super.onDraw(canvas);
+                canvas.restore();
             }
 
             @Override
