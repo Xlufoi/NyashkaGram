@@ -905,9 +905,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             );
         }
 
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        //    refreshRateController = new RefreshRateController(this);
-        //}
+        AndroidUtilities.setPreferredMaxRefreshRate(getWindow());
         checkFrameMetrics();
     }
 
@@ -7250,9 +7248,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             // Re-check if the user updated their email from another client
             MessagesController.getInstance(currentAccount).checkPromoInfo(true);
         }
-        //if (refreshRateController != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        //    refreshRateController.start();
-        //}
+        AndroidUtilities.setPreferredMaxRefreshRate(getWindow());
     }
 
     public static Runnable whenResumed;

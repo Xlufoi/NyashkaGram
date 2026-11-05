@@ -84,6 +84,8 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         container.setClipToOutline(true);
         container.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(22)));
         addView(container, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 44, Gravity.CENTER_VERTICAL));
+        outlinePaint.setStyle(Paint.Style.STROKE);
+        outlinePaint.setStrokeWidth(dp(1.25f));
     }
 
     public void updateColors() {
@@ -136,7 +138,7 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
             }
 
             ScaleStateListAnimator.apply(button, .13f, 2f);
-            button.setDrawBackground(true);
+            button.setDrawBackground(false);
             button.setVisibility(GONE);
             button.setOnClickListener(v -> {
                 if (onClickListeners[buttonId] != null) {
@@ -428,22 +430,45 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         return super.drawChild(canvas, child, drawingTime);
     }
 
+    private final RectF dockRect = new RectF();
+    private final Paint outlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     @Override
     protected void dispatchDraw(@NonNull Canvas canvas) {
         final int accentAlpha = (int) (255 * totalVisibilityFactor * animatorCenterAccentBackground.getFloatValue());
         if (accentAlpha > 0) {
             tmpRect.set(
-                totalWidthLeft + dp(10),
-                dp(9),
-                getMeasuredWidth() - dp(10) - totalWidthRight,
-                getMeasuredHeight() - dp(9)
+                totalWidthLeft + dp(8),
+                dp(8),
+                getMeasuredWidth() - dp(8) - totalWidthRight,
+                getMeasuredHeight() - dp(8)
             );
             backgroundAccentPaint.setColor(accentColor);
             backgroundAccentPaint.setAlpha(accentAlpha);
-            canvas.drawRoundRect(tmpRect, dp(19), dp(19), backgroundAccentPaint);
+            canvas.drawRoundRect(tmpRect, dp(20), dp(20), backgroundAccentPaint);
         }
 
         super.dispatchDraw(canvas);
+
+        final float visibility = totalVisibilityFactor;
+        if (visibility > 0) {
+            dockRect.set(
+                dp(6),
+                dp(6),
+                getMeasuredWidth() - dp(6),
+                getMeasuredHeight() - dp(6)
+            );
+            int outlineColor = Theme.getColor(Theme.key_divider, resourcesProvider);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                try {
+                    boolean isDark = Theme.isCurrentThemeDark();
+                    outlineColor = getContext().getColor(isDark ? android.R.color.system_neutral2_700 : android.R.color.system_neutral2_300);
+                } catch (Throwable ignore) {}
+            }
+            outlinePaint.setColor(outlineColor);
+            outlinePaint.setAlpha((int) (200 * visibility));
+            canvas.drawRoundRect(dockRect, dp(22), dp(22), outlinePaint);
+        }
     }
 
     private int accentColor = 0;

@@ -2706,11 +2706,24 @@ public class AndroidUtilities {
                     display.getSize(displaySize);
                     screenRefreshRate = display.getRefreshRate();
                     screenMaxRefreshRate = screenRefreshRate;
-                    float[] rates = display.getSupportedRefreshRates();
-                    if (rates != null) {
-                        for (int i = 0; i < rates.length; ++i) {
-                            if (rates[i] > screenMaxRefreshRate) {
-                                screenMaxRefreshRate = rates[i];
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        try {
+                            Display.Mode[] modes = display.getSupportedModes();
+                            if (modes != null) {
+                                for (Display.Mode m : modes) {
+                                    if (m.getRefreshRate() > screenMaxRefreshRate) {
+                                        screenMaxRefreshRate = m.getRefreshRate();
+                                    }
+                                }
+                            }
+                        } catch (Throwable ignored) {}
+                    } else {
+                        float[] rates = display.getSupportedRefreshRates();
+                        if (rates != null) {
+                            for (int i = 0; i < rates.length; ++i) {
+                                if (rates[i] > screenMaxRefreshRate) {
+                                    screenMaxRefreshRate = rates[i];
+                                }
                             }
                         }
                     }
@@ -2763,6 +2776,33 @@ public class AndroidUtilities {
         if (wm == null) return;
         WindowManager.LayoutParams params = window.getAttributes();
         params.preferredRefreshRate = rate;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                Display display = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    try {
+                        display = window.getContext().getDisplay();
+                    } catch (Throwable ignored) {}
+                }
+                if (display == null) {
+                    display = wm.getDefaultDisplay();
+                }
+                if (display != null) {
+                    Display.Mode[] modes = display.getSupportedModes();
+                    if (modes != null) {
+                        Display.Mode bestMode = null;
+                        for (Display.Mode mode : modes) {
+                            if (bestMode == null || mode.getRefreshRate() > bestMode.getRefreshRate()) {
+                                bestMode = mode;
+                            }
+                        }
+                        if (bestMode != null && bestMode.getRefreshRate() >= rate - 1) {
+                            params.preferredDisplayModeId = bestMode.getModeId();
+                        }
+                    }
+                }
+            } catch (Throwable ignored) {}
+        }
         try {
             wm.updateViewLayout(window.getDecorView(), params);
         } catch (Exception e) {
@@ -2774,6 +2814,25 @@ public class AndroidUtilities {
         if (wm == null) return;
         if (Math.abs(params.preferredRefreshRate - screenMaxRefreshRate) > 0.2) {
             params.preferredRefreshRate = screenMaxRefreshRate;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {
+                    Display display = wm.getDefaultDisplay();
+                    if (display != null) {
+                        Display.Mode[] modes = display.getSupportedModes();
+                        if (modes != null) {
+                            Display.Mode bestMode = null;
+                            for (Display.Mode mode : modes) {
+                                if (bestMode == null || mode.getRefreshRate() > bestMode.getRefreshRate()) {
+                                    bestMode = mode;
+                                }
+                            }
+                            if (bestMode != null && bestMode.getRefreshRate() >= screenMaxRefreshRate - 1) {
+                                params.preferredDisplayModeId = bestMode.getModeId();
+                            }
+                        }
+                    }
+                } catch (Throwable ignored) {}
+            }
             if (windowView.isAttachedToWindow()) {
                 try {
                     wm.updateViewLayout(windowView, params);
