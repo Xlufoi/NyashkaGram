@@ -21,13 +21,13 @@
 
 **NyashkaGram** — уютный, красивый и облегчённый Telegram-клиент для Android, созданный с душой и вниманием к деталям.
 
-### ✨ Главное:
+###  Главное:
 - **Material 3 Expressive**: мягкие органичные формы, выразительные акценты, плавающие карточки и гармоничные анимации.
 - **Динамический Monet**: глубокая адаптация цветов интерфейса и иконки приложения под палитру ваших обоев (Android 12+).
 - **Облегчённый и чистый**: полностью вырезана лишняя аналитика, телеметрия и назойливые фоновые трекеры.
 - **Максимальная плавность**: оптимизированный скролл и полноценная поддержка экранов 120/144 Гц без просадок.
 
-👉 **[Скачать NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
+ **[Скачать NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
 
 ---
 
@@ -35,13 +35,13 @@
 
 **NyashkaGram** — a cute, cozy, and lightweight Telegram client for Android, crafted with care and passion.
 
-### ✨ Highlights:
+###  Highlights:
 - **Material 3 Expressive**: soft playful shapes, lively accents, floating sheets, and organic transitions.
 - **Dynamic Monet Tinting**: seamless interface and launcher icon color matching powered by your wallpaper palette (Android 12+).
 - **Lightweight & Clean**: completely free from background analytics, telemetry, and tracking bloat.
 - **Buttery Smooth**: optimized list rendering with rock-solid high-refresh rate (120/144 Hz) support.
 
-👉 **[Download NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
+ **[Download NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
 
 ---
 
@@ -49,13 +49,13 @@
 
 **NyashkaGram** — 一款充满爱意、可爱软萌且极致轻盈的 Android 端 Telegram 客户端。
 
-### ✨ 特性亮点：
+###  特性亮点：
 - **Material 3 Expressive 设计**：柔和灵动的圆角质感、富有表现力的微交互与生动的转场动效。
 - **Monet 动态取色**：界面与应用图标随壁纸主色调动态流转（Android 12+）。
 - **轻量与纯粹**：彻底剔除冗余的后台遥测、统计分析及遥测代码，还你清爽体验。
 - **丝滑流畅**：优化列表渲染机制，全方位适配 120/144 Hz 高刷新率屏幕。
 
-👉 **[下载 NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
+ **[下载 NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
 
 ---
 
