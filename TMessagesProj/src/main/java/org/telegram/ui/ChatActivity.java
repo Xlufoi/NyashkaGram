@@ -4989,6 +4989,7 @@ public class ChatActivity extends BaseFragment implements
         actionBar.doNotDrawGlassHeader = true;
         actionBar.isFloatingCardHeader = true;
         actionBar.pinnedPanelVisibilityProvider = unused -> topPanelLayout != null && topPanelLayout.getMetadata().getTotalVisibility() > 0 && topPanelLayout.getMetadata().getTotalHeight() > 0;
+        actionBar.pinnedPanelProgressProvider = unused -> (topPanelLayout != null && topPanelLayout.getMetadata().getTotalHeight() > 0) ? topPanelLayout.getMetadata().getTotalVisibility() : 0f;
 
         if (chatMode == MODE_PINNED) {
             actionBar.setChatAvatarContainer(avatarContainer);
@@ -8891,7 +8892,7 @@ public class ChatActivity extends BaseFragment implements
             }
         });
         bottomChannelButtonsLayout.setOnButtonsTotalWidthChanged((l, r) -> {
-            chatInputViewsContainer.setInputBubbleOffsets(0, 0);
+            chatInputViewsContainer.setInputBubbleOffsets(l, r);
         });
 
         chatInputBubbleContainer.addView(bottomChannelButtonsLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 56, Gravity.BOTTOM, 0, 0, 0, (44 - 56) / 2));
@@ -10774,12 +10775,18 @@ public class ChatActivity extends BaseFragment implements
         final ActionBarMenu actionMode = actionBar.createActionMode();
 
         LayoutTransition transition = new LayoutTransition();
-        transition.setDuration(380);
+        transition.setDuration(200);
         transition.setInterpolator(LayoutTransition.APPEARING, CubicBezierInterpolator.EASE_OUT_QUINT);
         transition.setInterpolator(LayoutTransition.CHANGE_APPEARING, CubicBezierInterpolator.EASE_OUT_QUINT);
         transition.setInterpolator(LayoutTransition.CHANGING, CubicBezierInterpolator.EASE_OUT_QUINT);
         transition.setInterpolator(LayoutTransition.CHANGE_DISAPPEARING, CubicBezierInterpolator.EASE_OUT_QUINT);
         transition.setInterpolator(LayoutTransition.DISAPPEARING, CubicBezierInterpolator.EASE_OUT_QUINT);
+        transition.setStartDelay(LayoutTransition.APPEARING, 0);
+        transition.setStartDelay(LayoutTransition.CHANGE_APPEARING, 0);
+        transition.setStartDelay(LayoutTransition.CHANGING, 0);
+        transition.setStartDelay(LayoutTransition.CHANGE_DISAPPEARING, 0);
+        transition.setStartDelay(LayoutTransition.DISAPPEARING, 0);
+        transition.setAnimateParentHierarchy(false);
         transition.addTransitionListener(new LayoutTransition.TransitionListener() {
             ViewTreeObserver.OnPreDrawListener onPreDrawListener;
             int counter;

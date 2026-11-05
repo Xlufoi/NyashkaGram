@@ -926,16 +926,16 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
             }
             actionModeAnimation = new AnimatorSet();
             actionModeAnimation.playTogether(animators);
-            if (backgroundUpdateListener != null) {
-                ValueAnimator alphaUpdate = ValueAnimator.ofFloat(0, 1);
-                alphaUpdate.addUpdateListener(anm -> {
-                    if (backgroundUpdateListener != null) {
-                        backgroundUpdateListener.run();
-                    }
-                });
-                actionModeAnimation.playTogether(alphaUpdate);
-            }
-            actionModeAnimation.setDuration(200);
+            ValueAnimator alphaUpdate = ValueAnimator.ofFloat(0, 1);
+            alphaUpdate.addUpdateListener(anm -> {
+                if (backgroundUpdateListener != null) {
+                    backgroundUpdateListener.run();
+                }
+                invalidate();
+            });
+            actionModeAnimation.playTogether(alphaUpdate);
+            actionModeAnimation.setDuration(220);
+            actionModeAnimation.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
             actionModeAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -1091,16 +1091,16 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
         }
         actionModeAnimation = new AnimatorSet();
         actionModeAnimation.playTogether(animators);
-        if (backgroundUpdateListener != null) {
-            ValueAnimator alphaUpdate = ValueAnimator.ofFloat(0, 1);
-            alphaUpdate.addUpdateListener(anm -> {
-                if (backgroundUpdateListener != null) {
-                    backgroundUpdateListener.run();
-                }
-            });
-            actionModeAnimation.playTogether(alphaUpdate);
-        }
-        actionModeAnimation.setDuration(200);
+        ValueAnimator alphaUpdate = ValueAnimator.ofFloat(0, 1);
+        alphaUpdate.addUpdateListener(anm -> {
+            if (backgroundUpdateListener != null) {
+                backgroundUpdateListener.run();
+            }
+            invalidate();
+        });
+        actionModeAnimation.playTogether(alphaUpdate);
+        actionModeAnimation.setDuration(220);
+        actionModeAnimation.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
         actionModeAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -2277,6 +2277,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
     public boolean isFloatingCardHeader;
     public boolean hasPinnedPanel;
     public org.telegram.messenger.GenericProvider<Void, Boolean> pinnedPanelVisibilityProvider;
+    public org.telegram.messenger.GenericProvider<Void, Float> pinnedPanelProgressProvider;
     private final android.graphics.Path cardHeaderClipPath = new android.graphics.Path();
 
     @Override
@@ -2299,8 +2300,17 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 int bottomMargin = dp(2);
                 AndroidUtilities.rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
                 final float cardRadius = dp(16);
-                boolean showPinned = pinnedPanelVisibilityProvider != null ? Boolean.TRUE.equals(pinnedPanelVisibilityProvider.provide(null)) : hasPinnedPanel;
-                final float bottomRadius = showPinned ? 0 : cardRadius;
+                float pinnedProgress = 0f;
+                if (pinnedPanelProgressProvider != null) {
+                    Float p = pinnedPanelProgressProvider.provide(null);
+                    pinnedProgress = p != null ? p : 0f;
+                } else if (pinnedPanelVisibilityProvider != null) {
+                    pinnedProgress = Boolean.TRUE.equals(pinnedPanelVisibilityProvider.provide(null)) ? 1f : 0f;
+                } else if (hasPinnedPanel) {
+                    pinnedProgress = 1f;
+                }
+                final float effectivePinned = pinnedProgress * (1f - getActionModeFactor());
+                final float bottomRadius = (1f - effectivePinned) * cardRadius;
                 cardHeaderClipPath.rewind();
                 cardHeaderClipPath.addRoundRect(AndroidUtilities.rectTmp, new float[] {
                     cardRadius, cardRadius,

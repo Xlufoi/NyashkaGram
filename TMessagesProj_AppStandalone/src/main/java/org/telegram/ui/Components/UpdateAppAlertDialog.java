@@ -18,12 +18,22 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 
+import androidx.core.content.FileProvider;
 import androidx.core.widget.NestedScrollView;
 
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.DocumentObject;
 import org.telegram.messenger.FileLoader;
+import org.telegram.messenger.FileLog;
 import org.telegram.messenger.ImageLocation;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessageObject;
@@ -33,6 +43,9 @@ import org.telegram.messenger.browser.Browser;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.ActionBar.Theme;
+
+import java.io.File;
+
 import tw.nekomimi.nekogram.parts.DialogTransKt;
 
 public class UpdateAppAlertDialog extends BottomSheet {
@@ -312,10 +325,17 @@ public class UpdateAppAlertDialog extends BottomSheet {
         doneButton.background.setOnClickListener(v -> {
             if (appUpdate.document != null) {
                 FileLoader.getInstance(accountNum).loadFile(appUpdate.document, "update", FileLoader.PRIORITY_NORMAL, 1);
+                dismiss();
             } else if (!TextUtils.isEmpty(appUpdate.url)) {
-                Browser.openUrl(getContext(), appUpdate.url);
+                if (appUpdate.url.endsWith(".apk")) {
+                    downloadAndInstallApk(getContext(), appUpdate.url, appUpdate.version);
+                } else {
+                    Browser.openUrl(getContext(), appUpdate.url);
+                }
+                dismiss();
+            } else {
+                dismiss();
             }
-            dismiss();
         });
         container.addView(doneButton, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 50, Gravity.LEFT | Gravity.BOTTOM, 0, 0, 0, 50));
 
@@ -378,5 +398,83 @@ public class UpdateAppAlertDialog extends BottomSheet {
     @Override
     protected boolean canDismissWithSwipe() {
         return false;
+    }
+
+    private void downloadAndInstallApk(Context context, String url, String version) {
+        try {
+            DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+            if (dm != null) {
+                Uri uri = Uri.parse(url);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                String fileName = "NyashkaGram-" + (version != null ? version.replace("/", "_") : "update") + ".apk";
+                request.setTitle("NyashkaGram " + (version != null ? version : ""));
+                request.setDescription(LocaleController.getString(R.string.AppUpdate));
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+                File dir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                if (dir != null) {
+                    File destFile = new File(dir, fileName);
+                    if (destFile.exists()) {
+                        destFile.delete();
+                    }
+                    request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, fileName);
+
+                    long downloadId = dm.enqueue(request);
+
+                    BroadcastReceiver receiver = new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context ctx, Intent intent) {
+                            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                            if (id == downloadId) {
+                                try {
+                                    ctx.unregisterReceiver(this);
+                                } catch (Throwable ignored) {}
+
+                                File file = new File(ctx.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
+                                if (file.exists()) {
+                                    installApkFile(ctx, file);
+                                }
+                            }
+                        }
+                    };
+                    if (Build.VERSION.SDK_INT >= 33) {
+                        context.registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_EXPORTED);
+                    } else {
+                        context.registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    }
+
+                    BulletinFactory.global().createSimpleBulletin(R.raw.ic_download, LocaleController.getString(R.string.Downloading)).show();
+                    return;
+                }
+            }
+        } catch (Throwable e) {
+            FileLog.e(e);
+        }
+        Browser.openUrl(context, url);
+    }
+
+    public static void installApkFile(Context context, File file) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !context.getPackageManager().canRequestPackageInstalls()) {
+                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                intent.setData(Uri.parse("package:" + context.getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                return;
+            }
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+            Uri uri;
+            if (Build.VERSION.SDK_INT >= 24) {
+                uri = FileProvider.getUriForFile(context, ApplicationLoader.getApplicationId() + ".provider", file);
+            } else {
+                uri = Uri.fromFile(file);
+            }
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+            context.startActivity(intent);
+        } catch (Throwable e) {
+            FileLog.e(e);
+            Browser.openUrl(context, Uri.fromFile(file).toString());
+        }
     }
 }
