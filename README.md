@@ -1,77 +1,67 @@
 <div align="center">
 
-# 🐾 NyashkaGram (НяшкаГрам)
+# 🐾 NyashkaGram
 
-**Элегантный и выразительный Telegram-клиент для Android в стиле Material 3 Expressive**
+**Милый, лёгкий и выразительный Telegram-клиент для Android**  
+**Cute, lightweight, and expressive Telegram client for Android**  
+**可爱、轻盈且灵动的 Android Telegram 客户端**
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](LICENSE)
 [![Android](https://img.shields.io/badge/Android-8.0%2B-3DDC84.svg?style=flat-square&logo=android&logoColor=white)](https://developer.android.com)
 [![Material You](https://img.shields.io/badge/Design-Material%203%20Expressive-7C4DFF.svg?style=flat-square)](https://m3.material.io)
 [![GitHub Releases](https://img.shields.io/github/v/release/Xlufoi/NyashkaGram?style=flat-square&color=orange)](https://github.com/Xlufoi/NyashkaGram/releases)
 
-[✨ Возможности](#-основные-возможности) • [📥 Скачать](#-загрузка-и-обновления) • [💬 Сообщество](#-обратная-связь) • [❤️ Благодарности](#-благодарности)
+[🇷🇺 Русский](#-русский) • [🇬🇧 English](#-english) • [🇨🇳 简体中文](#-简体中文) • [❤️ Благодарности](#️-благодарности--credits--致谢)
 
 ---
 
 </div>
 
-## 🌟 О проекте
+## 🇷🇺 Русский
 
-**NyashkaGram** — современный клиент Telegram для Android, созданный для тех, кто ценит эстетику, плавность и свободу настройки. Приложение сочетает передовой язык дизайна **Material 3 Expressive**, глубокую интеграцию с динамическими палитрами **Android Monet**, мягкие AOSP-анимации и богатый арсенал продвинутых функций для комфортного общения.
+**NyashkaGram** — уютный, красивый и облегчённый Telegram-клиент для Android, созданный с душой и вниманием к деталям.
 
----
-
-## ✨ Основные возможности
-
-### 🎨 Дизайн и интерфейс нового поколения
-- **Material 3 Expressive**: Мягкие скругления карточек, плавающие диалоговые окна (28dp), обновлённые кнопки и переключатели.
-- **Динамическая тема Monet**: Полная адаптация всех элементов интерфейса под акцентные цвета ваших обоев (Android 12+).
-- **Тематическая иконка Monet**: Нативная векторная монохромная иконка лаунчера для Android 13+.
-- **Фирменный стиль звонков**: Анимированные кнопки управления вызовом с мягким переходом между кругом и сквирклом и физическим bounce-эффектом.
-- **Плавный скролл и отзывчивость**: Оптимизированный рендеринг списков чатов и диалогов, поддержка высокой частоты обновления экрана (90/120 Гц).
-- **Стильный профиль**: Круглые MD3-превью аватаров и плавная кинематографичная анимация раскрытия.
-
-### 💬 Продвинутое общение и чаты
-- **Удобное поле ввода**: Современная строка ввода в стиле Google Messages с гармоничной палитрой панели эмодзи, стикеров и GIF.
-- **Отправка от имени каналов**: Быстрое и удобное переключение автора сообщения в группах с идеальным позиционированием аватара.
-- **Объединение сообщений (Combine Message)**: Склейка нескольких сообщений в одно перед отправкой.
-- **Форматирование и стили**: Редактирование стилей текста, отмена и повтор действий (Undo / Redo).
-- **Быстрые ответы**: Мгновенный ответ по долгому нажатию, инвертированный ответ.
-- **Улучшение голоса**: Подавление шума и усиление голоса при записи голосовых сообщений.
-- **Скроллируемый предпросмотр чатов**: Удобный просмотр содержимого диалога без отметки о прочтении.
-- **Принудительное копирование**: Копирование текста сообщений даже там, где это ограничено.
-- **Размер шрифта по умолчанию**: Комфортный размер сообщений 16sp из коробки.
-
-### 🛡️ Свобода и конфиденциальность
-- **Поддержка прокси**: Встроенный менеджер прокси (MTProto с поддержкой IPv6, Socks5, HTTP, подписки, проверка пинга и автопереключение).
-- **Обход региональных ограничений**: Возможность игнорировать клиентские ограничения контента.
-- **Гибкое управление данными**: Настраиваемый каталог кэша, очистка локальных данных и расширенное управление памятью.
-- **Защита от случайных действий**: Отключение всплывающего таймера отмены («пожалеть за 5 секунд»), выборочная очистка черновиков.
-- **Вход по QR-коду**: Быстрая и безопасная авторизация через сканирование QR-кода.
-
-### 🚀 Автообновление
-- **Встроенный апдейтер**: Приложение умеет автоматически проверять свежие релизы напрямую из [GitHub Releases](https://github.com/Xlufoi/NyashkaGram/releases) и обновляться в один клик.
-
----
-
-## 📥 Загрузка и обновления
-
-Самые свежие сборки всегда доступны на странице релизов:
+### ✨ Главное:
+- **Material 3 Expressive**: мягкие органичные формы, выразительные акценты, плавающие карточки и гармоничные анимации.
+- **Динамический Monet**: глубокая адаптация цветов интерфейса и иконки приложения под палитру ваших обоев (Android 12+).
+- **Облегчённый и чистый**: полностью вырезана лишняя аналитика, телеметрия и назойливые фоновые трекеры.
+- **Максимальная плавность**: оптимизированный скролл и полноценная поддержка экранов 120/144 Гц без просадок.
 
 👉 **[Скачать NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
 
 ---
 
-## 📚 Документация Telegram API
+## 🇬🇧 English
 
-- Telegram API: <https://core.telegram.org/api>
-- Протокол MTProto: <https://core.telegram.org/mtproto>
+**NyashkaGram** — a cute, cozy, and lightweight Telegram client for Android, crafted with care and passion.
+
+### ✨ Highlights:
+- **Material 3 Expressive**: soft playful shapes, lively accents, floating sheets, and organic transitions.
+- **Dynamic Monet Tinting**: seamless interface and launcher icon color matching powered by your wallpaper palette (Android 12+).
+- **Lightweight & Clean**: completely free from background analytics, telemetry, and tracking bloat.
+- **Buttery Smooth**: optimized list rendering with rock-solid high-refresh rate (120/144 Hz) support.
+
+👉 **[Download NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
 
 ---
 
-## ❤️ Благодарности
+## 🇨🇳 简体中文
 
-Разработка NyashkaGram опирается на открытый исходный код и наработки сообщества Telegram:
+**NyashkaGram** — 一款充满爱意、可爱软萌且极致轻盈的 Android 端 Telegram 客户端。
+
+### ✨ 特性亮点：
+- **Material 3 Expressive 设计**：柔和灵动的圆角质感、富有表现力的微交互与生动的转场动效。
+- **Monet 动态取色**：界面与应用图标随壁纸主色调动态流转（Android 12+）。
+- **轻量与纯粹**：彻底剔除冗余的后台遥测、统计分析及遥测代码，还你清爽体验。
+- **丝滑流畅**：优化列表渲染机制，全方位适配 120/144 Hz 高刷新率屏幕。
+
+👉 **[下载 NyashkaGram (GitHub Releases)](https://github.com/Xlufoi/NyashkaGram/releases)**
+
+---
+
+## ❤️ Благодарности / Credits / 致谢
+
+Проект NyashkaGram развивается благодаря открытому сообществу разработчиков:
 
 - [Telegram for Android](https://github.com/DrKLO/Telegram)
 - [NekoX](https://github.com/NekoX-Dev/NekoX)
@@ -79,10 +69,12 @@
 - [TeleTux](https://github.com/TeleTux/TeleTux)
 - [OwlGram](https://github.com/OwlGramDev/OwlGram)
 - [Nullgram](https://github.com/qwq233/Nullgram)
+- [Nagram](https://github.com/NextAlone/Nagram)
+- [Shxvi](https://github.com/Shxvi/) — за тестирование и помощь в дизайне / for testing and design assistance / 感谢测试与设计支持 🌸
 
 ---
 
-## 📄 Лицензия
+## 📄 Лицензия / License
 
 NyashkaGram распространяется под лицензией **GNU General Public License v3.0 (GPLv3)**.  
 Подробности доступны в файле [LICENSE](LICENSE).

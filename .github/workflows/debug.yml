@@ -107,37 +107,26 @@ jobs:
           tag_name: v1.0.0
           name: NyashkaGram v1.0.0 (Release)
           body: |
-            ## 🎉 Первый официальный релиз — NyashkaGram v1.0.0!
+            # 🐾 NyashkaGram v1.0.0
 
-            Клиент Telegram с глубокой интеграцией **Material 3 Expressive** и динамическими цветами **Monet (Android 12+)**.
+            ### 🇷🇺 Русский
+            Уютный, красивый и облегчённый Telegram-клиент для Android.
+            - **Material 3 Expressive**: мягкие органичные формы, плавные переходы и живые акценты Monet.
+            - **Облегчённый клиент**: полностью удалена ненужная аналитика, трекеры и лишний код для максимальной плавности (120+ Гц).
 
-            ### 🎵 Музыкальный плеер (AOSP / Material You):
-            - **Морфящаяся кнопка Play/Pause**:
-              - В паузе — широкая гладкая овальная пилюля (`84x52 dp`).
-              - При воспроизведении — плавно трансформируется в прямоугольный блок с углами («около квадратная»).
-              - Окрашена в основной акцентный цвет Monet темы (`chats_actionBackground`) с высококонтрастной иконкой (`chats_actionIcon`).
-            - **Кнопки переключения треков (Prev / Next)**:
-              - Идеально круглые (`44x44 dp`).
-              - При нажатии плавно трансформируются в скруглённый квадрат с тактильным откликом и векторной анимацией, возвращаясь в круг при отпускании.
-              - Окрашены в тональный вторичный контейнер Monet темы с акцентными иконками (`player_buttonActive`).
-            - **Живой ползунок трека (Squiggly Seekbar)**:
-              - Плавная синусоидальная волна активна строго во время воспроизведения музыки и аккуратно выпрямляется в ровную прямую линию при паузе.
+            ### 🇬🇧 English
+            A cute, cozy, and lightweight Telegram client for Android.
+            - **Material 3 Expressive**: playful soft shapes, fluid transitions, and dynamic Monet palette.
+            - **Streamlined Client**: background telemetry and analytics removed for maximum responsiveness and high-refresh smoothness.
 
-            ### 🎨 Иконка приложения и цветовые варианты:
-            - Установлена новая иконка приложения высокого разрешения из `1793909594296.jpg`.
-            - Подготовлены адаптированные тематические иконки: **Default (Фиолетовая)**, **Blue (Синяя)**, **DarkBlue (Глубокая синяя)**, **DarkGreen (Изумрудная)**, **Neon (Неоновая)**, **Niello (Чёрно-серебряная)**, **Colorful (Закатно-коралловая)**, **Google**.
-            - Новая адаптивная монохромная иконка для Monet-темы Android 13+.
-            - Обновлена круглая иконка в шторке уведомлений и звонках (`ic_launcher_dr`).
-
-            ### ⚡ Производительность и оптимизация:
-            - Принудительная фиксация высокой частоты экрана 120/144 Гц с аппаратным `preferredDisplayModeId`.
-            - Оптимизированный скролл списков чатов (`chatListView`).
-            - Полное вырезание аналитики Sentry, телеметрии и сбора Crashlytics.
+            ### 🇨🇳 简体中文
+            一款可爱、纯净且极致轻盈的 Android 端 Telegram 客户端。
+            - **Material 3 Expressive**：灵动圆角、活泼微动效与 Monet 动态取色。
+            - **轻量纯粹**：剔除所有冗余后台遥测与分析代码，畅享高刷丝滑体验。
 
             ---
-            - **Архитектура**: arm64-v8a
-            - **Ветка**: `dev`
-            - **Коммит**: `${{ github.sha }}`
+            #### ❤️ Благодарности / Credits / 致谢:
+            [Telegram](https://github.com/DrKLO/Telegram) • [NekoX](https://github.com/NekoX-Dev/NekoX) • [Nekogram](https://gitlab.com/Nekogram/Nekogram) • [TeleTux](https://github.com/TeleTux/TeleTux) • [OwlGram](https://github.com/OwlGramDev/OwlGram) • [Nullgram](https://github.com/qwq233/Nullgram) • [Nagram](https://github.com/NextAlone/Nagram) • [Shxvi](https://github.com/Shxvi/) (тестирование и помощь в дизайне / testing & design) 🌸
           draft: false
           prerelease: false
           make_latest: true
