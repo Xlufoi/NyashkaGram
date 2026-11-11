@@ -306,7 +306,7 @@ public class ConnectionsManager extends BaseController {
     }
 
     public boolean isPushConnectionEnabled() {
-        if (xyz.nextalone.nagram.NaConfig.INSTANCE.getPushServiceType().Int() == 0 || TextUtils.isEmpty(SharedConfig.pushString) || "__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus)) {
+        if (xyz.nextalone.nagram.NaConfig.INSTANCE.getPushServiceType().Int() == 0 || TextUtils.isEmpty(SharedConfig.pushString) || "__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus) || org.telegram.messenger.XiaomiUtilities.isMIUI()) {
             return true;
         }
         SharedPreferences preferences = MessagesController.getNotificationsSettings(currentAccount);

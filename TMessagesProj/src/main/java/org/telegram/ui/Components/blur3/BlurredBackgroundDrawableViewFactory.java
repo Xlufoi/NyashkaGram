@@ -24,6 +24,10 @@ public class BlurredBackgroundDrawableViewFactory {
         this.source = source;
     }
 
+    public BlurredBackgroundSource getSource() {
+        return source;
+    }
+
     public BlurredBackgroundDrawableViewFactory(ViewPositionWatcher watcher, ViewGroup parent, BlurredBackgroundSource source) {
         this(source);
         setSourceRootView(watcher, parent);

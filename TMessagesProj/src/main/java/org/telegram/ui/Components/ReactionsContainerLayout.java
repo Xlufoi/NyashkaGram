@@ -742,6 +742,7 @@ public class ReactionsContainerLayout extends FrameLayout implements Notificatio
                     rect.round(AndroidUtilities.rectTmp2);
                     AndroidUtilities.rectTmp2.inset(-dp(8), -dp(8));
 
+                    blurredBackgroundDrawable.setRadius(radius);
                     blurredBackgroundDrawable.setBounds(AndroidUtilities.rectTmp2);
                     blurredBackgroundDrawable.setAlpha(bgPaint.getAlpha());
                     blurredBackgroundDrawable.draw(canvas);

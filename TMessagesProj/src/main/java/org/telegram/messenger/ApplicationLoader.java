@@ -406,7 +406,7 @@ public class ApplicationLoader extends Application {
 
     private static Intent createNotificationsServiceIntent() {
         Intent intent = new Intent(applicationContext, NotificationsService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && NaConfig.INSTANCE.getPushServiceTypeInAppDialog().Bool()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && (NaConfig.INSTANCE.getPushServiceTypeInAppDialog().Bool() || XiaomiUtilities.isMIUI())) {
             intent.setAction(NotificationsService.ACTION_START_FOREGROUND);
         } else {
             intent.setAction(NotificationsService.ACTION_START_BACKGROUND);
@@ -417,12 +417,12 @@ public class ApplicationLoader extends Application {
     private static void startPushServiceInternal() {
         int pushType = NaConfig.INSTANCE.getPushServiceType().Int();
         boolean isFCMorGMS = pushType == 1 || pushType == 3;
-        if (isFCMorGMS && PushListenerController.getProvider().hasServices() && !"__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus) && !android.text.TextUtils.isEmpty(SharedConfig.pushString)) {
+        if (!XiaomiUtilities.isMIUI() && isFCMorGMS && PushListenerController.getProvider().hasServices() && !"__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus) && !android.text.TextUtils.isEmpty(SharedConfig.pushString)) {
             return;
         }
         SharedPreferences preferences = MessagesController.getNotificationsSettings(UserConfig.selectedAccount);
         boolean enabled;
-        if (pushType == 0 || android.text.TextUtils.isEmpty(SharedConfig.pushString) || "__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus)) {
+        if (pushType == 0 || XiaomiUtilities.isMIUI() || android.text.TextUtils.isEmpty(SharedConfig.pushString) || "__FIREBASE_FAILED__".equals(SharedConfig.pushStringStatus)) {
             enabled = true;
         } else if (preferences.contains("pushService")) {
             enabled = preferences.getBoolean("pushService", false);
@@ -449,7 +449,11 @@ public class ApplicationLoader extends Application {
                     Log.d("TFOSS", "Trying to start push service every 10 minutes");
                     // Telegram-FOSS: unconditionally enable push service
                     AlarmManager am = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
-                    pendingIntent = PendingIntent.getService(applicationContext, 0, createNotificationsServiceIntent(), PendingIntent.FLAG_IMMUTABLE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && (NaConfig.INSTANCE.getPushServiceTypeInAppDialog().Bool() || XiaomiUtilities.isMIUI())) {
+                        pendingIntent = PendingIntent.getForegroundService(applicationContext, 0, createNotificationsServiceIntent(), PendingIntent.FLAG_IMMUTABLE);
+                    } else {
+                        pendingIntent = PendingIntent.getService(applicationContext, 0, createNotificationsServiceIntent(), PendingIntent.FLAG_IMMUTABLE);
+                    }
 
                     am.cancel(pendingIntent);
                     am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 10 * 60 * 1000, pendingIntent);

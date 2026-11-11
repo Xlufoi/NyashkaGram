@@ -10904,7 +10904,7 @@ public class ChatActivity extends BaseFragment implements
         if (thisTagSelector.getReactionsWindow() != null && thisTagSelector.getReactionsWindow().containerView != null) {
             thisTagSelector.getReactionsWindow().containerView.animate().alpha(0).setDuration(180).start();
         }
-        thisTagSelector.animate().alpha(0.01f).translationY(-dp(12)).scaleX(.7f).scaleY(.7f).withEndAction(() -> {
+        thisTagSelector.animate().alpha(0.01f).translationY(thisTagSelector.getTranslationY() - dp(12)).scaleX(.7f).scaleY(.7f).withEndAction(() -> {
             contentView.removeView(thisTagSelector);
         }).setDuration(180).start();
     }
@@ -10945,15 +10945,15 @@ public class ChatActivity extends BaseFragment implements
                 View item = actionMode.getItem(tag_message);
                 if (item != null) {
                     getLocationInWindow(loc);
-                    float x = getX();
-                    float x2 = x + getWidth();
+                    int myLeft = loc[0];
+                    int myRight = myLeft + getWidth();
                     item.getLocationInWindow(loc);
                     float cx = loc[0] + item.getWidth() / 2f + dp(20) * (LocaleController.isRTL ? -1 : 1);
 
                     if (LocaleController.isRTL) {
-                        updateBubbleOffset(cx - x, !firstLayout);
+                        updateBubbleOffset(cx - myLeft, !firstLayout);
                     } else {
-                        updateBubbleOffset(cx - x2, !firstLayout);
+                        updateBubbleOffset(cx - myRight, !firstLayout);
                     }
                     firstLayout = false;
                 }
@@ -11052,12 +11052,12 @@ public class ChatActivity extends BaseFragment implements
         tagSelector.setHint(LocaleController.getString(tagSelector.getSelectedReactions().isEmpty() ? R.string.SavedTagReactionsSelectedAddHint : R.string.SavedTagReactionsSelectedEditHint));
         contentView.addView(tagSelector, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 92.5f, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 0, 0, 0));
         tagSelector.setMessage(null, null, true);
-        tagSelector.setTranslationY(-dp(12));
+        float targetTranslationY = contentPanTranslation + (actionBarSearchTags != null ? actionBarSearchTags.getCurrentHeight() : 0);
+        tagSelector.setTranslationY(targetTranslationY - dp(12));
         tagSelector.setScaleY(.4f);
         tagSelector.setScaleX(.4f);
-        tagSelector.animate().scaleY(1f).scaleX(1f).translationY(0).setDuration(420).setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT).start();
+        tagSelector.animate().scaleY(1f).scaleX(1f).translationY(targetTranslationY).setDuration(420).setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT).start();
         updateSelectedMessageReactions();
-        tagSelector.setTranslationY(contentPanTranslation + (actionBarSearchTags != null ? actionBarSearchTags.getCurrentHeight() : 0));
     }
 
     private ArrayList<Pair<String, TLRPC.MessagesFilter>> searchFilters = new ArrayList<>() {{

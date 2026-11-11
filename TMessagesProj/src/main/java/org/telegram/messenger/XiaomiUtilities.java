@@ -36,7 +36,28 @@ public class XiaomiUtilities {
 	public static final int OP_WRITE_MMS = 10006;
 
 	public static boolean isMIUI() {
-		return !TextUtils.isEmpty(AndroidUtilities.getSystemProperty("ro.miui.ui.version.name"));
+		return !TextUtils.isEmpty(AndroidUtilities.getSystemProperty("ro.miui.ui.version.name"))
+			|| !TextUtils.isEmpty(AndroidUtilities.getSystemProperty("ro.mi.os.version.name"))
+			|| "Xiaomi".equalsIgnoreCase(android.os.Build.MANUFACTURER)
+			|| "Redmi".equalsIgnoreCase(android.os.Build.MANUFACTURER)
+			|| "POCO".equalsIgnoreCase(android.os.Build.MANUFACTURER);
+	}
+
+	public static boolean isIgnoringBatteryOptimizations(Context context) {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && context != null) {
+			android.os.PowerManager pm = (android.os.PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			return pm != null && pm.isIgnoringBatteryOptimizations(context.getPackageName());
+		}
+		return true;
+	}
+
+	public static Intent getBatteryOptimizationIntent(Context context) {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && context != null) {
+			Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+			intent.setData(android.net.Uri.parse("package:" + context.getPackageName()));
+			return intent;
+		}
+		return null;
 	}
 
 	@SuppressWarnings("JavaReflectionMemberAccess")

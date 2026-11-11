@@ -42,7 +42,11 @@ public class NotificationsService extends Service {
                 .setContentText(LocaleController.getString("NekoXPushService", R.string.NekoXPushService))
                 .setPriority(showDialog ? NotificationCompat.PRIORITY_LOW : NotificationCompat.PRIORITY_MIN);
         try {
-            startForeground(9999, builder.build());
+            if (Build.VERSION.SDK_INT >= 34) {
+                startForeground(9999, builder.build(), android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING);
+            } else {
+                startForeground(9999, builder.build());
+            }
         } catch (Throwable e) {
             Log.e("TFOSS", "Failed to start push service", e);
         }
@@ -65,7 +69,9 @@ public class NotificationsService extends Service {
     @Override
     public void onTimeout(int startId, int fgsType) {
         super.onTimeout(startId, fgsType);
-        stopSelf();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            doForegroundThings();
+        }
     }
 
     @Override
@@ -89,12 +95,20 @@ public class NotificationsService extends Service {
         }
         SharedPreferences preferences = MessagesController.getGlobalNotificationsSettings();
         if (preferences.getBoolean("pushService", true)) {
-            Intent intent = new Intent("org.telegram.start");
-            intent.setPackage(getPackageName());
             try {
-                sendBroadcast(intent);
+                Intent intent = new Intent(this, NotificationsService.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(intent);
+                } else {
+                    startService(intent);
+                }
             } catch (Exception ex) {
-                // 辣鷄miui 就你事最多.jpg
+                Intent intent = new Intent("org.telegram.start");
+                intent.setPackage(getPackageName());
+                try {
+                    sendBroadcast(intent);
+                } catch (Exception ignore) {
+                }
             }
         }
     }

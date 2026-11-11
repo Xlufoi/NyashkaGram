@@ -115,13 +115,18 @@ public class SearchTagsList extends FrameLayout implements NotificationCenter.No
 
     public void setBlurredFactory(BlurredBackgroundDrawableViewFactory blurredFactory,
                                   BlurredBackgroundProvider blurredColorProvider) {
-        this.blurredFactory = blurredFactory;
+        if (blurredFactory != null) {
+            this.blurredFactory = new BlurredBackgroundDrawableViewFactory(blurredFactory.getSource());
+            this.blurredFactory.setLiquidGlassEffectAllowed(false);
+        } else {
+            this.blurredFactory = null;
+        }
         this.blurredColorProvider = blurredColorProvider;
         strokePaint.setStrokeWidth(dpf2(1));
         strokePaint.setStyle(Paint.Style.STROKE);
 
-        if (premiumLayout != null) {
-            premiumLayout.setBackground(blurredFactory.create(premiumLayout)
+        if (premiumLayout != null && this.blurredFactory != null) {
+            premiumLayout.setBackground(this.blurredFactory.create(premiumLayout)
                 .setColorProvider(BlurredBackgroundProviderImpl.topPanelChatActivity(resourcesProvider))
                 .setRadius(dp(9), dp(15), dp(15), dp(9))
                 .setThickness(dp(5f))
@@ -917,14 +922,14 @@ public class SearchTagsList extends FrameLayout implements NotificationCenter.No
             final int x = (getWidth() - reactionButton.width) / 2;
             final int y = (getHeight() - reactionButton.height) / 2;
 
-            if (blurredDrawable != null) {
-                AndroidUtilities.rectTmp2.set(x, y, x + reactionButton.width, y + reactionButton.height);
-                clipPathTmpRect.set(AndroidUtilities.rectTmp2);
-                if (!clipPathTmpRect.equals(clipPathRect)) {
-                    clipPathRect.set(clipPathTmpRect);
-                    ReactionsLayoutInBubble.fillTagPath(clipPathRect, clipPathTmpRect, clipPath);
-                }
+            AndroidUtilities.rectTmp2.set(x, y, x + reactionButton.width, y + reactionButton.height);
+            clipPathTmpRect.set(AndroidUtilities.rectTmp2);
+            if (!clipPathTmpRect.equals(clipPathRect)) {
+                clipPathRect.set(clipPathTmpRect);
+                ReactionsLayoutInBubble.fillTagPath(clipPathRect, clipPathTmpRect, clipPath);
+            }
 
+            if (blurredDrawable != null) {
                 AndroidUtilities.rectTmp2.inset(-dp(4), -dp(4));
                 AndroidUtilities.rectTmp2.right += dp(1);
                 blurredDrawable.setBounds(AndroidUtilities.rectTmp2);
@@ -932,6 +937,13 @@ public class SearchTagsList extends FrameLayout implements NotificationCenter.No
                 canvas.save();
                 canvas.clipPath(clipPath);
                 blurredDrawable.draw(canvas);
+                strokePaint.setColor((resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark()) ? 0x28FFFFFF : 0xFFFFFFFF);
+                canvas.drawPath(clipPath, strokePaint);
+                canvas.restore();
+            } else {
+                canvas.save();
+                canvas.clipPath(clipPath);
+                canvas.drawColor(Theme.getColor(Theme.key_chat_inReactionButtonBackground, resourcesProvider));
                 strokePaint.setColor((resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark()) ? 0x28FFFFFF : 0xFFFFFFFF);
                 canvas.drawPath(clipPath, strokePaint);
                 canvas.restore();

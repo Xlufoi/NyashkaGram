@@ -224,11 +224,20 @@ public class AlertsCreator {
                 .setTopAnimation(R.raw.permission_request_apk, PERMISSIONS_REQUEST_TOP_ICON_SIZE, false, Theme.getColor(Theme.key_dialogTopBackground))
                 .setPositiveButton(LocaleController.getString(R.string.PermissionOpenSettings), (dialogInterface, i) -> {
                     try {
-                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:" + ApplicationLoader.applicationContext.getPackageName()));
+                        Intent intent = XiaomiUtilities.isMIUI() ? XiaomiUtilities.getBatteryOptimizationIntent(ctx) : null;
+                        if (intent == null) {
+                            intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            intent.setData(Uri.parse("package:" + ApplicationLoader.applicationContext.getPackageName()));
+                        }
                         ctx.startActivity(intent);
                     } catch (Exception e) {
-                        FileLog.e(e);
+                        try {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            intent.setData(Uri.parse("package:" + ApplicationLoader.applicationContext.getPackageName()));
+                            ctx.startActivity(intent);
+                        } catch (Exception ex) {
+                            FileLog.e(ex);
+                        }
                     }
                 })
                 .setNegativeButton(LocaleController.getString(R.string.ContactsPermissionAlertNotNow), null)

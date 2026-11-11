@@ -744,9 +744,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             FingerprintController.checkKeyReady();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            if (am.isBackgroundRestricted() && System.currentTimeMillis() - SharedConfig.BackgroundActivityPrefs.getLastCheckedBackgroundActivity() >= 86400000L && SharedConfig.BackgroundActivityPrefs.getDismissedCount() < 3) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityManager am = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE) : null;
+            boolean restricted = (am != null && am.isBackgroundRestricted()) || (XiaomiUtilities.isMIUI() && !XiaomiUtilities.isIgnoringBatteryOptimizations(this));
+            if (restricted && System.currentTimeMillis() - SharedConfig.BackgroundActivityPrefs.getLastCheckedBackgroundActivity() >= 86400000L && SharedConfig.BackgroundActivityPrefs.getDismissedCount() < 3) {
                 AlertsCreator.createBackgroundActivityDialog(this).show();
                 SharedConfig.BackgroundActivityPrefs.setLastCheckedBackgroundActivity(System.currentTimeMillis());
             }
