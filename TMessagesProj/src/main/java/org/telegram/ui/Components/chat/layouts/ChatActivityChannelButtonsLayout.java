@@ -89,11 +89,17 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
     }
 
     public void updateColors() {
+        if (resourcesProvider != null) {
+            accentColor = Theme.getColor(Theme.key_featuredStickers_addButton, resourcesProvider);
+        } else {
+            accentColor = Theme.getColor(Theme.key_featuredStickers_addButton);
+        }
         for (ButtonHolder holder : buttonHolders) {
             if (holder != null) {
                 holder.button.updateColors();
             }
         }
+        invalidate();
     }
 
     public FrameLayout getContainer() {
@@ -437,15 +443,25 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
     protected void dispatchDraw(@NonNull Canvas canvas) {
         final int accentAlpha = (int) (255 * totalVisibilityFactor * animatorCenterAccentBackground.getFloatValue());
         if (accentAlpha > 0) {
-            final float left = totalWidthLeft > 0 ? totalWidthLeft + dp(7) : dp(7);
-            final float right = totalWidthRight > 0 ? getMeasuredWidth() - dp(7) - totalWidthRight : getMeasuredWidth() - dp(7);
+            final float left = totalWidthLeft > 0 ? totalWidthLeft + dp(2) : dp(7);
+            final float right = totalWidthRight > 0 ? getMeasuredWidth() - dp(2) - totalWidthRight : getMeasuredWidth() - dp(7);
             tmpRect.set(
                 left,
                 dp(6),
                 right,
                 getMeasuredHeight() - dp(6)
             );
-            backgroundAccentPaint.setColor(accentColor);
+            int effectiveAccentColor = accentColor;
+            if (effectiveAccentColor == 0 && resourcesProvider != null) {
+                effectiveAccentColor = Theme.getColor(Theme.key_featuredStickers_addButton, resourcesProvider);
+            }
+            if (effectiveAccentColor == 0) {
+                effectiveAccentColor = Theme.getColor(Theme.key_featuredStickers_addButton);
+            }
+            if (effectiveAccentColor == 0) {
+                effectiveAccentColor = 0xff50a8eb;
+            }
+            backgroundAccentPaint.setColor(effectiveAccentColor);
             backgroundAccentPaint.setAlpha(accentAlpha);
             canvas.drawRoundRect(tmpRect, dp(22), dp(22), backgroundAccentPaint);
         }

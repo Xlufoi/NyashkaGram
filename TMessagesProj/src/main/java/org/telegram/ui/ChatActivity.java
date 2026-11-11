@@ -8894,8 +8894,9 @@ public class ChatActivity extends BaseFragment implements
             }
         });
         bottomChannelButtonsLayout.setOnButtonsTotalWidthChanged((l, r) -> {
-            chatInputViewsContainer.setInputBubbleOffsets(l, r);
+            chatInputViewsContainer.setInputBubbleOffsets(0, 0);
         });
+        chatInputViewsContainer.setInputBubbleOffsets(0, 0);
 
         chatInputBubbleContainer.addView(bottomChannelButtonsLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 56, Gravity.BOTTOM, 0, 0, 0, (44 - 56) / 2));
 
@@ -43981,6 +43982,7 @@ public class ChatActivity extends BaseFragment implements
                 sideControlsButtonsLayout.updateColors();
             }
             if (bottomChannelButtonsLayout != null) {
+                bottomChannelButtonsLayout.setAccentColor(getThemedColor(Theme.key_featuredStickers_addButton));
                 bottomChannelButtonsLayout.updateColors();
             }
             for (BlurredBackgroundDrawable d : glassAttachedDrawables) {
