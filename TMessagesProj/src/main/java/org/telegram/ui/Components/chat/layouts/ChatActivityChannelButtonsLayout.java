@@ -437,15 +437,17 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
     protected void dispatchDraw(@NonNull Canvas canvas) {
         final int accentAlpha = (int) (255 * totalVisibilityFactor * animatorCenterAccentBackground.getFloatValue());
         if (accentAlpha > 0) {
+            final float left = totalWidthLeft > 0 ? totalWidthLeft + dp(7) : dp(7);
+            final float right = totalWidthRight > 0 ? getMeasuredWidth() - dp(7) - totalWidthRight : getMeasuredWidth() - dp(7);
             tmpRect.set(
-                totalWidthLeft + dp(8),
-                dp(8),
-                getMeasuredWidth() - dp(8) - totalWidthRight,
-                getMeasuredHeight() - dp(8)
+                left,
+                dp(6),
+                right,
+                getMeasuredHeight() - dp(6)
             );
             backgroundAccentPaint.setColor(accentColor);
             backgroundAccentPaint.setAlpha(accentAlpha);
-            canvas.drawRoundRect(tmpRect, dp(20), dp(20), backgroundAccentPaint);
+            canvas.drawRoundRect(tmpRect, dp(22), dp(22), backgroundAccentPaint);
         }
 
         super.dispatchDraw(canvas);
@@ -453,9 +455,9 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         final float visibility = totalVisibilityFactor;
         if (visibility > 0) {
             dockRect.set(
+                dp(7),
                 dp(6),
-                dp(6),
-                getMeasuredWidth() - dp(6),
+                getMeasuredWidth() - dp(7),
                 getMeasuredHeight() - dp(6)
             );
             int outlineColor = Theme.getColor(Theme.key_divider, resourcesProvider);

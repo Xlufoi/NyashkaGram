@@ -2368,7 +2368,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
             }
 
             glassDrawable.setBounds(left, t, right, b);
-            if (!doNotDrawGlassHeader || (isSearchFieldVisible && !actionModeVisible)) {
+            if (!isFloatingCardHeader && (!doNotDrawGlassHeader || (isSearchFieldVisible && !actionModeVisible))) {
                 glassDrawable.draw(canvas);
             }
         }
