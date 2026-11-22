@@ -236,4 +236,6 @@
     <string name="PassQRPasswordWarning">安全警告：此密码是保护您密钥的唯一防线。弱密码可被离线破解，请混合使用大写字母、小写字母、数字和符号。</string>
     <string name="DirectTextSelection">直接选择文本</string>
     <string name="DirectTextSelectionNotice">长按消息文本直接进入文本选择</string>
+    <string name="hyperos4Design">HyperOS 4 设计</string>
+    <string name="hyperos4DesignNotice">聊天顶栏与底栏模糊效果，聊天列表底部导航栏大圆角</string>
 </resources>

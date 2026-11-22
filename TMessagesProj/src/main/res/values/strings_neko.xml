@@ -238,4 +238,6 @@
     <string name="PassQRPasswordWarning">Security warning: this password is the only thing protecting your key. A weak password can be cracked offline, so mix uppercase, lowercase, numbers and symbols.</string>
     <string name="DirectTextSelection">Direct text selection</string>
     <string name="DirectTextSelectionNotice">Long press on message text directly initiates text selection</string>
+    <string name="hyperos4Design">HyperOS 4 design</string>
+    <string name="hyperos4DesignNotice">Blur panels in chats, rounded navigation bar in chat list</string>
 </resources>

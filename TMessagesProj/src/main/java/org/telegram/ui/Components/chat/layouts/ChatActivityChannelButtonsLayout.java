@@ -82,7 +82,7 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
 
         container = new FrameLayout(context);
         container.setClipToOutline(true);
-        container.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(22)));
+        container.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 26 : 22)));
         addView(container, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 44, Gravity.CENTER_VERTICAL));
         outlinePaint.setStyle(Paint.Style.STROKE);
         outlinePaint.setStrokeWidth(dp(1.25f));

@@ -616,7 +616,11 @@ public class SizeNotifierFrameLayout extends FrameLayout implements Theme.Colora
         }
 
         int blurAlpha = Color.alpha(Theme.getColor(Theme.key_chat_BlurAlphaSlow));
-        if (NekoConfig.forceBlurInChat.Bool()) blurAlpha = NekoConfig.chatBlueAlphaValue.Int();
+        if (NekoConfig.forceBlurInChat.Bool()) {
+            blurAlpha = NekoConfig.chatBlueAlphaValue.Int();
+        } else if (NekoConfig.hyperos4Design.Bool()) {
+            blurAlpha = 140;
+        }
         if (blurAlpha == 255) {
             return;
         }
@@ -977,7 +981,11 @@ public class SizeNotifierFrameLayout extends FrameLayout implements Theme.Colora
     }
 
     public void drawBlurRect(Canvas canvas, float y, Rect rectTmp, Paint blurScrimPaint, boolean top, int blurAlpha) {
-        if (NekoConfig.forceBlurInChat.Bool()) blurAlpha = NekoConfig.chatBlueAlphaValue.Int();
+        if (NekoConfig.forceBlurInChat.Bool()) {
+            blurAlpha = NekoConfig.chatBlueAlphaValue.Int();
+        } else if (NekoConfig.hyperos4Design.Bool()) {
+            blurAlpha = 140;
+        }
         if (!SharedConfig.chatBlurEnabled()) {
             canvas.drawRect(rectTmp, blurScrimPaint);
             return;

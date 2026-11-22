@@ -432,7 +432,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         iBlur3FactoryGlass.setLiquidGlassEffectAllowed(LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS));
 
         tabsViewBackground = iBlur3FactoryGlass.create(tabsView, BlurredBackgroundProviderImpl.mainTabs(resourceProvider));
-        tabsViewBackground.setRadius(dp(16));
+        tabsViewBackground.setRadius(dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 28 : 16));
         tabsViewBackground.setPadding(dp(tabMargin - 0.334f));
         tabsView.setBackground(tabsViewBackground);
 

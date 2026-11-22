@@ -11237,4 +11237,6 @@
     <string name="RoundVideoCompositionEnabled">Round video styling</string>
     <string name="RoundVideoCompositionInfo">Disable styling to record a plain square without outside-circle blur, dimming or Telegram overlays.</string>
     <string name="SelectText">Select text</string>
+    <string name="hyperos4Design">HyperOS 4 design</string>
+    <string name="hyperos4DesignNotice">Blur panels in chats, rounded navigation bar in chat list</string>
 </resources>

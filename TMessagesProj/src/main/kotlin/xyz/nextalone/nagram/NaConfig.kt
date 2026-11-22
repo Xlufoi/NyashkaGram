@@ -26,6 +26,8 @@ object NaConfig {
         ArrayList<ConfigItem>()
 
     // Configs
+    val hyperos4Design =
+        tw.nekomimi.nekogram.NekoConfig.hyperos4Design
     val forceCopy =
         addConfig(
             "ForceCopy",

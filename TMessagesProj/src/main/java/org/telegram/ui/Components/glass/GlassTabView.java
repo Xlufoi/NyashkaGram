@@ -163,7 +163,7 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
             float cx = viewWidth / 2f;
             float cy = getHeight() / 2f;
             tmpRectF.set(cx - pillWidth / 2f, cy - pillHeight / 2f, cx + pillWidth / 2f, cy + pillHeight / 2f);
-            final float r = dp(10);
+            final float r = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? (pillHeight / 2f) : dp(10);
             final float s = lerp(0.6f, 1, selectedFactor) * MathUtils.clamp(attachScale, 0, 1);
             canvas.save();
             canvas.scale(s, s, tmpRectF.centerX(), tmpRectF.centerY());
@@ -187,8 +187,8 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
             final float cy = dpf2(10);
             final float height = dpf2(16);
             final float width = Math.max(height, counter.getCurrentWidth() + dp(8));
-            final float rOuter = dpf2(6f);
-            final float rInner = dpf2(5f);
+            final float rOuter = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? ((height + gap * 2) / 2f) : dpf2(6f);
+            final float rInner = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? (height / 2f) : dpf2(5f);
             tmpRectF.set(
                     cx - width / 2f - gap,
                     cy - height / 2f - gap,

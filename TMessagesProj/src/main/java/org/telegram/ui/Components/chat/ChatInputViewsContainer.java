@@ -79,13 +79,13 @@ public class ChatInputViewsContainer extends FrameLayout {
     public void setInputIslandBubbleDrawable(BlurredBackgroundDrawable drawable) {
         blurredBackgroundDrawable = drawable;
         blurredBackgroundDrawable.setPadding(dp(7));
-        blurredBackgroundDrawable.setRadius(dp(INPUT_BUBBLE_RADIUS));
+        blurredBackgroundDrawable.setRadius(dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 28 : INPUT_BUBBLE_RADIUS));
     }
 
     public void setUnderKeyboardBackgroundDrawable(BlurredBackgroundDrawable drawable) {
         underKeyboardBackgroundDrawable = drawable;
         underKeyboardBackgroundDrawable.enableInAppKeyboardOptimization();
-        underKeyboardBackgroundDrawable.setRadius(dp(INPUT_KEYBOARD_RADIUS), dp(INPUT_KEYBOARD_RADIUS), 0, 0);
+        underKeyboardBackgroundDrawable.setRadius(dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 32 : INPUT_KEYBOARD_RADIUS), dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 32 : INPUT_KEYBOARD_RADIUS), 0, 0);
         underKeyboardBackgroundDrawable.setThickness(dp(32));
         underKeyboardBackgroundDrawable.setIntensity(0.4f);
     }
@@ -138,7 +138,7 @@ public class ChatInputViewsContainer extends FrameLayout {
         if (currentBlurredHeight != blurredHeight || force) {
             currentBlurredHeight = blurredHeight;
 
-            final int r = dp(INPUT_KEYBOARD_RADIUS);
+            final int r = dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 32 : INPUT_KEYBOARD_RADIUS);
             tmpRectF.set(0, getMeasuredHeight() - imeBottomInset, getMeasuredWidth(), getMeasuredHeight());
             underKeyboardPath.rewind();
             underKeyboardPath.addRoundRect(tmpRectF, new float[] {r, r, r, r, 0, 0, 0, 0}, Path.Direction.CW);
@@ -177,7 +177,7 @@ public class ChatInputViewsContainer extends FrameLayout {
                     rightBottomRadius = bottomRight == null ? 0 : bottomRight.getRadius();
                 }
             }
-            underKeyboardBackgroundDrawable.setRadius(dp(INPUT_KEYBOARD_RADIUS), dp(INPUT_KEYBOARD_RADIUS), rightBottomRadius, leftBottomRadius, true);
+            underKeyboardBackgroundDrawable.setRadius(dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 32 : INPUT_KEYBOARD_RADIUS), dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 32 : INPUT_KEYBOARD_RADIUS), rightBottomRadius, leftBottomRadius, true);
         }
     }
 

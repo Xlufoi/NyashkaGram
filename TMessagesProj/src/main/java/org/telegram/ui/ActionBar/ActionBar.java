@@ -2299,7 +2299,7 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                 int sideMargin = dp(5);
                 int bottomMargin = dp(2);
                 AndroidUtilities.rectTmp.set(sideMargin, topOffset, getMeasuredWidth() - sideMargin, getMeasuredHeight() - bottomMargin);
-                final float cardRadius = dp(16);
+                final float cardRadius = dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 20 : 16);
                 float pinnedProgress = 0f;
                 if (pinnedPanelProgressProvider != null) {
                     Float p = pinnedPanelProgressProvider.provide(null);
@@ -2318,6 +2318,17 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                     bottomRadius, bottomRadius,
                     bottomRadius, bottomRadius
                 }, android.graphics.Path.Direction.CW);
+                if (tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool()) {
+                    if (glassDrawable != null) {
+                        glassDrawable.setPadding(0);
+                        glassDrawable.setRadius(cardRadius, cardRadius, bottomRadius, bottomRadius);
+                        glassDrawable.setBounds(AndroidUtilities.rectTmp);
+                        glassDrawable.draw(canvas);
+                    }
+                    blurScrimPaint.setAlpha(170);
+                } else {
+                    blurScrimPaint.setAlpha(255);
+                }
                 canvas.drawPath(cardHeaderClipPath, blurScrimPaint);
 
                 canvas.save();
