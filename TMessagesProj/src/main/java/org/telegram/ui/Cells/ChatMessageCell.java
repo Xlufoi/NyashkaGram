@@ -5499,7 +5499,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             return false;
         }
 
-        if ((!drawSelectionBackground && currentMessagesGroup == null) || (currentMessagesGroup != null && !delegate.hasSelectedMessages())) {
+        if ((!drawSelectionBackground && currentMessagesGroup == null && !tw.nekomimi.nekogram.NekoConfig.directTextSelection.Bool()) || (currentMessagesGroup != null && !delegate.hasSelectedMessages())) {
             return false;
         }
 

@@ -1360,6 +1360,7 @@ public class ChatActivity extends BaseFragment implements
 
     public final static int OPTION_COPY_PHOTO = 150;
     public final static int OPTION_COPY_PHOTO_AS_STICKER = 151;
+    public final static int OPTION_SELECT_TEXT = 152;
 
     private boolean isChannelBottomMuteView = false;
 
@@ -35383,6 +35384,27 @@ public class ChatActivity extends BaseFragment implements
                 });
                 break;
             }
+            case OPTION_SELECT_TEXT: {
+                if (chatListView != null && textSelectionHelper != null && selectedObject != null) {
+                    for (int i = 0; i < chatListView.getChildCount(); i++) {
+                        View child = chatListView.getChildAt(i);
+                        if (child instanceof ChatMessageCell) {
+                            ChatMessageCell cell = (ChatMessageCell) child;
+                            if (cell.getMessageObject() != null && cell.getMessageObject().getId() == selectedObject.getId()) {
+                                CharSequence text = selectedObject.messageText;
+                                if (text == null && cell.hasCaptionLayout()) {
+                                    text = selectedObject.caption;
+                                }
+                                if (text != null && text.length() > 0) {
+                                    textSelectionHelper.select(cell, 0, text.length());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
             case OPTION_HIDE_SPONSORED_MESSAGE: {
                 hideAds();
                 break;
@@ -48267,6 +48289,11 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.Copy));
                     options.add(OPTION_COPY);
                     icons.add(R.drawable.msg_copy);
+                    if (selectedObject.type == MessageObject.TYPE_TEXT || selectedObject.type == MessageObject.TYPE_ARTICLE || getMessageCaption(selectedObject, selectedObjectGroup) != null) {
+                        items.add(LocaleController.getString(R.string.SelectText));
+                        options.add(OPTION_SELECT_TEXT);
+                        icons.add(R.drawable.msg_select_between);
+                    }
                 }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
                     if (primaryMessage.hasReplies()) {
@@ -48763,6 +48790,11 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.Copy));
                     options.add(OPTION_COPY);
                     icons.add(R.drawable.msg_copy);
+                    if (selectedObject.type == MessageObject.TYPE_TEXT || selectedObject.type == MessageObject.TYPE_ARTICLE || getMessageCaption(selectedObject, selectedObjectGroup) != null) {
+                        items.add(LocaleController.getString(R.string.SelectText));
+                        options.add(OPTION_SELECT_TEXT);
+                        icons.add(R.drawable.msg_select_between);
+                    }
                 }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
                     if (primaryMessage.hasReplies()) {

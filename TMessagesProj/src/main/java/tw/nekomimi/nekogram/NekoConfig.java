@@ -81,6 +81,7 @@ public class NekoConfig {
     public static ConfigItem showRepeat = addConfig("showRepeat", configTypeBool, false);
     public static ConfigItem showShareMessages = addConfig("showShareMessages", configTypeBool, false);
     public static ConfigItem showMessageHide = addConfig("showMessageHide", configTypeBool, false);
+    public static ConfigItem directTextSelection = addConfig("directTextSelection", configTypeBool, true);
 
     public static ConfigItem eventType = addConfig("eventType", configTypeInt, 0);
     public static ConfigItem actionBarDecoration = addConfig("ActionBarDecoration", configTypeInt, 0);

@@ -141,32 +141,7 @@ public class TranslateController extends BaseController {
     }
 
     public static boolean isSummarizable(MessageObject messageObject) {
-        int buttonStatus = NaConfig.INSTANCE.getSummarizeTextButton().Int();
-        if (buttonStatus == SummarizeTextButtonStatus.DISABLE.getValue()) {
-            return false;
-        }
-        boolean alwaysShow = buttonStatus == SummarizeTextButtonStatus.ALWAYS.getValue();
-        return (
-            messageObject != null &&
-            messageObject.messageOwner != null &&
-            (alwaysShow || messageObject.messageOwner.summary_from_language != null) &&
-            !messageObject.isOutOwner() &&
-            !messageObject.isRestrictedMessage &&
-            !messageObject.isSponsored() &&
-            (
-                messageObject.type == MessageObject.TYPE_TEXT ||
-                messageObject.type == MessageObject.TYPE_VIDEO ||
-                messageObject.type == MessageObject.TYPE_PHOTO ||
-//                messageObject.type == MessageObject.TYPE_VOICE ||
-//                messageObject.type == MessageObject.TYPE_ROUND_VIDEO ||
-                messageObject.type == MessageObject.TYPE_FILE ||
-                messageObject.type == MessageObject.TYPE_MUSIC ||
-                messageObject.type == MessageObject.TYPE_POLL
-            ) && (
-                !TextUtils.isEmpty(messageObject.messageOwner.message) &&
-                messageObject.messageOwner.message.length() > 100
-            )
-        );
+        return false;
     }
 
     public static boolean isTranslatable(MessageObject messageObject) {

@@ -108,20 +108,9 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
                     LocaleController.getString(R.string.DeepLFormalityMore),
                     LocaleController.getString(R.string.DeepLFormalityLess),
             }, null));
-    private final AbstractConfigCell llmSettingsRow = cellGroup.appendCell(new ConfigCellCustom("LLMSettings", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell hideOriginAfterTranslationRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getHideOriginAfterTranslation()));
     private final AbstractConfigCell autoTranslateRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getAutoTranslate(), LocaleController.getString("AutoTranslateAbout")));
     private final AbstractConfigCell dividerTranslation = cellGroup.appendCell(new ConfigCellDivider());
-
-    private final AbstractConfigCell headerAiTools = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.PremiumPreviewAIEditor)));
-    private final AbstractConfigCell summarizeTextButtonRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getSummarizeTextButton(),
-            new String[]{
-                    LocaleController.getString(R.string.Default),
-                    LocaleController.getString(R.string.SummarizeTextButtonDisable),
-                    LocaleController.getString(R.string.SummarizeTextButtonAlways),
-            }, null));
-    private final AbstractConfigCell disableAiEditorRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableAiEditor()));
-    private final AbstractConfigCell dividerAiTools = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell headerMap = cellGroup.appendCell(new ConfigCellHeader("Map"));
     private final AbstractConfigCell useOSMDroidMapRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useOSMDroidMap));
@@ -448,8 +437,6 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                         listAdapter.notifyItemChanged(position);
                         return Unit.INSTANCE;
                     });
-                } else if (position == cellGroup.rows.indexOf(llmSettingsRow)) {
-                    presentFragment(new NekoLLMSettingsActivity());
                 } else if (position == cellGroup.rows.indexOf(nameOrderRow)) {
                     LocaleController.getInstance().recreateFormatters();
                 }
@@ -770,8 +757,6 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                             textCell.setTextAndValue(LocaleController.getString(R.string.TransToLang), NekoXConfig.formatLang(NekoConfig.translateToLang.String()), divider);
                         } else if (position == cellGroup.rows.indexOf(translateInputToLangRow)) {
                             textCell.setTextAndValue(LocaleController.getString(R.string.TransInputToLang), NekoXConfig.formatLang(NekoConfig.translateInputLang.String()), divider);
-                        } else if (position == cellGroup.rows.indexOf(llmSettingsRow)) {
-                            textCell.setTextAndValue(LocaleController.getString("LLMTranslatorSettings", R.string.LLMTranslatorSettings), "", divider);
                         }
                     }
                 } else {
@@ -814,24 +799,18 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
         if (NekoConfig.useTelegramTranslateInChat.Bool())
             ((ConfigCellCustom) translationProviderRow).setEnabled(false);
 
-        // Control LLM config rows visibility
-        boolean isLLMProvider = NekoConfig.translationProvider.Int() == Translator.providerLLM;
         boolean isDeepLProvider = NekoConfig.translationProvider.Int() == Translator.providerDeepL;
         boolean isDeepLOfficialProvider = NekoConfig.translationProvider.Int() == Translator.providerDeepLOfficial;
         boolean isDeepLFreeProvider = NekoConfig.translationProvider.Int() == Translator.providerDeepLFree;
         boolean isGoogleCloudProvider = NekoConfig.translationProvider.Int() == Translator.providerGoogle;
 
-        cellGroup.rows.remove(llmSettingsRow);
         cellGroup.rows.remove(deepLxCustomApiRow);
         cellGroup.rows.remove(deepLApiKeyRow);
         cellGroup.rows.remove(deepLFreeApiKeyRow);
         cellGroup.rows.remove(deepLFormalityRow);
         cellGroup.rows.remove(googleCloudTranslateKeyRow);
 
-        if (isLLMProvider) {
-            int insertIndex = cellGroup.rows.indexOf(translateInputToLangRow) + 1;
-            cellGroup.rows.add(insertIndex, llmSettingsRow);
-        } else if (isDeepLProvider) {
+        if (isDeepLProvider) {
             int insertIndex = cellGroup.rows.indexOf(translateInputToLangRow) + 1;
             cellGroup.rows.add(insertIndex, deepLxCustomApiRow);
             cellGroup.rows.add(insertIndex + 1, deepLFormalityRow);

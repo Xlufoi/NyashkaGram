@@ -86,6 +86,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     private final AbstractConfigCell customEditedMessageRow = cellGroup.appendCell(new ConfigCellTextInput(null, NaConfig.INSTANCE.getCustomEditedMessage(), "", null, null, false));
     private final AbstractConfigCell showVoteCountBeforeVoteRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getShowVoteCountBeforeVote()));
     private final AbstractConfigCell showSpoilersDirectlyRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showSpoilersDirectly));
+    private final AbstractConfigCell directTextSelectionRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.directTextSelection, LocaleController.getString(R.string.DirectTextSelectionNotice)));
     private final AbstractConfigCell disableLinkPreviewsRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getGlobalDisableLinkPreviews()));
     private final AbstractConfigCell dividerMessages = cellGroup.appendCell(new ConfigCellDivider());
 

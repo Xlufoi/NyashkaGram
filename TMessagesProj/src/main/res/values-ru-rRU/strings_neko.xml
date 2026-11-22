@@ -149,4 +149,6 @@
     <string name="useOSMDroidMap">Используйте карту OSMDroid</string>
     <string name="mapDriftingFixForGoogleMaps">Исправить дрейф Карт Google в Китае</string>
     <string name="enhancedFileLoader">Увеличить скорость загрузки</string>
+    <string name="DirectTextSelection">Прямое выделение текста</string>
+    <string name="DirectTextSelectionNotice">Выделение фрагментов текста долгим нажатием на слова без открытия меню</string>
 </resources>

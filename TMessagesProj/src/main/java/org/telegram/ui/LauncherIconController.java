@@ -35,15 +35,15 @@ public class LauncherIconController {
 
     public enum LauncherIcon {
         DEFAULT("DefaultIcon", R.mipmap.ic_launcher_nagram, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconDefault),
-        GOOGLE("GoogleIcon", R.mipmap.icon_background_google, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconGoogle),
-        COLORFUL("ColorfulIcon", R.mipmap.icon_background_colorful, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconColorful),
-        DARKGREEN("DarkGreenIcon", R.mipmap.icon_background_darkgreen, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconDarkGreen),
-        NEON("NeonIcon", R.mipmap.icon_background_neon, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconNeon),
-        NIELLO("NielloIcon", R.drawable.ic_launcher_nagram_round_niello_background, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconNiello),
-        BLUE("BlueIcon", R.color.nagram_block_round_background, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconBlue),
-        DARKBLUE("DarkBlueIcon", R.color.nagram_round_blue_background, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconDarkBlue),
-        BLURBLUE("BlurBlueIcon", R.drawable.ic_launcher_nagram_blue_background, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconBlurBlue),
-        NOX("PremiumIcon", R.drawable.icon_3_background_sa, R.drawable.ic_launcher_nagram_foreground, R.string.AppIconPremium);
+        GOOGLE("GoogleIcon", R.mipmap.icon_background_google, R.drawable.ic_launcher_nagram_google_foreground, R.string.AppIconGoogle),
+        COLORFUL("ColorfulIcon", R.mipmap.icon_background_colorful, R.drawable.ic_launcher_nagram_colorful_foreground, R.string.AppIconColorful),
+        DARKGREEN("DarkGreenIcon", R.mipmap.icon_background_darkgreen, R.drawable.ic_launcher_nagram_darkgreen_foreground, R.string.AppIconDarkGreen),
+        NEON("NeonIcon", R.mipmap.icon_background_neon, R.drawable.ic_launcher_nagram_neon_foreground, R.string.AppIconNeon),
+        NIELLO("NielloIcon", R.drawable.ic_launcher_nagram_round_niello_background, R.drawable.ic_launcher_nagram_round_niello_foreground, R.string.AppIconNiello),
+        BLUE("BlueIcon", R.color.nagram_block_round_background, R.drawable.ic_launcher_nagram_blue_foreground, R.string.AppIconBlue),
+        DARKBLUE("DarkBlueIcon", R.color.nagram_round_blue_background, R.drawable.ic_launcher_nagram_blue_foreground, R.string.AppIconDarkBlue),
+        BLURBLUE("BlurBlueIcon", R.drawable.ic_launcher_nagram_blue_background, R.drawable.ic_launcher_nagram_blue_foreground, R.string.AppIconBlurBlue),
+        NOX("PremiumIcon", R.drawable.icon_3_background_sa, R.drawable.ic_launcher_nagram_round_niello_foreground, R.string.AppIconPremium);
 
         public final String key;
         public final int background;
