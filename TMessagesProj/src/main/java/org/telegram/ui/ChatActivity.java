@@ -281,7 +281,6 @@ import org.telegram.ui.Components.Reactions.ReactionsEffectOverlay;
 import org.telegram.ui.Components.Reactions.ReactionsLayoutInBubble;
 import org.telegram.ui.Components.blur3.BlurredBackgroundDrawableViewFactory;
 import org.telegram.ui.Components.blur3.DownscaleScrollableNoiseSuppressor;
-import org.telegram.ui.Components.blur3.drawable.color.BlurredBackgroundColorProvider;
 import org.telegram.ui.Components.blur3.drawable.color.BlurredBackgroundColorProviderThemed;
 import org.telegram.ui.Components.blur3.drawable.color.impl.BlurredBackgroundProviderImpl;
 import org.telegram.ui.Components.blur3.source.BlurredBackgroundSourceWrapped;
@@ -5010,16 +5009,10 @@ public class ChatActivity extends BaseFragment implements
         chatInputViewsContainer = new ChatInputViewsContainer(context);
         chatInputViewsContainer.setClipChildren(false);
         chatInputViewsContainer.setWindowInsetsProvider(windowInsetsStateHolder);
-        BlurredBackgroundDrawableViewFactory chatInputBubbleFactory = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool()
-            ? glassBackgroundDrawableFactory
-            : chatInputSolidFactory;
-        BlurredBackgroundColorProvider chatInputBubbleColorProvider = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool()
-            ? BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate)
-            : chatInputSolidColorProvider;
         chatInputViewsContainer.setInputIslandBubbleDrawable(
-            chatInputBubbleFactory.create(chatInputViewsContainer, chatInputBubbleColorProvider));
+            chatInputSolidFactory.create(chatInputViewsContainer, chatInputSolidColorProvider));
         chatInputViewsContainer.setUnderKeyboardBackgroundDrawable(
-            chatInputBubbleFactory.create(chatInputViewsContainer, underKeyboardSolidColorProvider));
+            chatInputSolidFactory.create(chatInputViewsContainer, underKeyboardSolidColorProvider));
 
 
         chatInputBubbleContainer = chatInputViewsContainer.getInputIslandBubbleContainer();
@@ -7692,7 +7685,7 @@ public class ChatActivity extends BaseFragment implements
             mentionContainer.setAlpha(0f);
         }
         mentionContainer.setDialogId(dialog_id);
-        mentionContainer.setBackgroundDrawable((tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? glassBackgroundDrawableFactory : chatInputSolidFactory).create(mentionContainer, tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate) : chatInputSolidColorProvider));
+        mentionContainer.setBackgroundDrawable(chatInputSolidFactory.create(mentionContainer, chatInputSolidColorProvider));
         {
             final int indexToAdd = chatActivityFadeView != null ? contentView.indexOfChild(chatActivityFadeView) : -1;
             contentView.addView(mentionContainer, indexToAdd, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 110, Gravity.LEFT | Gravity.BOTTOM));
@@ -8831,12 +8824,7 @@ public class ChatActivity extends BaseFragment implements
         bottomOverlay.addView(bottomOverlayText, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.CENTER));
 
 
-        bottomChannelButtonsLayout = new ChatActivityChannelButtonsLayout(
-            context,
-            resourceProvider,
-            tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate) : chatInputSolidColorProvider,
-            tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? glassBackgroundDrawableFactory : chatInputSolidFactory
-        ) {
+        bottomChannelButtonsLayout = new ChatActivityChannelButtonsLayout(context, resourceProvider, chatInputSolidColorProvider, chatInputSolidFactory) {
             @Override
             public void setVisibility(int visibility) {
                 super.setVisibility(visibility);
@@ -9436,7 +9424,7 @@ public class ChatActivity extends BaseFragment implements
         checkUi_topPanelLayoutWidth();
         topPanelLayout.setBlurredBackground(glassBackgroundDrawableFactory.create(topPanelLayout)
             .setColorProvider(BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate))
-            .setRadius(0, 0, dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 20 : 16), dp(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? 20 : 16))
+            .setRadius(0, 0, dp(16), dp(16))
             .setPadding(dp(7)));
 
         if (chatMode == MODE_SEARCH) {
@@ -18181,7 +18169,7 @@ public class ChatActivity extends BaseFragment implements
                 botCommandsMenuContainer.setBackgroundDrawable(drawable);
             }
             if (chatActivityEnterView != null && child == chatActivityEnterView.controlsView) {
-                chatActivityEnterView.controlsView.setBlurredBackgroundFactory(tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool() ? glassBackgroundDrawableFactory : (chatInputSolidFactory != null ? chatInputSolidFactory : glassBackgroundDrawableFactory));
+                chatActivityEnterView.controlsView.setBlurredBackgroundFactory(chatInputSolidFactory != null ? chatInputSolidFactory : glassBackgroundDrawableFactory);
             }
         }
 

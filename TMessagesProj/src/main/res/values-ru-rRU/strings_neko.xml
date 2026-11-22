@@ -151,6 +151,4 @@
     <string name="enhancedFileLoader">Увеличить скорость загрузки</string>
     <string name="DirectTextSelection">Прямое выделение текста</string>
     <string name="DirectTextSelectionNotice">Выделение фрагментов текста долгим нажатием на слова без открытия меню</string>
-    <string name="hyperos4Design">Дизайн HyperOS 4</string>
-    <string name="hyperos4DesignNotice">Размытие панелей в чатах и скругленная панель в списке чатов</string>
 </resources>
