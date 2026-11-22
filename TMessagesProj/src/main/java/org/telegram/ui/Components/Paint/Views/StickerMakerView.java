@@ -913,7 +913,6 @@ public class StickerMakerView extends FrameLayout implements NotificationCenter.
     private void segment(Bitmap bitmap, int orientation, Utilities.Callback<List<SubjectMock>> whenDone, Utilities.Callback<SegmentedObject> whenEmpty) {
         segmentingLoading = false;
         whenDone.run(new ArrayList<>());
-    }
 
         // preload emojis
         List<TLRPC.TL_availableReaction> defaultReactions = MediaDataController.getInstance(currentAccount).getEnabledReactionsList();
