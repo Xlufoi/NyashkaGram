@@ -48292,7 +48292,7 @@ public class ChatActivity extends BaseFragment implements
                     if (selectedObject.type == MessageObject.TYPE_TEXT || selectedObject.type == MessageObject.TYPE_ARTICLE || getMessageCaption(selectedObject, selectedObjectGroup) != null) {
                         items.add(LocaleController.getString(R.string.SelectText));
                         options.add(OPTION_SELECT_TEXT);
-                        icons.add(R.drawable.msg_select_between);
+                        icons.add(R.drawable.msg_select);
                     }
                 }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
@@ -48793,7 +48793,7 @@ public class ChatActivity extends BaseFragment implements
                     if (selectedObject.type == MessageObject.TYPE_TEXT || selectedObject.type == MessageObject.TYPE_ARTICLE || getMessageCaption(selectedObject, selectedObjectGroup) != null) {
                         items.add(LocaleController.getString(R.string.SelectText));
                         options.add(OPTION_SELECT_TEXT);
-                        icons.add(R.drawable.msg_select_between);
+                        icons.add(R.drawable.msg_select);
                     }
                 }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
