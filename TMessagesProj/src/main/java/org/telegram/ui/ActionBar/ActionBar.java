@@ -2322,7 +2322,12 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                     if (glassDrawable != null) {
                         glassDrawable.setPadding(0);
                         glassDrawable.setRadius(cardRadius, cardRadius, bottomRadius, bottomRadius);
-                        glassDrawable.setBounds(AndroidUtilities.rectTmp);
+                        glassDrawable.setBounds(
+                            (int) AndroidUtilities.rectTmp.left,
+                            (int) AndroidUtilities.rectTmp.top,
+                            (int) AndroidUtilities.rectTmp.right,
+                            (int) AndroidUtilities.rectTmp.bottom
+                        );
                         glassDrawable.draw(canvas);
                     }
                     blurScrimPaint.setAlpha(170);

@@ -281,6 +281,7 @@ import org.telegram.ui.Components.Reactions.ReactionsEffectOverlay;
 import org.telegram.ui.Components.Reactions.ReactionsLayoutInBubble;
 import org.telegram.ui.Components.blur3.BlurredBackgroundDrawableViewFactory;
 import org.telegram.ui.Components.blur3.DownscaleScrollableNoiseSuppressor;
+import org.telegram.ui.Components.blur3.drawable.color.BlurredBackgroundColorProvider;
 import org.telegram.ui.Components.blur3.drawable.color.BlurredBackgroundColorProviderThemed;
 import org.telegram.ui.Components.blur3.drawable.color.impl.BlurredBackgroundProviderImpl;
 import org.telegram.ui.Components.blur3.source.BlurredBackgroundSourceWrapped;
@@ -5012,7 +5013,7 @@ public class ChatActivity extends BaseFragment implements
         BlurredBackgroundDrawableViewFactory chatInputBubbleFactory = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool()
             ? glassBackgroundDrawableFactory
             : chatInputSolidFactory;
-        BlurredBackgroundColorProviderThemed chatInputBubbleColorProvider = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool()
+        BlurredBackgroundColorProvider chatInputBubbleColorProvider = tw.nekomimi.nekogram.NekoConfig.hyperos4Design.Bool()
             ? BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate)
             : chatInputSolidColorProvider;
         chatInputViewsContainer.setInputIslandBubbleDrawable(
