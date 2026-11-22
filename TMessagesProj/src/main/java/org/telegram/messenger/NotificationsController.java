@@ -4239,7 +4239,7 @@ public class NotificationsController extends BaseController implements Notificat
             }
             SharedPreferences preferences = getAccountInstance().getNotificationsSettings();
             int dismissDate = preferences.getInt("dismissDate", 0);
-            if (!lastMessageObject.isStoryPush && (lastMessageObject.messageOwner.date <= dismissDate && NaConfig.INSTANCE.getPushServiceType().Int() != 3)) {
+            if (!lastMessageObject.isStoryPush && (lastMessageObject.messageOwner.date <= dismissDate && !(NaConfig.INSTANCE.getPushServiceType().Int() == 3 || GooglePushListenerServiceProvider.isMicroGInstalled()))) {
                 dismissNotification();
                 return;
             }
@@ -4385,7 +4385,7 @@ public class NotificationsController extends BaseController implements Notificat
                 for (int i = 0; i < count; i++) {
                     MessageObject messageObject = pushMessages.get(i);
                     String message = getStringForMessage(messageObject, false, text, null);
-                    if (message == null || !messageObject.isStoryPush && (messageObject.messageOwner.date <= dismissDate && NaConfig.INSTANCE.getPushServiceType().Int() != 3)) {
+                    if (message == null || !messageObject.isStoryPush && (messageObject.messageOwner.date <= dismissDate && !(NaConfig.INSTANCE.getPushServiceType().Int() == 3 || GooglePushListenerServiceProvider.isMicroGInstalled()))) {
                         continue;
                     }
                     if (silent == 2) {
@@ -4910,7 +4910,7 @@ public class NotificationsController extends BaseController implements Notificat
             long dialog_id = messageObject.getDialogId();
             long topicId = MessageObject.getTopicId(currentAccount, messageObject.messageOwner, getMessagesController().isForum(messageObject));
             int dismissDate = preferences.getInt("dismissDate" + dialog_id, 0);
-            if (!messageObject.isStoryPush && (messageObject.messageOwner.date <= dismissDate && NaConfig.INSTANCE.getPushServiceType().Int() != 3)) {
+            if (!messageObject.isStoryPush && (messageObject.messageOwner.date <= dismissDate && !(NaConfig.INSTANCE.getPushServiceType().Int() == 3 || GooglePushListenerServiceProvider.isMicroGInstalled()))) {
                 FileLog.d("showExtraNotifications: dialog " + dialog_id + " is skipped, message date (" + messageObject.messageOwner.date + " <= " + dismissDate + ")");
                 continue;
             }

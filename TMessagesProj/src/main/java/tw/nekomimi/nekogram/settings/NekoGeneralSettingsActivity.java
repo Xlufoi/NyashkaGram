@@ -453,7 +453,9 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
 
         // Cells: Set OnSettingChanged Callbacks
         cellGroup.callBackSettingsChanged = (key, newValue) -> {
-            if (key.equals(NaConfig.INSTANCE.getCustomIpStrategy().getKey())) {
+            if (key.equals(NaConfig.INSTANCE.getPushServiceType().getKey())) {
+                ApplicationLoader.reloadPushServices();
+            } else if (key.equals(NaConfig.INSTANCE.getCustomIpStrategy().getKey())) {
                 ConnectionsManager.ipStrategy = -1;
                 for (int a : SharedConfig.activeAccounts) {
                     if (UserConfig.getInstance(a).isClientActivated()) {

@@ -1745,7 +1745,17 @@ public class PushListenerController {
     public static IPushListenerServiceProvider getProvider() {
         if (instance != null)
             return instance;
-        switch (NaConfig.INSTANCE.getPushServiceType().Int()) {
+        int type = NaConfig.INSTANCE.getPushServiceType().Int();
+        if (type == 0 && !tw.nekomimi.nekogram.NekoConfig.preferences.contains(NaConfig.INSTANCE.getPushServiceType().getKey())) {
+            if (GooglePushListenerServiceProvider.isMicroGInstalled()) {
+                type = 3;
+                NaConfig.INSTANCE.getPushServiceType().setConfigInt(3);
+            } else if (GooglePushListenerServiceProvider.isGmsInstalled()) {
+                type = 1;
+                NaConfig.INSTANCE.getPushServiceType().setConfigInt(1);
+            }
+        }
+        switch (type) {
             case 1:
             case 3: {
                 instance = new GooglePushListenerServiceProvider();

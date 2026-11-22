@@ -474,6 +474,13 @@ public class ApplicationLoader extends Application {
         });
     }
 
+    public static void reloadPushServices() {
+        pushProvider = null;
+        PushListenerController.resetProvider();
+        SharedConfig.pushStringStatus = "";
+        initPushServices();
+    }
+
     private static void initPushServices() {
         AndroidUtilities.runOnUIThread(() -> {
             if (getPushProvider().hasServices()) {
