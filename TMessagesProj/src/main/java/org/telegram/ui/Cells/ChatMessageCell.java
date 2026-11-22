@@ -4997,7 +4997,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             }
         }
 
-        if (checkTextSelection(event)) {
+        if ((drawSelectionBackground || (delegate != null && delegate.getTextSelectionHelper() != null && delegate.getTextSelectionHelper().isInSelectionMode() && delegate.getTextSelectionHelper().getSelectedCell() == this)) && checkTextSelection(event)) {
             return true;
         }
 
@@ -5061,6 +5061,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             result = checkDateMotionEvent(event);
         }
         if (!result) {
+            result = checkCaptionMotionEvent(event);
+        }
+        if (!result) {
             result = checkTextSelection(event);
         }
         if (!result && topicButton != null) {
@@ -5074,9 +5077,6 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         }
         if (!result) {
             result = checkSponsoredCloseMotionEvent(event);
-        }
-        if (!result) {
-            result = checkCaptionMotionEvent(event);
         }
         if (!result) {
             result = checkExplanationMotionEvent(event);
