@@ -9684,10 +9684,11 @@ public class ChatActivityEnterView extends FrameLayout implements
                 } else if (userFull != null) {
                     alpha = userFull.voice_messages_forbidden ? 0.5f : 1.0f;
                 }
+                final float targetAlpha = alpha;
 
                 animators.add(ObjectAnimator.ofFloat(audioVideoButtonContainer, View.SCALE_X, 1f));
                 animators.add(ObjectAnimator.ofFloat(audioVideoButtonContainer, View.SCALE_Y, 1f));
-                animators.add(ObjectAnimator.ofFloat(audioVideoButtonContainer, View.ALPHA, alpha));
+                animators.add(ObjectAnimator.ofFloat(audioVideoButtonContainer, View.ALPHA, targetAlpha));
                 if (cancelBotButton.getVisibility() == VISIBLE) {
                     animators.add(ObjectAnimator.ofFloat(cancelBotButton, View.SCALE_X, 0.1f));
                     animators.add(ObjectAnimator.ofFloat(cancelBotButton, View.SCALE_Y, 0.1f));
@@ -9721,7 +9722,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                                 audioVideoButtonContainer.setVisibility(VISIBLE);
                                 audioVideoButtonContainer.setScaleX(1.0f);
                                 audioVideoButtonContainer.setScaleY(1.0f);
-                                audioVideoButtonContainer.setAlpha(alpha);
+                                audioVideoButtonContainer.setAlpha(targetAlpha);
                             }
                         }
                     }
